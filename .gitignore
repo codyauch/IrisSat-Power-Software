@@ -1,0 +1,14 @@
+# Ignored files and folders
+
+# Workspace folders
+/.jxbrowser.userdata
+/.metadata
+/dvt
+/RemoteSystemsTempFiles
+
+# Project files/folders
+/Debug
+/Release
+.xdchelp
+/.config
+/.launches
