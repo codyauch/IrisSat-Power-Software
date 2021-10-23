@@ -27,10 +27,11 @@
 #define GPIO_PIN_CAN_RST        BIT7
 #define GPIO_PIN_CAN_INT        BIT0
 
-void Init_CAN_Ports();
-int Init_CAN(void);
+void CAN_Wake(void);
+void Init_CAN(void);
 void CAN_Test1(void);
 void CAN_Test2(void);
+void CAN_Error(uint8_t error_code);
 
 
 

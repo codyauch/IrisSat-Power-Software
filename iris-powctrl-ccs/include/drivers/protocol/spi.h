@@ -45,7 +45,6 @@
 #define GPIO_PIN_SPIB1_MISO         BIT3
 #define GPIO_PIN_SPIB1_MOSI         BIT4
 
-void Init_SPI_Ports();
 void Init_SPI();
 void Init_SPIA0();
 void Init_SPIA0();

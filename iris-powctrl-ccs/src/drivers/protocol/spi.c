@@ -20,30 +20,6 @@ uint8_t SPIB0_TXData[SPIB0_BYTE_LENGTH] = {0}, SPIB0_RXData[SPIB0_BYTE_LENGTH] =
 unsigned int SPIB1_index = 0;
 uint8_t SPIB1_TXData[SPIB1_BYTE_LENGTH] = {0}, SPIB1_RXData[SPIB1_BYTE_LENGTH] = {0};
 
-void Init_SPI_Ports()
-{
-    /*********************************************************
-     *                  SPI A0 Interface Pins
-     *********************************************************/
-    //P1.4(SPI CLK on UCB0CLK) --> P5.0
-    //GPIO_setAsOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_CLK);
-    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_CLK, GPIO_PRIMARY_MODULE_FUNCTION);
-    //P1.6(MOSI on UCB0SIMO) --> P5.2
-    //GPIO_setAsOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI);
-    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI, GPIO_PRIMARY_MODULE_FUNCTION );
-    //P1.7(MISO on UCB0SOMI) --> P5.1
-    //GPIO_setAsInputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MISO);
-    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MISO, GPIO_PRIMARY_MODULE_FUNCTION);
-    //set P2.5 as SPI CS, already set to output above --> P4.7
-    //GPIO_setAsOutputPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
-    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS, GPIO_PRIMARY_MODULE_FUNCTION);
-
-    //GPIO_setOutputLowOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
-    //GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
-    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_CLK);
-    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI);
-    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
-}
 
 void Init_SPI()
 {
@@ -55,7 +31,7 @@ void Init_SPI()
 
     // Disable the GPIO power-on default high-impedance mode
     // to activate previously configured port settings
-    PMM_unlockLPM5();
+//    PMM_unlockLPM5();
 }
 
 /*
@@ -65,47 +41,27 @@ void Init_SPI()
 void Init_SPIA0()
 {
 
-    SYSCFG3 |= USCIA0RMP;             // SETS remap source
-    //-- setup SPIA0
-    UCA0CTLW0 |= UCSWRST;           // put into SW reset
-    UCA0CTLW0 |= UCSSEL__SMCLK;     // choose SMCLK
-    UCA0BRW = 10;                   // set prscaler to 10 to get 100KHz
-    //UCA0BRW = 8;                   // set prscaler to 10 to get 100KHz
-    //UCA0BRW = 6;                   // set prscaler to 10 to get 100KHz
-    UCA0CTLW0 |= UCSYNC | UCMST | UCMSB | UCMODE_2 | UCSTEM;
-    UCA0CTLW0 |= UCSYNC;            // put into SPI
-    UCA0CTLW0 |= UCMST;             // set as master
-    UCA0CTLW0 |= UCMSB;
-    UCA0CTLW0 |= UCMODE_2;
-    UCA0CTLW0 |= UCSTEM;
-    //UCA0CTLW0 |= UCCKPL;            // Clock inactive HIGH
-    //configure the ports
-    P5SEL1 &= ~(BIT2 | BIT1 | BIT0);
-    P5SEL0 |= (BIT2 | BIT1 | BIT0);
-    /*
-    P5SEL1 &= ~BIT1;               // P5.1 use SOMI
-    P5SEL0 |= BIT1;
-    P5SEL1 &= ~BIT0;                // P5.0 use SCLK
-    P5SEL0 |= BIT0;
-    P5SEL1 &= ~BIT2;               // P5.2 use SIMO
-    P5SEL0 |= BIT2;
-    */
-    //P4SEL1 &= ~BIT7;               // P4.7 use STE
+    WDTCTL = WDTPW | WDTHOLD;                 // Stop watchdog timer
+    SYSCFG3|=USCIA0RMP;                       //Set the remapping source
+    P5SEL0 |= BIT0 | BIT1 | BIT2;             // set 4-SPI pin as second function
     //P4SEL0 |= BIT7;
-    //PM5CTL0 &= ~LOCKLPM5;
-    UCA0CTLW0 &= ~UCSWRST;        // take out of SW reset
-    // -- ENABLE IRQs
-    //P4IE |= BIT1;
-    //P4F
-    UCA0IE |= UCTXIE;
-    UCA0IFG &= ~UCTXIFG;         //clear flag
+    P4SEL0 &= ~BIT7;
 
-    // Send dummy message to pull CLK low
-    uint8_t dummy_data[4] = {0};
-    GPIO_setOutputLowOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
-    read_write_SPIA0(&dummy_data);
-    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
+    UCA0CTLW0 |= UCSWRST;                     // **Put state machine in reset**
+                                              // 4-pin, 8-bit SPI master
+    //UCA0CTLW0 |= UCMST|UCSYNC|UCCKPL|UCMSB|UCMODE_2|UCSTEM;
+    UCA0CTLW0 |= UCMST|UCSYNC|UCMSB|UCMODE_2|UCSTEM;
+                                                  // Clock polarity high, MSB
+    //UCA0CTLW0 |= UCSSEL__ACLK;                // Select ACLK
+    UCA0CTLW0 |= UCSSEL__SMCLK;
+    UCA0BR0 = 0x00;                           // BRCLK = ACLK/2
+    UCA0BR1 = 0;                              //
+    UCA0MCTLW = 0;                            // No modulation
+    UCA0CTLW0 &= ~UCSWRST;                    // **Initialize USCI state machine**
+    UCA0IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
 
+//    PM5CTL0 &= ~LOCKLPM5;                     // Disable the GPIO power-on default high-impedance mode
+//                                              // to activate previously configured port settings
 }
 /*
  * SPI A1 communicates with the ADCS subsystem.
@@ -238,66 +194,69 @@ uint16_t read_write_SPIB1(uint8_t data[])
     return (((uint16_t)SPIB1_RXData[0]) << 8) | SPIB1_RXData[1];
 }
 // -------------------- ISRs --------------------
-#pragma vector = EUSCI_A0_VECTOR
-__interrupt void ISR_EUSCI_A0(void)
-{
-    if (SPIA0_index < SPIA0_BYTE_LENGTH)
-    {
-        UCA0TXBUF = SPIA0_TXData[SPIA0_index];
-        SPIA0_RXData[SPIA0_index++] = UCA0RXBUF;
-    }
-    else
-    {
-        SPIA0_index = 0;
-        UCA0IFG &= ~UCTXIFG;
-    }
 
-    /*switch(__even_in_range(UCA0IV,USCI_SPI_UCTXIFG))
-    {
-        case USCI_NONE: break;                    // Vector 0 - no interrupt
-        case USCI_SPI_UCRXIFG:
-            if (SPIA0_index < SPIA0_BYTE_LENGTH)
-            {
-                SPIA0_RXData[SPIA0_index] = UCA0RXBUF;
-                UCA0IFG |= UCTXIFG;
-            }
-            else
-            {
-                //SPIA0_TXData = 0;
-                UCA0IFG &= ~UCRXIFG;
-            }
-            break;
-        case USCI_SPI_UCTXIFG:
-            if (SPIA0_index < SPIA0_BYTE_LENGTH)
-            {
-                UCA0TXBUF = SPIA0_TXData[SPIA0_index++];
-                UCA0IFG |= UCRXIFG;
-                UCA0IFG &= ~UCTXIFG;
-            }
-            else
-            {
-                SPIA0_index = 0;
-                UCA0IFG &= ~UCTXIFG;
-            }
-            break;
-        default: break;
-    }*/
+//#pragma vector = EUSCI_A0_VECTOR
+//__interrupt void ISR_EUSCI_A0(void)
+//{
+//    if (SPIA0_index < SPIA0_BYTE_LENGTH)
+//    {
+//        UCA0TXBUF = SPIA0_TXData[SPIA0_index];
+//        SPIA0_RXData[SPIA0_index++] = UCA0RXBUF;
+//    }
+//    else
+//    {
+//        SPIA0_index = 0;
+//        UCA0IFG &= ~UCTXIFG;
+//    }
+//
+//    /*switch(__even_in_range(UCA0IV,USCI_SPI_UCTXIFG))
+//    {
+//        case USCI_NONE: break;                    // Vector 0 - no interrupt
+//        case USCI_SPI_UCRXIFG:
+//            if (SPIA0_index < SPIA0_BYTE_LENGTH)
+//            {
+//                SPIA0_RXData[SPIA0_index] = UCA0RXBUF;
+//                UCA0IFG |= UCTXIFG;
+//            }
+//            else
+//            {
+//                //SPIA0_TXData = 0;
+//                UCA0IFG &= ~UCRXIFG;
+//            }
+//            break;
+//        case USCI_SPI_UCTXIFG:
+//            if (SPIA0_index < SPIA0_BYTE_LENGTH)
+//            {
+//                UCA0TXBUF = SPIA0_TXData[SPIA0_index++];
+//                UCA0IFG |= UCRXIFG;
+//                UCA0IFG &= ~UCTXIFG;
+//            }
+//            else
+//            {
+//                SPIA0_index = 0;
+//                UCA0IFG &= ~UCTXIFG;
+//            }
+//            break;
+//        default: break;
+//    }*/
+//
+//}
 
-}
-/*
-#pragma vector = EUSCI_A1_VECTOR
-__interrupt void ISR_EUSCI_A1(void)
-{
+//#pragma vector = EUSCI_A1_VECTOR
+//__interrupt void ISR_EUSCI_A1(void)
+//{
+//
+//}
 
-}
-#pragma vector = EUSCI_B0_VECTOR
-__interrupt void ISR_EUSCI_B0(void)
-{
+//#pragma vector = EUSCI_B0_VECTOR
+//__interrupt void ISR_EUSCI_B0(void)
+//{
+//
+//}
 
-}
-#pragma vector = EUSCI_B1_VECTOR
-__interrupt void ISR_EUSCI_B1(void)
-{
+//#pragma vector = EUSCI_B1_VECTOR
+//__interrupt void ISR_EUSCI_B1(void)
+//{
+//
+//}
 
-}
-*/

@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v20.2.5                     
 ******************************************************************************
->> Linked Wed Aug  4 16:39:44 2021
+>> Linked Fri Oct 22 21:29:48 2021
 
 OUTPUT FILE NAME:   <iris-powctrl-ccs.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 00009762
+ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 000097b6
 
 
 MEMORY CONFIGURATION
@@ -16,8 +16,8 @@ MEMORY CONFIGURATION
   INFO                  00001800   00000200  00000000  00000200  RWIX
   TLVMEM                00001a00   00000200  00000000  00000200  RWIX
   BOOTCODE              00001c00   00000400  00000000  00000400  RWIX
-  RAM                   00002000   00001000  000000da  00000f26  RWIX
-  FRAM                  00008000   00007f80  0000178a  000067f6  RWIX
+  RAM                   00002000   00001000  000000c8  00000f38  RWIX
+  FRAM                  00008000   00007f80  000017de  000067a2  RWIX
   JTAGSIGNATURE         0000ff80   00000004  00000004  00000000  RWIX  ffff 
   BSLSIGNATURE          0000ff84   00000004  00000004  00000000  RWIX  ffff 
   BSLCONFIGURATIONSIGNA 0000ff88   00000002  00000002  00000000  RWIX  ffff 
@@ -86,122 +86,111 @@ section   page    origin      length       input sections
 
 .sysmem    0    00008000    00000000     UNINITIALIZED
 
-.cinit     0    00008000    0000002a     
-                  00008000    0000000c     (__TI_handler_table)
-                  0000800c    00000007     (.cinit..data.load) [load image, compression = lzss]
-                  00008013    00000001     --HOLE-- [fill = 0]
-                  00008014    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  0000801a    00000010     (__TI_cinit_table)
+.cinit     0    00008000    00000012     
+                  00008000    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00008006    00000004     (__TI_handler_table)
+                  0000800a    00000008     (__TI_cinit_table)
 
-.pinit     0    0000802a    00000000     UNINITIALIZED
+.pinit     0    00008012    00000000     UNINITIALIZED
 
-.binit     0    0000802a    00000000     
+.binit     0    00008012    00000000     
 
 .init_array 
-*          0    0000802a    00000000     UNINITIALIZED
+*          0    00008012    00000000     UNINITIALIZED
 
 .mspabi.exidx 
-*          0    0000802a    00000000     UNINITIALIZED
+*          0    00008012    00000000     UNINITIALIZED
 
 .mspabi.extab 
-*          0    0000802a    00000000     UNINITIALIZED
+*          0    00008012    00000000     UNINITIALIZED
 
-.const     0    0000802a    00000075     
-                  0000802a    0000001c     gpio.obj (.const:GPIO_PORT_TO_BASE)
-                  00008046    0000000a     can.obj (.const:$P$T22$7)
-                  00008050    00000008     can.obj (.const:$P$T25$10)
-                  00008058    00000008     TCAN4550.obj (.const:.string:lookup$2)
-                  00008060    00000007     TCAN4550.obj (.const:.string:lookup$1)
-                  00008067    00000001     --HOLE-- [fill = 0]
-                  00008068    00000006     can.obj (.const:$P$T18$3)
-                  0000806e    00000006     can.obj (.const:$P$T27$12)
-                  00008074    00000004     can.obj (.const:$P$T16$1)
-                  00008078    00000004     can.obj (.const:$P$T17$2)
-                  0000807c    00000004     can.obj (.const:$P$T20$5)
-                  00008080    00000004     can.obj (.const:$P$T21$6)
-                  00008084    00000004     can.obj (.const:$P$T23$8)
-                  00008088    00000004     can.obj (.const:$P$T24$9)
-                  0000808c    00000004     can.obj (.const:$P$T26$11)
-                  00008090    00000004     TCAN4x5x_SPI.obj (.const:.string:$P$T0$1)
-                  00008094    00000004     TCAN4x5x_SPI.obj (.const:.string:$P$T1$2)
-                  00008098    00000004     can.obj (.const:.string:$P$T28$13)
-                  0000809c    00000003     can.obj (.const:$P$T19$4)
+.const     0    00008012    0000006d     
+                  00008012    0000001c     gpio.obj (.const:GPIO_PORT_TO_BASE)
+                  0000802e    0000000a     can.obj (.const:$P$T22$7)
+                  00008038    00000008     can.obj (.const:$P$T25$10)
+                  00008040    00000008     TCAN4550.obj (.const:.string:lookup$2)
+                  00008048    00000007     TCAN4550.obj (.const:.string:lookup$1)
+                  0000804f    00000001     --HOLE-- [fill = 0]
+                  00008050    00000006     can.obj (.const:$P$T18$3)
+                  00008056    00000006     can.obj (.const:$P$T27$12)
+                  0000805c    00000004     can.obj (.const:$P$T16$1)
+                  00008060    00000004     can.obj (.const:$P$T17$2)
+                  00008064    00000004     can.obj (.const:$P$T20$5)
+                  00008068    00000004     can.obj (.const:$P$T21$6)
+                  0000806c    00000004     can.obj (.const:$P$T23$8)
+                  00008070    00000004     can.obj (.const:$P$T24$9)
+                  00008074    00000004     can.obj (.const:$P$T26$11)
+                  00008078    00000004     can.obj (.const:.string:$P$T28$13)
+                  0000807c    00000003     can.obj (.const:$P$T19$4)
 
-.text      0    000080a0    0000167e     
-                  000080a0    000003b6     can.obj (.text:Init_CAN)
-                  00008456    00000352     TCAN4550.obj (.text:TCAN4x5x_MRAM_Configure)
-                  000087a8    0000020c     TCAN4550.obj (.text:TCAN4x5x_MCAN_WriteTXBuffer)
-                  000089b4    00000116     can.obj (.text:CAN_Test1)
-                  00008aca    00000112     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureDataTiming_Simple)
-                  00008bdc    000000ca     peripheral_driver.obj (.text:Init_Ports)
-                  00008ca6    000000c4     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureNominalTiming_Simple)
-                  00008d6a    000000b0     TCAN4550.obj (.text:TCAN4x5x_MCAN_WriteXIDFilter)
-                  00008e1a    0000009a     spi.obj (.text:Init_SPIA0)
-                  00008eb4    00000080     TCAN4550.obj (.text:TCAN4x5x_MCAN_EnableProtectedRegisters)
-                  00008f34    00000076     rts430x_lc_rd_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  00008faa    0000006e     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureCCCRRegister)
-                  00009018    00000062     can.obj (.text:Init_CAN_Ports)
-                  0000907a    00000062     TCAN4550.obj (.text:TCAN4x5x_Device_Configure)
-                  000090dc    00000062     TCAN4550.obj (.text:TCAN4x5x_Device_SetMode)
-                  0000913e    00000054     rts430x_lc_rd_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit_hold_wdt:__TI_auto_init_nobinit_nopinit_hold_wdt)
-                  00009192    00000052     spi.obj (.text:read_write_SPIA0)
-                  000091e4    00000050     TCAN4550.obj (.text:TCAN4x5x_MCAN_DisableProtectedRegisters)
-                  00009234    0000004c     TCAN4550.obj (.text:TCAN4x5x_MCAN_WriteSIDFilter)
-                  00009280    00000048     TCAN4x5x_SPI.obj (.text:AHB_READ_BURST_START)
-                  000092c8    00000048     TCAN4x5x_SPI.obj (.text:AHB_WRITE_BURST_START)
-                  00009310    00000042     TCAN4550.obj (.text:TCAN4x5x_Device_ConfigureInterruptEnable)
-                  00009352    00000040     TCAN4550.obj (.text:TCAN4x5x_Device_ReadMode)
-                  00009392    0000003e     rts430x_lc_rd_eabi.lib : lsl32.asm.obj (.text:l_lsl_const)
-                  000093d0    0000003c     FRWP_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : frwp_init.obj (.text:__mpu_init)
-                  0000940c    0000003a     TCAN4x5x_SPI.obj (.text:AHB_WRITE_BURST_WRITE)
-                  00009446    00000034     gpio.obj (.text:GPIO_setAsOutputPin)
-                  0000947a    00000034     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureGlobalFilter)
-                  000094ae    00000028     TCAN4550.obj (.text:TCAN4x5x_MCAN_TransmitBufferContents)
-                  000094d6    00000026     main.obj (.text:main)
-                  000094fc    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
-                  00009520    00000022     TCAN4550.obj (.text:TCAN4x5x_MRAM_Clear)
-                  00009542    0000001e     TCAN4550.obj (.text:TCAN4x5x_MCAN_DLCtoBytes)
-                  00009560    0000001c     TCAN4x5x_SPI.obj (.text:AHB_READ_32)
-                  0000957c    0000001c     TCAN4x5x_SPI.obj (.text:AHB_WRITE_32)
-                  00009598    0000001c     gpio.obj (.text:GPIO_setOutputHighOnPin)
-                  000095b4    0000001c     gpio.obj (.text:GPIO_setOutputLowOnPin)
-                  000095d0    0000001c     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureInterruptEnable)
-                  000095ec    0000001a     TCAN4x5x_SPI.obj (.text:AHB_READ_BURST_READ)
-                  00009606    00000018     TCAN4550.obj (.text:TCAN4x5x_Device_ReadInterrupts)
-                  0000961e    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.asm.obj (.text)
-                  00009636    00000016     wdt_a.obj (.text:WDT_A_hold)
-                  0000964c    00000016     rts430x_lc_rd_eabi.lib : memset.c.obj (.text:memset)
-                  00009662    00000014                            : memcpy.c.obj (.text:memcpy)
-                  00009676    00000012     TCAN4x5x_SPI.obj (.text:AHB_READ_BURST_END)
-                  00009688    00000012     TCAN4x5x_SPI.obj (.text:AHB_WRITE_BURST_END)
-                  0000969a    00000012     rts430x_lc_rd_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
-                  000096ac    00000010     TCAN4550.obj (.text:TCAN4x5x_Device_ClearInterrupts)
-                  000096bc    00000010     rts430x_lc_rd_eabi.lib : lsl32.asm.obj (.text:l_lsl)
-                  000096cc    0000000e     TCAN4550.obj (.text:TCAN4x5x_Device_ClearSPIERR)
-                  000096da    0000000e     TCAN4550.obj (.text:TCAN4x5x_MCAN_ClearInterruptsAll)
-                  000096e8    0000000e     TCAN4550.obj (.text:TCAN4x5x_MCAN_TXRXESC_DataByteValue)
-                  000096f6    0000000a     spi.obj (.text:Init_SPI)
-                  00009700    0000000a     rts430x_lc_rd_eabi.lib : lsl16.asm.obj (.text)
-                  0000970a    00000008     pmm.obj (.text:PMM_unlockLPM5)
-                  00009712    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  00009718    00000004                            : pre_init.c.obj (.text:_system_pre_init)
-                  0000971c    00000002                            : startup.c.obj (.text:_system_post_cinit)
+.text      0    00008080    00001736     
+                  00008080    000003a4     can.obj (.text:Init_CAN)
+                  00008424    00000352     TCAN4550.obj (.text:TCAN4x5x_MRAM_Configure)
+                  00008776    0000020c     TCAN4550.obj (.text:TCAN4x5x_MCAN_WriteTXBuffer)
+                  00008982    0000013a     peripheral_driver.obj (.text:Init_Ports)
+                  00008abc    00000116     can.obj (.text:CAN_Test1)
+                  00008bd2    00000112     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureDataTiming_Simple)
+                  00008ce4    000000c4     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureNominalTiming_Simple)
+                  00008da8    000000b0     TCAN4550.obj (.text:TCAN4x5x_MCAN_WriteXIDFilter)
+                  00008e58    00000080     TCAN4550.obj (.text:TCAN4x5x_MCAN_EnableProtectedRegisters)
+                  00008ed8    00000078     TCAN4x5x_SPI.obj (.text:AHB_READ_BURST_READ)
+                  00008f50    00000072     gpio.obj (.text:GPIO_setAsPeripheralModuleFunctionInputPin)
+                  00008fc2    00000072     gpio.obj (.text:GPIO_setAsPeripheralModuleFunctionOutputPin)
+                  00009034    0000006e     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureCCCRRegister)
+                  000090a2    00000062     TCAN4550.obj (.text:TCAN4x5x_Device_Configure)
+                  00009104    00000062     TCAN4550.obj (.text:TCAN4x5x_Device_SetMode)
+                  00009166    00000060     TCAN4x5x_SPI.obj (.text:AHB_WRITE_BURST_WRITE)
+                  000091c6    0000005a     TCAN4x5x_SPI.obj (.text:AHB_READ_BURST_START)
+                  00009220    0000005a     TCAN4x5x_SPI.obj (.text:AHB_WRITE_BURST_START)
+                  0000927a    00000054     spi.obj (.text:Init_SPIA0)
+                  000092ce    00000054     rts430x_lc_rd_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit_hold_wdt:__TI_auto_init_nobinit_nopinit_hold_wdt)
+                  00009322    00000050     TCAN4550.obj (.text:TCAN4x5x_MCAN_DisableProtectedRegisters)
+                  00009372    0000004c     TCAN4550.obj (.text:TCAN4x5x_MCAN_WriteSIDFilter)
+                  000093be    0000004a     can.obj (.text:CAN_Wake)
+                  00009408    00000042     TCAN4550.obj (.text:TCAN4x5x_Device_ConfigureInterruptEnable)
+                  0000944a    00000040     TCAN4550.obj (.text:TCAN4x5x_Device_ReadMode)
+                  0000948a    0000003e     rts430x_lc_rd_eabi.lib : lsl32.asm.obj (.text:l_lsl_const)
+                  000094c8    0000003c     FRWP_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : frwp_init.obj (.text:__mpu_init)
+                  00009504    00000034     gpio.obj (.text:GPIO_setAsOutputPin)
+                  00009538    00000034     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureGlobalFilter)
+                  0000956c    00000028     TCAN4550.obj (.text:TCAN4x5x_MCAN_TransmitBufferContents)
+                  00009594    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  000095b8    00000022     TCAN4550.obj (.text:TCAN4x5x_MRAM_Clear)
+                  000095da    0000001e     TCAN4550.obj (.text:TCAN4x5x_MCAN_DLCtoBytes)
+                  000095f8    0000001c     TCAN4x5x_SPI.obj (.text:AHB_READ_32)
+                  00009614    0000001c     TCAN4x5x_SPI.obj (.text:AHB_WRITE_32)
+                  00009630    0000001c     gpio.obj (.text:GPIO_setOutputHighOnPin)
+                  0000964c    0000001c     gpio.obj (.text:GPIO_setOutputLowOnPin)
+                  00009668    0000001c     main.obj (.text:Init_GPIO)
+                  00009684    0000001c     TCAN4550.obj (.text:TCAN4x5x_MCAN_ConfigureInterruptEnable)
+                  000096a0    00000018     TCAN4550.obj (.text:TCAN4x5x_Device_ReadInterrupts)
+                  000096b8    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.asm.obj (.text)
+                  000096d0    00000016     wdt_a.obj (.text:WDT_A_hold)
+                  000096e6    00000014     main.obj (.text:main)
+                  000096fa    00000014     rts430x_lc_rd_eabi.lib : memcpy.c.obj (.text:memcpy)
+                  0000970e    00000012     TCAN4x5x_SPI.obj (.text:AHB_READ_BURST_END)
+                  00009720    00000012     TCAN4x5x_SPI.obj (.text:AHB_WRITE_BURST_END)
+                  00009732    00000010     can.obj (.text:CAN_Error)
+                  00009742    00000010     TCAN4550.obj (.text:TCAN4x5x_Device_ClearInterrupts)
+                  00009752    00000010     rts430x_lc_rd_eabi.lib : lsl32.asm.obj (.text:l_lsl)
+                  00009762    0000000e     TCAN4550.obj (.text:TCAN4x5x_Device_ClearSPIERR)
+                  00009770    0000000e     TCAN4550.obj (.text:TCAN4x5x_MCAN_ClearInterruptsAll)
+                  0000977e    0000000e     TCAN4550.obj (.text:TCAN4x5x_MCAN_TXRXESC_DataByteValue)
+                  0000978c    0000000c     eusci_a_spi.obj (.text:EUSCI_A_SPI_transmitData)
+                  00009798    0000000a     rts430x_lc_rd_eabi.lib : lsl16.asm.obj (.text)
+                  000097a2    00000008     pmm.obj (.text:PMM_unlockLPM5)
+                  000097aa    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  000097b0    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+                  000097b4    00000002                            : startup.c.obj (.text:_system_post_cinit)
 
 .text:_isr 
-*          0    0000971e    0000006c     
-                  0000971e    00000044     spi.obj (.text:_isr:ISR_EUSCI_A0)
-                  00009762    00000020     rts430x_lc_rd_eabi.lib : boot.c.obj (.text:_isr:_c_int00_noargs_mpu)
-                  00009782    00000008                            : isr_trap.asm.obj (.text:_isr:__TI_ISR_TRAP)
+*          0    000097b6    00000028     
+                  000097b6    00000020     rts430x_lc_rd_eabi.lib : boot.c.obj (.text:_isr:_c_int00_noargs_mpu)
+                  000097d6    00000008                            : isr_trap.asm.obj (.text:_isr:__TI_ISR_TRAP)
 
-.bss       0    00002000    0000002a     UNINITIALIZED
+.bss       0    00002000    00000028     UNINITIALIZED
                   00002000    00000024     (.common:TCAN4x5x_MCAN_CACHE)
                   00002024    00000004     (.common:help)
-                  00002028    00000002     (.common:can_init_ec)
-
-.data      0    0000202a    00000010     UNINITIALIZED
-                  0000202a    00000008     spi.obj (.data)
-                  00002032    00000004     spi.obj (.data:SPIA0_RXData)
-                  00002036    00000004     spi.obj (.data:SPIA0_TXData)
 
 .stack     0    00002f60    000000a0     UNINITIALIZED
                   00002f60    00000004     rts430x_lc_rd_eabi.lib : boot.c.obj (.stack)
@@ -241,7 +230,7 @@ EUSCI_A1   0    0000ffde    00000002
                   0000ffde    00000002     rts430x_lc_rd_eabi.lib : int30.asm.obj (.int30)
 
 EUSCI_A0   0    0000ffe0    00000002     
-                  0000ffe0    00000002     spi.obj (.int31)
+                  0000ffe0    00000002     rts430x_lc_rd_eabi.lib : int31.asm.obj (.int31)
 
 WDT        0    0000ffe2    00000002     
                   0000ffe2    00000002     rts430x_lc_rd_eabi.lib : int32.asm.obj (.int32)
@@ -315,104 +304,100 @@ $fill004   0    0000ffa0    00000002
 
 MODULE SUMMARY
 
-       Module                       code   ro data   rw data
-       ------                       ----   -------   -------
+       Module                  code   ro data   rw data
+       ------                  ----   -------   -------
     .\driverlib\MSP430FR2xx_4xx\
-       gpio.obj                     108    28        0      
-       wdt_a.obj                    22     0         0      
-       pmm.obj                      8      0         0      
-    +--+----------------------------+------+---------+---------+
-       Total:                       138    28        0      
-                                                            
+       gpio.obj                336    28        0      
+       wdt_a.obj               22     0         0      
+       eusci_a_spi.obj         12     0         0      
+       pmm.obj                 8      0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  378    28        0      
+                                                       
     .\src\
-       main.obj                     38     0         0      
-    +--+----------------------------+------+---------+---------+
-       Total:                       38     0         0      
-                                                            
+       main.obj                48     0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  48     0         0      
+                                                       
     .\src\drivers\
-       peripheral_driver.obj        202    0         0      
-    +--+----------------------------+------+---------+---------+
-       Total:                       202    0         0      
-                                                            
+       peripheral_driver.obj   314    0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  314    0         0      
+                                                       
     .\src\drivers\device\tcan4x5x\
-       TCAN4550.obj                 3006   15        40     
-       TCAN4x5x_SPI.obj             320    8         0      
-    +--+----------------------------+------+---------+---------+
-       Total:                       3326   23        40     
-                                                            
+       TCAN4550.obj            3006   15        40     
+       TCAN4x5x_SPI.obj        488    0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  3494   15        40     
+                                                       
     .\src\drivers\protocol\
-       can.obj                      1326   65        2      
-       spi.obj                      314    2         16     
-    +--+----------------------------+------+---------+---------+
-       Total:                       1640   67        18     
-                                                            
+       can.obj                 1300   65        0      
+       spi.obj                 84     0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  1384   65        0      
+                                                       
     C:\ti\ccs1040\ccs\ccs_base\msp430\lib\FR2xx\FRWP_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
-       frwp_init.obj                60     0         0      
-    +--+----------------------------+------+---------+---------+
-       Total:                       60     0         0      
-                                                            
+       frwp_init.obj           60     0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  60     0         0      
+                                                       
     C:\ti\ccs1040\ccs\tools\compiler\ti-cgt-msp430_20.2.5.LTS\lib\rts430x_lc_rd_eabi.lib
-       copy_decompress_lzss.c.obj   118    0         0      
-       autoinit.c.obj               84     0         0      
-       lsl32.asm.obj                78     0         0      
-       copy_zero_init.c.obj         36     0         0      
-       boot.c.obj                   32     2         0      
-       mult16_f5hw.asm.obj          24     0         0      
-       memset.c.obj                 22     0         0      
-       memcpy.c.obj                 20     0         0      
-       copy_decompress_none.c.obj   18     0         0      
-       lsl16.asm.obj                10     0         0      
-       isr_trap.asm.obj             8      0         0      
-       exit.c.obj                   6      0         0      
-       pre_init.c.obj               4      0         0      
-       int20.asm.obj                0      2         0      
-       int21.asm.obj                0      2         0      
-       int22.asm.obj                0      2         0      
-       int23.asm.obj                0      2         0      
-       int24.asm.obj                0      2         0      
-       int25.asm.obj                0      2         0      
-       int26.asm.obj                0      2         0      
-       int27.asm.obj                0      2         0      
-       int28.asm.obj                0      2         0      
-       int29.asm.obj                0      2         0      
-       int30.asm.obj                0      2         0      
-       int32.asm.obj                0      2         0      
-       int33.asm.obj                0      2         0      
-       int34.asm.obj                0      2         0      
-       int35.asm.obj                0      2         0      
-       int36.asm.obj                0      2         0      
-       int37.asm.obj                0      2         0      
-       int38.asm.obj                0      2         0      
-       int39.asm.obj                0      2         0      
-       int40.asm.obj                0      2         0      
-       int41.asm.obj                0      2         0      
-       int42.asm.obj                0      2         0      
-       int43.asm.obj                0      2         0      
-       int44.asm.obj                0      2         0      
-       int45.asm.obj                0      2         0      
-       startup.c.obj                2      0         0      
-    +--+----------------------------+------+---------+---------+
-       Total:                       462    52        0      
-                                                            
-       Stack:                       0      0         160    
-       Linker Generated:            0      41        0      
-    +--+----------------------------+------+---------+---------+
-       Grand Total:                 5866   211       218    
+       autoinit.c.obj          84     0         0      
+       lsl32.asm.obj           78     0         0      
+       copy_zero_init.c.obj    36     0         0      
+       boot.c.obj              32     2         0      
+       mult16_f5hw.asm.obj     24     0         0      
+       memcpy.c.obj            20     0         0      
+       lsl16.asm.obj           10     0         0      
+       isr_trap.asm.obj        8      0         0      
+       exit.c.obj              6      0         0      
+       pre_init.c.obj          4      0         0      
+       int20.asm.obj           0      2         0      
+       int21.asm.obj           0      2         0      
+       int22.asm.obj           0      2         0      
+       int23.asm.obj           0      2         0      
+       int24.asm.obj           0      2         0      
+       int25.asm.obj           0      2         0      
+       int26.asm.obj           0      2         0      
+       int27.asm.obj           0      2         0      
+       int28.asm.obj           0      2         0      
+       int29.asm.obj           0      2         0      
+       int30.asm.obj           0      2         0      
+       int31.asm.obj           0      2         0      
+       int32.asm.obj           0      2         0      
+       int33.asm.obj           0      2         0      
+       int34.asm.obj           0      2         0      
+       int35.asm.obj           0      2         0      
+       int36.asm.obj           0      2         0      
+       int37.asm.obj           0      2         0      
+       int38.asm.obj           0      2         0      
+       int39.asm.obj           0      2         0      
+       int40.asm.obj           0      2         0      
+       int41.asm.obj           0      2         0      
+       int42.asm.obj           0      2         0      
+       int43.asm.obj           0      2         0      
+       int44.asm.obj           0      2         0      
+       int45.asm.obj           0      2         0      
+       startup.c.obj           2      0         0      
+    +--+-----------------------+------+---------+---------+
+       Total:                  304    54        0      
+                                                       
+       Stack:                  0      0         160    
+       Linker Generated:       0      18        0      
+    +--+-----------------------+------+---------+---------+
+       Grand Total:            5982   180       200    
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 0000801a records: 2, size/record: 8, table size: 16
-	.data: load addr=0000800c, load size=00000007 bytes, run addr=0000202a, run size=00000010 bytes, compression=lzss
-	.bss: load addr=00008014, load size=00000006 bytes, run addr=00002000, run size=0000002a bytes, compression=zero_init
+__TI_cinit_table @ 0000800a records: 1, size/record: 8, table size: 8
+	.bss: load addr=00008000, load size=00000006 bytes, run addr=00002000, run size=00000028 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00008000 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00008006 records: 1, size/record: 4, table size: 4
 	index: 0, handler: __TI_zero_init
-	index: 1, handler: __TI_decompress_lzss
-	index: 2, handler: __TI_decompress_none
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -449,14 +434,14 @@ address   name
 00000712  ADCMEM0                                    
 00000713  ADCMEM0_H                                  
 00000712  ADCMEM0_L                                  
-00009560  AHB_READ_32                                
-00009676  AHB_READ_BURST_END                         
-000095ec  AHB_READ_BURST_READ                        
-00009280  AHB_READ_BURST_START                       
-0000957c  AHB_WRITE_32                               
-00009688  AHB_WRITE_BURST_END                        
-000092c8  AHB_WRITE_BURST_START                      
-0000940c  AHB_WRITE_BURST_WRITE                      
+000095f8  AHB_READ_32                                
+0000970e  AHB_READ_BURST_END                         
+00008ed8  AHB_READ_BURST_READ                        
+000091c6  AHB_READ_BURST_START                       
+00009614  AHB_WRITE_32                               
+00009720  AHB_WRITE_BURST_END                        
+00009220  AHB_WRITE_BURST_START                      
+00009166  AHB_WRITE_BURST_WRITE                      
 00000660  BAKMEM0                                    
 00000661  BAKMEM0_H                                  
 00000660  BAKMEM0_L                                  
@@ -505,8 +490,10 @@ address   name
 00000672  BAKMEM9                                    
 00000673  BAKMEM9_H                                  
 00000672  BAKMEM9_L                                  
-00009712  C$$EXIT                                    
-000089b4  CAN_Test1                                  
+000097aa  C$$EXIT                                    
+00009732  CAN_Error                                  
+00008abc  CAN_Test1                                  
+000093be  CAN_Wake                                   
 000008e0  CP0CTL0                                    
 000008e1  CP0CTL0_H                                  
 000008e0  CP0CTL0_L                                  
@@ -564,6 +551,7 @@ address   name
 00000190  CSCTL8                                     
 00000191  CSCTL8_H                                   
 00000190  CSCTL8_L                                   
+0000978c  EUSCI_A_SPI_transmitData                   
 000001a0  FRCTL0                                     
 000001a1  FRCTL0_H                                   
 000001a0  FRCTL0_L                                   
@@ -573,15 +561,16 @@ address   name
 000001a6  GCCTL1                                     
 000001a7  GCCTL1_H                                   
 000001a6  GCCTL1_L                                   
-00009446  GPIO_setAsOutputPin                        
-00009598  GPIO_setOutputHighOnPin                    
-000095b4  GPIO_setOutputLowOnPin                     
-0000971e  ISR_EUSCI_A0                               
-000080a0  Init_CAN                                   
-00009018  Init_CAN_Ports                             
-00008bdc  Init_Ports                                 
-000096f6  Init_SPI                                   
-00008e1a  Init_SPIA0                                 
+00009504  GPIO_setAsOutputPin                        
+00008f50  GPIO_setAsPeripheralModuleFunctionInputPin 
+00008fc2  GPIO_setAsPeripheralModuleFunctionOutputPin
+00009630  GPIO_setOutputHighOnPin                    
+0000964c  GPIO_setOutputLowOnPin                     
+00008080  Init_CAN                                   
+00009668  Init_GPIO                                  
+00008982  Init_Ports                                 
+0000927a  Init_SPI                                   
+0000927a  Init_SPIA0                                 
 000004c4  MAC                                        
 000004da  MAC32H                                     
 000004db  MAC32H_H                                   
@@ -834,7 +823,7 @@ address   name
 0000012a  PMMIFG                                     
 0000012b  PMMIFG_H                                   
 0000012a  PMMIFG_L                                   
-0000970a  PMM_unlockLPM5                             
+000097a2  PMM_unlockLPM5                             
 000004e4  RES0                                       
 000004e5  RES0_H                                     
 000004e4  RES0_L                                     
@@ -874,12 +863,6 @@ address   name
 00000104  SFRRPCR                                    
 00000105  SFRRPCR_H                                  
 00000104  SFRRPCR_L                                  
-00002032  SPIA0_RXData                               
-00002036  SPIA0_TXData                               
-0000202a  SPIA0_index                                
-0000202c  SPIA1_index                                
-0000202e  SPIB0_index                                
-00002030  SPIB1_index                                
 000004ce  SUMEXT                                     
 000004cf  SUMEXT_H                                   
 000004ce  SUMEXT_L                                   
@@ -1099,30 +1082,30 @@ address   name
 00000490  TB0R                                       
 00000491  TB0R_H                                     
 00000490  TB0R_L                                     
-000096ac  TCAN4x5x_Device_ClearInterrupts            
-000096cc  TCAN4x5x_Device_ClearSPIERR                
-0000907a  TCAN4x5x_Device_Configure                  
-00009310  TCAN4x5x_Device_ConfigureInterruptEnable   
-00009606  TCAN4x5x_Device_ReadInterrupts             
-00009352  TCAN4x5x_Device_ReadMode                   
-000090dc  TCAN4x5x_Device_SetMode                    
+00009742  TCAN4x5x_Device_ClearInterrupts            
+00009762  TCAN4x5x_Device_ClearSPIERR                
+000090a2  TCAN4x5x_Device_Configure                  
+00009408  TCAN4x5x_Device_ConfigureInterruptEnable   
+000096a0  TCAN4x5x_Device_ReadInterrupts             
+0000944a  TCAN4x5x_Device_ReadMode                   
+00009104  TCAN4x5x_Device_SetMode                    
 00002000  TCAN4x5x_MCAN_CACHE                        
-000096da  TCAN4x5x_MCAN_ClearInterruptsAll           
-00008faa  TCAN4x5x_MCAN_ConfigureCCCRRegister        
-00008aca  TCAN4x5x_MCAN_ConfigureDataTiming_Simple   
-0000947a  TCAN4x5x_MCAN_ConfigureGlobalFilter        
-000095d0  TCAN4x5x_MCAN_ConfigureInterruptEnable     
-00008ca6  TCAN4x5x_MCAN_ConfigureNominalTiming_Simple
-00009542  TCAN4x5x_MCAN_DLCtoBytes                   
-000091e4  TCAN4x5x_MCAN_DisableProtectedRegisters    
-00008eb4  TCAN4x5x_MCAN_EnableProtectedRegisters     
-000096e8  TCAN4x5x_MCAN_TXRXESC_DataByteValue        
-000094ae  TCAN4x5x_MCAN_TransmitBufferContents       
-00009234  TCAN4x5x_MCAN_WriteSIDFilter               
-000087a8  TCAN4x5x_MCAN_WriteTXBuffer                
-00008d6a  TCAN4x5x_MCAN_WriteXIDFilter               
-00009520  TCAN4x5x_MRAM_Clear                        
-00008456  TCAN4x5x_MRAM_Configure                    
+00009770  TCAN4x5x_MCAN_ClearInterruptsAll           
+00009034  TCAN4x5x_MCAN_ConfigureCCCRRegister        
+00008bd2  TCAN4x5x_MCAN_ConfigureDataTiming_Simple   
+00009538  TCAN4x5x_MCAN_ConfigureGlobalFilter        
+00009684  TCAN4x5x_MCAN_ConfigureInterruptEnable     
+00008ce4  TCAN4x5x_MCAN_ConfigureNominalTiming_Simple
+000095da  TCAN4x5x_MCAN_DLCtoBytes                   
+00009322  TCAN4x5x_MCAN_DisableProtectedRegisters    
+00008e58  TCAN4x5x_MCAN_EnableProtectedRegisters     
+0000977e  TCAN4x5x_MCAN_TXRXESC_DataByteValue        
+0000956c  TCAN4x5x_MCAN_TransmitBufferContents       
+00009372  TCAN4x5x_MCAN_WriteSIDFilter               
+00008776  TCAN4x5x_MCAN_WriteTXBuffer                
+00008da8  TCAN4x5x_MCAN_WriteXIDFilter               
+000095b8  TCAN4x5x_MRAM_Clear                        
+00008424  TCAN4x5x_MRAM_Configure                    
 00000510  UCA0ABCTL                                  
 00000511  UCA0ABCTL_H                                
 00000510  UCA0ABCTL_L                                
@@ -1300,17 +1283,15 @@ address   name
 000001cc  WDTCTL                                     
 000001cd  WDTCTL_H                                   
 000001cc  WDTCTL_L                                   
-00009636  WDT_A_hold                                 
+000096d0  WDT_A_hold                                 
 00003000  __STACK_END                                
 000000a0  __STACK_SIZE                               
-0000801a  __TI_CINIT_Base                            
-0000802a  __TI_CINIT_Limit                           
-00008000  __TI_Handler_Table_Base                    
-0000800c  __TI_Handler_Table_Limit                   
-00009782  __TI_ISR_TRAP                              
-0000913e  __TI_auto_init_nobinit_nopinit_hold_wdt    
-00008f34  __TI_decompress_lzss                       
-0000969a  __TI_decompress_none                       
+0000800a  __TI_CINIT_Base                            
+00008012  __TI_CINIT_Limit                           
+00008006  __TI_Handler_Table_Base                    
+0000800a  __TI_Handler_Table_Limit                   
+000097d6  __TI_ISR_TRAP                              
+000092ce  __TI_auto_init_nobinit_nopinit_hold_wdt    
 0000ffca  __TI_int20                                 
 0000ffcc  __TI_int21                                 
 0000ffce  __TI_int22                                 
@@ -1340,44 +1321,41 @@ address   name
 ffffffff  __TI_pprof_out_hndl                        
 ffffffff  __TI_prof_data_size                        
 ffffffff  __TI_prof_data_start                       
-000094fc  __TI_zero_init_nomemset                    
+00009594  __TI_zero_init_nomemset                    
 ffffffff  __c_args__                                 
 00000001  __mpu_enable                               
-000093d0  __mpu_init                                 
-0000961e  __mspabi_mpyi_f5hw                         
-00009700  __mspabi_slli                              
-000096bc  __mspabi_slll                              
-000093ca  __mspabi_slll_1                            
-000093a6  __mspabi_slll_10                           
-000093a2  __mspabi_slll_11                           
-0000939e  __mspabi_slll_12                           
-0000939a  __mspabi_slll_13                           
-00009396  __mspabi_slll_14                           
-00009392  __mspabi_slll_15                           
-000093c6  __mspabi_slll_2                            
-000093c2  __mspabi_slll_3                            
-000093be  __mspabi_slll_4                            
-000093ba  __mspabi_slll_5                            
-000093b6  __mspabi_slll_6                            
-000093b2  __mspabi_slll_7                            
-000093ae  __mspabi_slll_8                            
-000093aa  __mspabi_slll_9                            
-00009762  _c_int00_noargs_mpu                        
+000094c8  __mpu_init                                 
+000096b8  __mspabi_mpyi_f5hw                         
+00009798  __mspabi_slli                              
+00009752  __mspabi_slll                              
+000094c2  __mspabi_slll_1                            
+0000949e  __mspabi_slll_10                           
+0000949a  __mspabi_slll_11                           
+00009496  __mspabi_slll_12                           
+00009492  __mspabi_slll_13                           
+0000948e  __mspabi_slll_14                           
+0000948a  __mspabi_slll_15                           
+000094be  __mspabi_slll_2                            
+000094ba  __mspabi_slll_3                            
+000094b6  __mspabi_slll_4                            
+000094b2  __mspabi_slll_5                            
+000094ae  __mspabi_slll_6                            
+000094aa  __mspabi_slll_7                            
+000094a6  __mspabi_slll_8                            
+000094a2  __mspabi_slll_9                            
+000097b6  _c_int00_noargs_mpu                        
 0000fffe  _reset_vector                              
 00002f60  _stack                                     
-0000971c  _system_post_cinit                         
-00009718  _system_pre_init                           
-00009712  abort                                      
-00002028  can_init_ec                                
+000097b4  _system_post_cinit                         
+000097b0  _system_pre_init                           
+000097aa  abort                                      
 00008000  fram_rw_start                              
 00008000  fram_rx_start                              
 00002024  help                                       
 00000001  info_fram_protection                       
-000094d6  main                                       
-00009662  memcpy                                     
-0000964c  memset                                     
+000096e6  main                                       
+000096fa  memcpy                                     
 00000001  program_fram_protection                    
-00009192  read_write_SPIA0                           
 00000000  start_protection_offset_address            
 
 
@@ -2223,97 +2201,90 @@ address   name
 000008f3  CP0DACDATA_H                               
 00002000  TCAN4x5x_MCAN_CACHE                        
 00002024  help                                       
-00002028  can_init_ec                                
-0000202a  SPIA0_index                                
-0000202c  SPIA1_index                                
-0000202e  SPIB0_index                                
-00002030  SPIB1_index                                
-00002032  SPIA0_RXData                               
-00002036  SPIA0_TXData                               
 00002f60  _stack                                     
 00003000  __STACK_END                                
-00008000  __TI_Handler_Table_Base                    
 00008000  fram_rw_start                              
 00008000  fram_rx_start                              
-0000800c  __TI_Handler_Table_Limit                   
-0000801a  __TI_CINIT_Base                            
-0000802a  __TI_CINIT_Limit                           
-000080a0  Init_CAN                                   
-00008456  TCAN4x5x_MRAM_Configure                    
-000087a8  TCAN4x5x_MCAN_WriteTXBuffer                
-000089b4  CAN_Test1                                  
-00008aca  TCAN4x5x_MCAN_ConfigureDataTiming_Simple   
-00008bdc  Init_Ports                                 
-00008ca6  TCAN4x5x_MCAN_ConfigureNominalTiming_Simple
-00008d6a  TCAN4x5x_MCAN_WriteXIDFilter               
-00008e1a  Init_SPIA0                                 
-00008eb4  TCAN4x5x_MCAN_EnableProtectedRegisters     
-00008f34  __TI_decompress_lzss                       
-00008faa  TCAN4x5x_MCAN_ConfigureCCCRRegister        
-00009018  Init_CAN_Ports                             
-0000907a  TCAN4x5x_Device_Configure                  
-000090dc  TCAN4x5x_Device_SetMode                    
-0000913e  __TI_auto_init_nobinit_nopinit_hold_wdt    
-00009192  read_write_SPIA0                           
-000091e4  TCAN4x5x_MCAN_DisableProtectedRegisters    
-00009234  TCAN4x5x_MCAN_WriteSIDFilter               
-00009280  AHB_READ_BURST_START                       
-000092c8  AHB_WRITE_BURST_START                      
-00009310  TCAN4x5x_Device_ConfigureInterruptEnable   
-00009352  TCAN4x5x_Device_ReadMode                   
-00009392  __mspabi_slll_15                           
-00009396  __mspabi_slll_14                           
-0000939a  __mspabi_slll_13                           
-0000939e  __mspabi_slll_12                           
-000093a2  __mspabi_slll_11                           
-000093a6  __mspabi_slll_10                           
-000093aa  __mspabi_slll_9                            
-000093ae  __mspabi_slll_8                            
-000093b2  __mspabi_slll_7                            
-000093b6  __mspabi_slll_6                            
-000093ba  __mspabi_slll_5                            
-000093be  __mspabi_slll_4                            
-000093c2  __mspabi_slll_3                            
-000093c6  __mspabi_slll_2                            
-000093ca  __mspabi_slll_1                            
-000093d0  __mpu_init                                 
-0000940c  AHB_WRITE_BURST_WRITE                      
-00009446  GPIO_setAsOutputPin                        
-0000947a  TCAN4x5x_MCAN_ConfigureGlobalFilter        
-000094ae  TCAN4x5x_MCAN_TransmitBufferContents       
-000094d6  main                                       
-000094fc  __TI_zero_init_nomemset                    
-00009520  TCAN4x5x_MRAM_Clear                        
-00009542  TCAN4x5x_MCAN_DLCtoBytes                   
-00009560  AHB_READ_32                                
-0000957c  AHB_WRITE_32                               
-00009598  GPIO_setOutputHighOnPin                    
-000095b4  GPIO_setOutputLowOnPin                     
-000095d0  TCAN4x5x_MCAN_ConfigureInterruptEnable     
-000095ec  AHB_READ_BURST_READ                        
-00009606  TCAN4x5x_Device_ReadInterrupts             
-0000961e  __mspabi_mpyi_f5hw                         
-00009636  WDT_A_hold                                 
-0000964c  memset                                     
-00009662  memcpy                                     
-00009676  AHB_READ_BURST_END                         
-00009688  AHB_WRITE_BURST_END                        
-0000969a  __TI_decompress_none                       
-000096ac  TCAN4x5x_Device_ClearInterrupts            
-000096bc  __mspabi_slll                              
-000096cc  TCAN4x5x_Device_ClearSPIERR                
-000096da  TCAN4x5x_MCAN_ClearInterruptsAll           
-000096e8  TCAN4x5x_MCAN_TXRXESC_DataByteValue        
-000096f6  Init_SPI                                   
-00009700  __mspabi_slli                              
-0000970a  PMM_unlockLPM5                             
-00009712  C$$EXIT                                    
-00009712  abort                                      
-00009718  _system_pre_init                           
-0000971c  _system_post_cinit                         
-0000971e  ISR_EUSCI_A0                               
-00009762  _c_int00_noargs_mpu                        
-00009782  __TI_ISR_TRAP                              
+00008006  __TI_Handler_Table_Base                    
+0000800a  __TI_CINIT_Base                            
+0000800a  __TI_Handler_Table_Limit                   
+00008012  __TI_CINIT_Limit                           
+00008080  Init_CAN                                   
+00008424  TCAN4x5x_MRAM_Configure                    
+00008776  TCAN4x5x_MCAN_WriteTXBuffer                
+00008982  Init_Ports                                 
+00008abc  CAN_Test1                                  
+00008bd2  TCAN4x5x_MCAN_ConfigureDataTiming_Simple   
+00008ce4  TCAN4x5x_MCAN_ConfigureNominalTiming_Simple
+00008da8  TCAN4x5x_MCAN_WriteXIDFilter               
+00008e58  TCAN4x5x_MCAN_EnableProtectedRegisters     
+00008ed8  AHB_READ_BURST_READ                        
+00008f50  GPIO_setAsPeripheralModuleFunctionInputPin 
+00008fc2  GPIO_setAsPeripheralModuleFunctionOutputPin
+00009034  TCAN4x5x_MCAN_ConfigureCCCRRegister        
+000090a2  TCAN4x5x_Device_Configure                  
+00009104  TCAN4x5x_Device_SetMode                    
+00009166  AHB_WRITE_BURST_WRITE                      
+000091c6  AHB_READ_BURST_START                       
+00009220  AHB_WRITE_BURST_START                      
+0000927a  Init_SPI                                   
+0000927a  Init_SPIA0                                 
+000092ce  __TI_auto_init_nobinit_nopinit_hold_wdt    
+00009322  TCAN4x5x_MCAN_DisableProtectedRegisters    
+00009372  TCAN4x5x_MCAN_WriteSIDFilter               
+000093be  CAN_Wake                                   
+00009408  TCAN4x5x_Device_ConfigureInterruptEnable   
+0000944a  TCAN4x5x_Device_ReadMode                   
+0000948a  __mspabi_slll_15                           
+0000948e  __mspabi_slll_14                           
+00009492  __mspabi_slll_13                           
+00009496  __mspabi_slll_12                           
+0000949a  __mspabi_slll_11                           
+0000949e  __mspabi_slll_10                           
+000094a2  __mspabi_slll_9                            
+000094a6  __mspabi_slll_8                            
+000094aa  __mspabi_slll_7                            
+000094ae  __mspabi_slll_6                            
+000094b2  __mspabi_slll_5                            
+000094b6  __mspabi_slll_4                            
+000094ba  __mspabi_slll_3                            
+000094be  __mspabi_slll_2                            
+000094c2  __mspabi_slll_1                            
+000094c8  __mpu_init                                 
+00009504  GPIO_setAsOutputPin                        
+00009538  TCAN4x5x_MCAN_ConfigureGlobalFilter        
+0000956c  TCAN4x5x_MCAN_TransmitBufferContents       
+00009594  __TI_zero_init_nomemset                    
+000095b8  TCAN4x5x_MRAM_Clear                        
+000095da  TCAN4x5x_MCAN_DLCtoBytes                   
+000095f8  AHB_READ_32                                
+00009614  AHB_WRITE_32                               
+00009630  GPIO_setOutputHighOnPin                    
+0000964c  GPIO_setOutputLowOnPin                     
+00009668  Init_GPIO                                  
+00009684  TCAN4x5x_MCAN_ConfigureInterruptEnable     
+000096a0  TCAN4x5x_Device_ReadInterrupts             
+000096b8  __mspabi_mpyi_f5hw                         
+000096d0  WDT_A_hold                                 
+000096e6  main                                       
+000096fa  memcpy                                     
+0000970e  AHB_READ_BURST_END                         
+00009720  AHB_WRITE_BURST_END                        
+00009732  CAN_Error                                  
+00009742  TCAN4x5x_Device_ClearInterrupts            
+00009752  __mspabi_slll                              
+00009762  TCAN4x5x_Device_ClearSPIERR                
+00009770  TCAN4x5x_MCAN_ClearInterruptsAll           
+0000977e  TCAN4x5x_MCAN_TXRXESC_DataByteValue        
+0000978c  EUSCI_A_SPI_transmitData                   
+00009798  __mspabi_slli                              
+000097a2  PMM_unlockLPM5                             
+000097aa  C$$EXIT                                    
+000097aa  abort                                      
+000097b0  _system_pre_init                           
+000097b4  _system_post_cinit                         
+000097b6  _c_int00_noargs_mpu                        
+000097d6  __TI_ISR_TRAP                              
 0000ffca  __TI_int20                                 
 0000ffcc  __TI_int21                                 
 0000ffce  __TI_int22                                 
@@ -2346,4 +2317,4 @@ ffffffff  __TI_prof_data_size
 ffffffff  __TI_prof_data_start                       
 ffffffff  __c_args__                                 
 
-[960 symbols]
+[953 symbols]

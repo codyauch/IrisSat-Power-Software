@@ -8,21 +8,10 @@
 #include "drivers/protocol/can.h"
 
 volatile uint8_t TCAN_Int_Cnt = 0;                  // A variable used to keep track of interrupts the MCAN Interrupt pin
-volatile int can_init_ec;
 
-void Init_CAN_Ports()
+// --- Reset the TCAN4550 ---
+void CAN_Wake(void)
 {
-    // Configure P2.3 interrupt for MCAN Interrupt 1 --> P6.0 (CAN_INT)
-    /*
-    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_CAN_INT, GPIO_PIN_CAN_INT);
-    GPIO_selectInterruptEdge(GPIO_PORT_CAN_INT, GPIO_PIN_CAN_INT, GPIO_HIGH_TO_LOW_TRANSITION);
-    GPIO_clearInterrupt(GPIO_PORT_CAN_INT, GPIO_PIN_CAN_INT);
-    GPIO_enableInterrupt(GPIO_PORT_CAN_INT, GPIO_PIN_CAN_INT);
-    */
-
-    // Reset the TCAN4550
-    GPIO_setAsOutputPin(GPIO_PORT_CAN_SCLK_MISO_MOSI_WAKE_RST,GPIO_PIN_CAN_WAKE); // Set CAN_WAKE as output
-    GPIO_setAsOutputPin(GPIO_PORT_CAN_SCLK_MISO_MOSI_WAKE_RST,GPIO_PIN_CAN_RST); // Set CAN_RST as output
     // Set CAN_WAKE high
     GPIO_setOutputHighOnPin(GPIO_PORT_CAN_SCLK_MISO_MOSI_WAKE_RST,GPIO_PIN_CAN_WAKE);
     // Pulse CAN_RST (low-high-low 30 microsecond pulse)
@@ -35,10 +24,10 @@ void Init_CAN_Ports()
 
 }
 
-int Init_CAN(void)
+void Init_CAN(void)
 {
     // From sample code
-    can_init_ec = 0;
+    volatile int can_init_ec = 0;
     TCAN4x5x_Device_ClearSPIERR();                              // Clear any SPI ERR flags that might be set as a result of our pin mux changing during MCU startup
 
     /* Step one attempt to clear all interrupts */
@@ -192,6 +181,10 @@ int Init_CAN(void)
     }
 
     TCAN4x5x_MCAN_ClearInterruptsAll();                         // Resets all MCAN interrupts (does NOT include any SPIERR interrupts)
+
+    // Check for any initialization errors.
+    if(can_init_ec != 0) CAN_Error(0x00);
+
     return can_init_ec;
 }
 
@@ -315,5 +308,12 @@ void CAN_Test2(void)
                 }
             }
         }
+    }
+}
+
+void CAN_Error(uint8_t error_code)
+{
+    while(1){
+        __delay_cycles(1000);
     }
 }

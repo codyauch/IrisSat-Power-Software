@@ -48,7 +48,7 @@ GPIO_PIN_S_DPL_EN,
 GPIO_PIN_HTR_EN
 };
 
-void Init_Ports()
+void Init_Ports(void)
 {
     // Set all GPIO pins to output low to prevent floating input and reduce power consumption
     GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3|GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7);
@@ -70,26 +70,46 @@ void Init_Ports()
     GPIO_setAsOutputPin(GPIO_PORT_P7, GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3|GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7);
     GPIO_setAsOutputPin(GPIO_PORT_P8, GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3|GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7);
     GPIO_setAsOutputPin(GPIO_PORT_P9, GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3|GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7);
+
+    // TCAN4550
+    GPIO_setAsOutputPin(GPIO_PORT_CAN_SCLK_MISO_MOSI_WAKE_RST,GPIO_PIN_CAN_WAKE); // Set CAN_WAKE as output
+    GPIO_setAsOutputPin(GPIO_PORT_CAN_SCLK_MISO_MOSI_WAKE_RST,GPIO_PIN_CAN_RST); // Set CAN_RST as output
+
+    /*********************************************************
+     *                  SPI A0 Interface Pins
+     *********************************************************/
+    //P1.4(SPI CLK on UCB0CLK) --> P5.0
+    //GPIO_setAsOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_CLK);
+    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_CLK, GPIO_PRIMARY_MODULE_FUNCTION);
+    //P1.6(MOSI on UCB0SIMO) --> P5.2
+    //GPIO_setAsOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI);
+    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI, GPIO_PRIMARY_MODULE_FUNCTION );
+    //P1.7(MISO on UCB0SOMI) --> P5.1
+    //GPIO_setAsInputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MISO);
+    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MISO, GPIO_PRIMARY_MODULE_FUNCTION);
+    //set P2.5 as SPI CS, already set to output above --> P4.7
+    //GPIO_setAsOutputPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
+    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS, GPIO_PRIMARY_MODULE_FUNCTION);
+
+//    GPIO_setOutputLowOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
+    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
+    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_CLK);
+    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI);
+    GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
+
 }
 
-void Init_GPIO()
-{
-    Init_Ports();
-    Init_SPI();
-    // Initialize ports
-    Init_CAN_Ports();
-    Init_CAN();
 
-    __enable_interrupt();
-}
 
 void setSolar(uint8_t n, uint8_t val) //n=[1~7], val=[HIGH/LOW]
 {
-    unsigned int i;
-    for(i=0; i < NUM_SOLAR_CELLS; i++)
-    {
-        GPIO_setAsOutputPin(SOLAR_CELL_EN_PORTS[i], SOLAR_CELL_EN_Ax[i]);
-    }
+//    unsigned int i;
+//    for(i=0; i < NUM_SOLAR_CELLS; i++)
+//    {
+//        GPIO_setAsOutputPin(SOLAR_CELL_EN_PORTS[i], SOLAR_CELL_EN_Ax[i]);
+//    }
+
+    GPIO_setAsOutputPin(SOLAR_CELL_EN_PORTS[n-1], SOLAR_CELL_EN_Ax[n-1]);
 
     if(val == GPIO_INPUT_PIN_LOW)
     {
@@ -117,11 +137,13 @@ void setSolar(uint8_t n, uint8_t val) //n=[1~7], val=[HIGH/LOW]
 
 void setLoads(uint8_t n, uint8_t val)
 {
-    unsigned int i;
-    for(i=0; i < NUM_SUBSYTEM_EN; i++)
-    {
-        GPIO_setAsOutputPin(SUBSYTEM_EN_PORTS[i], SUBSYSTEM_EN_PINS[i]);
-    }
+//    unsigned int i;
+//    for(i=0; i < NUM_SUBSYTEM_EN; i++)
+//    {
+//        GPIO_setAsOutputPin(SUBSYTEM_EN_PORTS[i], SUBSYSTEM_EN_PINS[i]);
+//    }
+
+    GPIO_setAsOutputPin(SUBSYTEM_EN_PORTS[n-1], SUBSYSTEM_EN_PINS[n-1]);
 
     if(val == GPIO_INPUT_PIN_LOW)
     {

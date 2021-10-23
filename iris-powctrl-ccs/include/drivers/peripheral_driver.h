@@ -49,8 +49,7 @@
 #define GPIO_PIN_HTR_EN             BIT3
 
 
-void Init_Ports();
-void Init_GPIO();
+void Init_Ports(void);
 
 void setSolar(uint8_t n, uint8_t val);
 void setLoads(uint8_t n, uint8_t val);

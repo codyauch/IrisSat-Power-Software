@@ -39,9 +39,6 @@
 
 #include "drivers/device/tcan4x5x/TCAN4x5x_SPI.h"
 
-extern uint8_t SPIA0_TXData[4];
-extern uint8_t SPIA0_RXData[4];
-
 /*
  * @brief Single word write
  *
@@ -88,37 +85,22 @@ AHB_READ_32(uint16_t address)
  */
 void
 AHB_WRITE_BURST_START(uint16_t address, uint8_t words)
-{
-    //set the CS low to start the transaction
-    GPIO_setOutputLowOnPin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN);
-    // Set data to be sent by ISR
-    uint8_t TXData[4] = {AHB_WRITE_OPCODE, HWREG8(&address + 1), HWREG8(&address), words};
-    read_write_SPIA0(&TXData);
-    //SPIA0_TXData = {AHB_WRITE_OPCODE, HWREG8(&address + 1), HWREG8(&address), words};
-    /*
-    SPIA0_TXData[0] = AHB_WRITE_OPCODE;
-    SPIA0_TXData[1] = HWREG8(&address + 1);
-    SPIA0_TXData[2] = HWREG8(&address);
-    SPIA0_TXData[3] = words;
-    // Initiate ISR
-    UCA0IFG |= UCTXIFG;
-    */
-    /*
+ {
     //set the CS low to start the transaction
     GPIO_setOutputLowOnPin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN);
 
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, AHB_WRITE_OPCODE);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, AHB_WRITE_OPCODE);
 
     // Send the 16-bit address
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address + 1));
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address + 1));
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address));
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address));
+    WAIT_FOR_TRANSMIT;
 
-    WAIT_FOR_TRANSMIT;
     // Send the number of words to read
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, words);
-    */
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, words);
+
 }
 
 
@@ -133,29 +115,14 @@ AHB_WRITE_BURST_START(uint16_t address, uint8_t words)
 void
 AHB_WRITE_BURST_WRITE(uint32_t data)
 {
-    // Set data to be sent by ISR
-    uint8_t TXData[4] = {HWREG8(&data + 3), HWREG8(&data + 2), HWREG8(&data + 1), HWREG8(&data)};
-    read_write_SPIA0(&TXData);
-
-    //SPIA0_TXData = {HWREG8(&data + 3),HWREG8(&data + 2),HWREG8(&data + 1),HWREG8(&data)};
-    /*
-    SPIA0_TXData[0] = HWREG8(&data + 3);
-    SPIA0_TXData[1] = HWREG8(&data + 2);
-    SPIA0_TXData[2] = HWREG8(&data + 1);
-    SPIA0_TXData[3] = HWREG8(&data);
-    // Initiate ISR
-    UCA0IFG |= UCTXIFG;
-    */
-    /*
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data + 3));
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data + 3));
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data + 2));
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data + 2));
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data + 1));
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data + 1));
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data));
-    */
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&data));
 }
 
 
@@ -185,41 +152,19 @@ AHB_WRITE_BURST_END(void)
 void
 AHB_READ_BURST_START(uint16_t address, uint8_t words)
 {
-    GPIO_setOutputLowOnPin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN);
-    uint8_t TXData[4] = {AHB_READ_OPCODE, HWREG8(&address + 1), HWREG8(&address), words};
-    read_write_SPIA0(&TXData);
-
-    /*
     // Set the CS low to start the transaction
     GPIO_setOutputLowOnPin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN);
-    // Set data to be sent by ISR
-    SPIA0_TXData[0] = AHB_READ_OPCODE;
-    SPIA0_TXData[1] = HWREG8(&address + 1);
-    SPIA0_TXData[2] = HWREG8(&address);
-    SPIA0_TXData[3] = words;
-    // Initiate ISR
-    UCA0IFG |= UCTXIFG;
-    */
-    /*
-    // Set the CS low to start the transaction
-    GPIO_setOutputLowOnPin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN);
-    //digitalWrite(4,CAN_SE,LOW);
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, AHB_READ_OPCODE);
-    //writeSPIA0(AHB_READ_OPCODE);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, AHB_READ_OPCODE);
 
     // Send the 16-bit address
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address + 1));
-    //writeSPIA0((address >> 8) & 0xFF);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address + 1));
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address));
-    //writeSPIA0((address) & 0xFF);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, HWREG8(&address));
 
     // Send the number of words to read
     WAIT_FOR_TRANSMIT;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, words);
-    //writeSPIA0((unsigned char) words);
-     */
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, words);
 
 }
 
@@ -235,22 +180,6 @@ AHB_READ_BURST_START(uint16_t address, uint8_t words)
 uint32_t
 AHB_READ_BURST_READ(void)
 {
-    uint8_t TXData[4] = {0};
-    return read_write_SPIA0(&TXData);
-
-    // Send all zeros in order to receive data in ISR
-    /*
-    SPIA0_TXData[0] = 0;
-    SPIA0_TXData[1] = 0;
-    SPIA0_TXData[2] = 0;
-    SPIA0_TXData[3] = 0;
-    // Initiate ISR
-    UCA0IFG |= UCTXIFG;
-    // Return
-    uint32_t returnData = (((uint32_t)SPIA0_RXData[0]) << 24) | (((uint32_t)SPIA0_RXData[1] << 16)) | (((uint32_t)SPIA0_RXData[2]) << 8) | SPIA0_RXData[3];
-    return returnData;
-    */
-    /*
     uint8_t readData;
     uint8_t readData1;
     uint8_t readData2;
@@ -258,27 +187,21 @@ AHB_READ_BURST_READ(void)
     uint32_t returnData;
 
     WAIT_FOR_IDLE;
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, 0x00); // pause after this
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, 0x00); // pause after this
     WAIT_FOR_IDLE;
-
-    readData = HWREG8(SPI_HW_ADDR + OFS_UCBxRXBUF);
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, 0x00);
-
+    readData = HWREG8(SPI_HW_ADDR + OFS_UCAxRXBUF);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, 0x00);
     WAIT_FOR_IDLE;
-    readData1 = HWREG8(SPI_HW_ADDR + OFS_UCBxRXBUF);
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, 0x00);
-
+    readData1 = HWREG8(SPI_HW_ADDR + OFS_UCAxRXBUF);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, 0x00);
     WAIT_FOR_IDLE;
-    readData2 = HWREG8(SPI_HW_ADDR + OFS_UCBxRXBUF);
-    EUSCI_B_SPI_transmitData(SPI_HW_ADDR, 0x00);
-
+    readData2 = HWREG8(SPI_HW_ADDR + OFS_UCAxRXBUF);
+    EUSCI_A_SPI_transmitData(SPI_HW_ADDR, 0x00);
     WAIT_FOR_IDLE;
-    readData3 = HWREG8(SPI_HW_ADDR + OFS_UCBxRXBUF);
-
+    readData3 = HWREG8(SPI_HW_ADDR + OFS_UCAxRXBUF);
 
     returnData = (((uint32_t)readData) << 24) | (((uint32_t)readData1 << 16)) | (((uint32_t)readData2) << 8) | readData3;
     return returnData;
-    */
 }
 
 
