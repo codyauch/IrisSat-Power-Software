@@ -12,7 +12,8 @@ int main(void) {
     Init_GPIO();
 
     // Tests
-    CAN_Test1();
+//    CAN_Test1();
+    CAN_Test2();
 
     return 0;
 }
@@ -28,7 +29,7 @@ void Init_GPIO(void)
     // to activate previously configured port settings
     PMM_unlockLPM5();
 
-    __enable_interrupt();
+//    __enable_interrupt();
 }
 
 void TestSolarCells(void)

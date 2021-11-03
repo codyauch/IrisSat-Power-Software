@@ -45,7 +45,7 @@ void Init_CAN(void)
     TCAN4x5x_Device_ClearInterrupts(&dev_ir);
     /* Configure the CAN bus speeds */
     TCAN4x5x_MCAN_Nominal_Timing_Simple TCANNomTiming = {0};    // 500k arbitration with a 40 MHz crystal ((40E6 / 2) / (32 + 8) = 500E3)
-    TCANNomTiming.NominalBitRatePrescaler = 2;
+    TCANNomTiming.NominalBitRatePrescaler = 4;
     TCANNomTiming.NominalTqBeforeSamplePoint = 32;
     TCANNomTiming.NominalTqAfterSamplePoint = 8;
 
@@ -183,7 +183,7 @@ void Init_CAN(void)
     TCAN4x5x_MCAN_ClearInterruptsAll();                         // Resets all MCAN interrupts (does NOT include any SPIERR interrupts)
 
     // Check for any initialization errors.
-    if(can_init_ec != 0) CAN_Error(0x00);
+    if(can_init_ec != 0) CAN_Error(0xFF);
 
     return can_init_ec;
 }
@@ -243,8 +243,10 @@ void CAN_Test2(void)
     uint8_t data[4] = {0x55, 0x66, 0x77, 0x88};     // Define the data payload
     header.DLC = MCAN_DLC_4B;                       // Set the DLC to be equal to or less than the data payload (it is ok to pass a 64 byte data array into the WriteTXFIFO function if your DLC is 8 bytes, only the first 8 bytes will be read)
     header.TXID = 0x144;                                // Set the ID
-    header.FDF = 1;                                 // CAN FD frame enabled
-    header.BRS = 1;                                 // Bit rate switch enabled
+//    header.FDF = 1;                                 // CAN FD frame enabled
+//    header.BRS = 1;                                 // Bit rate switch enabled
+    header.FDF = 0;                                 // CAN FD frame enabled
+    header.BRS = 0;                                 // Bit rate switch enabled
     header.EFC = 0;
     header.MM  = 0;
     header.RTR = 0;
@@ -263,8 +265,10 @@ void CAN_Test2(void)
 
     header.DLC = MCAN_DLC_4B;                       // Set the DLC to be equal to or less than the data payload (it is ok to pass a 64 byte data array into the WriteTXFIFO function if your DLC is 8 bytes, only the first 8 bytes will be read)
     header.TXID = 0x123;                                // Set the ID
-    header.FDF = 1;                                 // CAN FD frame enabled
-    header.BRS = 1;                                 // Bit rate switch enabled
+//    header.FDF = 1;                                 // CAN FD frame enabled
+//    header.BRS = 1;                                 // Bit rate switch enabled
+    header.FDF = 0;                                 // CAN FD frame enabled
+    header.BRS = 0;                                 // Bit rate switch enabled
     header.EFC = 0;
     header.MM  = 0;
     header.RTR = 0;
@@ -272,16 +276,17 @@ void CAN_Test2(void)
     header.ESI = 0;                                 // Error state indicator
 
     TCAN4x5x_MCAN_WriteTXBuffer(1, &header, data);  // This line writes the data and header to TX FIFO 1
-    TCAN4x5x_MCAN_TransmitBufferContents(1);        // Request that TX Buffer 1 be transmitted
+//    TCAN4x5x_MCAN_TransmitBufferContents(1);        // Request that TX Buffer 1 be transmitted
 
 
-    TCAN4x5x_MCAN_TransmitBufferContents(0);        // Now we can send the TX FIFO element 0 data that we had queued up earlier but didn't send.
+//    TCAN4x5x_MCAN_TransmitBufferContents(0);        // Now we can send the TX FIFO element 0 data that we had queued up earlier but didn't send.
 
     while (1)
     {
+        TCAN4x5x_MCAN_TransmitBufferContents(0);
         if (TCAN_Int_Cnt > 0 )
         {
-            TCAN_Int_Cnt--;
+//            TCAN_Int_Cnt--;
             TCAN4x5x_Device_Interrupts dev_ir = {0};            // Define a new Device IR object for device (non-CAN) interrupt checking
             TCAN4x5x_MCAN_Interrupts mcan_ir = {0};             // Setup a new MCAN IR object for easy interrupt checking
             TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register
