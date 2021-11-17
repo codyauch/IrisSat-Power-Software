@@ -236,13 +236,73 @@ void CAN_Test1(void)
     }
 }
 
+void CAN_TEST3(void)
+{
+    int cnt=8;
+    /* Define the CAN message we want to send*/
+        TCAN4x5x_MCAN_TX_Header header = {0};           // Remember to initialize to 0, or you'll get random garbage!
+        uint8_t data[4] = {0x55, 0x66, 0x77, 0x88};     // Define the data payload
+        header.DLC = MCAN_DLC_4B;                       // Set the DLC to be equal to or less than the data payload (it is ok to pass a 64 byte data array into the WriteTXFIFO function if your DLC is 8 bytes, only the first 8 bytes will be read)
+        header.TXID = 0x123456A;                        // Set the ID
+        header.FDF = 0;                                 // CAN FD frame enabled
+        header.BRS = 0;                                 // Bit rate switch enabled
+        header.FDF = 0;                                 // CAN FD frame enabled
+        header.BRS = 0;                                 // Bit rate switch enabled
+        header.EFC = 0;
+        header.MM  = 0;
+        header.RTR = 0;
+        header.XTD = 1;                                 // We are using an extended ID in this example
+        header.ESI = 0;                                 // Error state indicator
+
+
+        for (cnt = 0; cnt<10; cnt++)
+        {
+            header.TXID = cnt*16;
+            data[1]= cnt;
+            TCAN4x5x_MCAN_WriteTXBuffer(0, &header, data);  // This function actually writes the header and data payload to the TCAN's MRAM in the specified TX queue number. It returns the bit necessary to write to TXBAR,
+                                                            // but does not necessarily require you to use it. In this example, we won't, so that we can send the data queued up at a later point.
+            TCAN4x5x_MCAN_TransmitBufferContents(0);        // Request that TX Buffer 1 be transmitted
+        }
+}
+
+
+void check_message(unsigned int RXID)
+{
+    TCAN4x5x_Device_Interrupts dev_ir = {0};            // Define a new Device IR object for device (non-CAN) interrupt checking
+    TCAN4x5x_MCAN_Interrupts mcan_ir = {0};             // Setup a new MCAN IR object for easy interrupt checking
+    TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register
+    TCAN4x5x_MCAN_ReadInterrupts(&mcan_ir);             // Read the interrupt register
+
+    if (dev_ir.SPIERR)                                  // If the SPIERR flag is set
+        TCAN4x5x_Device_ClearSPIERR();                  // Clear the SPIERR flag
+
+    if (mcan_ir.RF0N)                                   // If a new message in RX FIFO 0
+    {
+        TCAN4x5x_MCAN_RX_Header MsgHeader = {0};        // Initialize to 0 or you'll get garbage
+        uint8_t numBytes = 0;                           // Used since the ReadNextFIFO function will return how many bytes of data were read
+        uint8_t dataPayload[64] = {0};                  // Used to store the received data
+
+        TCAN4x5x_MCAN_ClearInterrupts(&mcan_ir);        // Clear any of the interrupt bits that are set.
+
+        numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
+
+        // numBytes will have the number of bytes it transfered in it. Or you can decode the DLC value in MsgHeader.DLC
+        // The data is now in dataPayload[], and message specific information is in the MsgHeader struct.
+        if (MsgHeader.RXID == 0x0AA)        // Example of how you can do an action based off a received address
+        {
+            // Do something
+
+        }
+    }
+}
+
 void CAN_Test2(void)
 {
     /* Define the CAN message we want to send*/
     TCAN4x5x_MCAN_TX_Header header = {0};           // Remember to initialize to 0, or you'll get random garbage!
     uint8_t data[4] = {0x55, 0x66, 0x77, 0x88};     // Define the data payload
     header.DLC = MCAN_DLC_4B;                       // Set the DLC to be equal to or less than the data payload (it is ok to pass a 64 byte data array into the WriteTXFIFO function if your DLC is 8 bytes, only the first 8 bytes will be read)
-    header.TXID = 0x144;                                // Set the ID
+    header.TXID = 0x123456A;                                // Set the ID
 //    header.FDF = 1;                                 // CAN FD frame enabled
 //    header.BRS = 1;                                 // Bit rate switch enabled
     header.FDF = 0;                                 // CAN FD frame enabled
@@ -250,7 +310,7 @@ void CAN_Test2(void)
     header.EFC = 0;
     header.MM  = 0;
     header.RTR = 0;
-    header.XTD = 0;                                 // We are not using an extended ID in this example
+    header.XTD = 1;                                 // We are not using an extended ID in this example
     header.ESI = 0;                                 // Error state indicator
 
 
@@ -304,6 +364,7 @@ void CAN_Test2(void)
                 TCAN4x5x_MCAN_ClearInterrupts(&mcan_ir);        // Clear any of the interrupt bits that are set.
 
                 numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
+
 
                 // numBytes will have the number of bytes it transfered in it. Or you can decode the DLC value in MsgHeader.DLC
                 // The data is now in dataPayload[], and message specific information is in the MsgHeader struct.

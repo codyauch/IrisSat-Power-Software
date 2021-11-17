@@ -47,12 +47,13 @@
 
 void Init_SPI();
 void Init_SPIA0();
-void Init_SPIA0();
+void Init_SPIA1();
 void Init_SPIB0();
 void Init_SPIB1();
 
 uint32_t read_write_SPIA0(uint8_t data[]);
 uint32_t read_write_SPIA1(uint8_t data[]);
+char readSPIB0();
 uint16_t read_write_SPIB0(uint8_t data[]);
 uint16_t read_write_SPIB1(uint8_t data[]);
 

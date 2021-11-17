@@ -32,8 +32,8 @@
 #define GPIO_PIN_EN_A6              BIT7
 #define GPIO_PIN_EN_A7              BIT2
 // Subsystem enable ports
-#define GPIO_PORT_ADCS_EN           GPIO_PORT_P3
-#define GPIO_PORT_CDH_EN            GPIO_PORT_P2
+#define GPIO_PORT_ADCS_EN           GPIO_PORT_P2
+#define GPIO_PORT_CDH_EN            GPIO_PORT_P3
 #define GPIO_PORT_COM_EN            GPIO_PORT_P5
 #define GPIO_PORT_PLD_EN            GPIO_PORT_P3
 #define GPIO_PORT_A_DPL_EN          GPIO_PORT_P3

@@ -97,6 +97,9 @@ void Init_Ports(void)
     GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CLK_MISO_MOSI, GPIO_PIN_SPIA0_MOSI);
     GPIO_setOutputHighOnPin(GPIO_PORT_SPIA0_CS, GPIO_PIN_SPIA0_CS);
 
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P4, GPIO_PIN6);
+
 }
 
 

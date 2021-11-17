@@ -30,6 +30,7 @@
 void CAN_Wake(void);
 void Init_CAN(void);
 void CAN_Test1(void);
+void CAN_TEST3(void);
 void CAN_Test2(void);
 void CAN_Error(uint8_t error_code);
 

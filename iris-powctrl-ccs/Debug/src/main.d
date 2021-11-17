@@ -58,6 +58,10 @@ src/main.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/
 src/main.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
 src/main.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Reg.h
 src/main.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Data_Structs.h
+src/main.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/adcbankAB_driver.h
+src/main.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/math.h
+src/main.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/_defs.h
+src/main.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/machine/_limits.h
 
 ../src/main.c: 
 C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h: 
@@ -117,3 +121,7 @@ C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat
 C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h: 
 C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Reg.h: 
 C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Data_Structs.h: 
+C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/adcbankAB_driver.h: 
+C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/math.h: 
+C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/_defs.h: 
+C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/machine/_limits.h: 
