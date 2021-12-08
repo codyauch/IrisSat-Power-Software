@@ -33,7 +33,7 @@ void readAllSensors(void *pvParameters);
 void Init_GPIO(void);
 void TestSolarCells(void);
 void TestPowerSupply(void);
-void Init_interrupts(void);
+void Init_interrupts_main(void);
 float read_temperature(unsigned char therm); /// input ADC channel from 0 to 6
 float read_solar_current(unsigned char solar);
 float read_load_current(unsigned char load);
@@ -57,10 +57,10 @@ typedef struct ADC_A_pins{
 
 int main_powctrl(void) {
 
-//     Initialization
-    WDT_A_hold(WDT_A_BASE);
-    Init_GPIO();
-    Init_interrupts();
+//     Initialization - moved to prvSetupHardware (new main.c)
+//    WDT_A_hold(WDT_A_BASE);
+//    Init_GPIO();
+//    Init_interrupts();
 
     // todo: can sometimes gets stuck in CAN_error. fix it!
 
@@ -277,7 +277,7 @@ void TestPowerSupply(void)
 
 }
 
-void Init_interrupts(void) // this function configures the timer and pin interrupts
+void Init_interrupts_main(void) // this function configures the timer and pin interrupts
 {
 
 

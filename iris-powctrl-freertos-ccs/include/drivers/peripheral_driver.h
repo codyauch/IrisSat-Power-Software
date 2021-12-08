@@ -50,6 +50,7 @@
 
 
 void Init_Ports(void);
+void Init_interrupts(void);
 
 void setSolar(uint8_t n, uint8_t val);
 void setLoads(uint8_t n, uint8_t val);

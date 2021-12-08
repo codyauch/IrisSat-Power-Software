@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <?ccsproject version="1.0"?>
 <projectOptions>
-	<deviceVariant value="MSP430FR5969"/>
+	<ccsVersion value="11.0.0"/>
+	<deviceVariant value="MSP430FR2476"/>
 	<deviceFamily value="MSP430"/>
-	<codegenToolVersion value="4.4.4"/>
+	<deviceEndianness value="little"/>
+	<codegenToolVersion value="20.2.5.LTS"/>
 	<isElfFormat value="true"/>
-	<linkerCommandFile value="lnk_msp430fr5969"/>
+	<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
+	<linkerCommandFile value="lnk_msp430fr2476.cmd"/>
 	<rts value="libc.a"/>
 	<createSlaveProjects value=""/>
-	<templateProperties value="id=OutOfBox_MSP430FR5969.projectspec.OutOfBox_MSP430FR5969,"/>
-	<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
-	<isTargetManual value="false"/>
-	<origin value="C:/Users/mckoyj/Downloads/FreeRTOSv202111.00/FreeRTOSv202111.00/FreeRTOS/Demo/MSP430X_MSP430FR5969_LaunchPad_IAR_CCS"/>
+	<templateProperties value="id=com.ti.mcu.msp430.driverlib.example_14,products=com.ti.mcu.msp430.driverlib,buildProfile=debug,isHybrid=false"/>
+	<filesToOpen value="main.c"/>
+	<origin value="C:/Users/mckoyj/Desktop/CCS_Desktop_workspace/iris-powctrl-freertos-ccs"/>
 </projectOptions>

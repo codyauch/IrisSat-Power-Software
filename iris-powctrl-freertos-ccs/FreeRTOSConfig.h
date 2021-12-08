@@ -41,18 +41,12 @@
 
 /* The array used as the heap is declared by the application to allow the
 __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4 */
-//#define configAPPLICATION_ALLOCATED_HEAP		1
-#define configAPPLICATION_ALLOCATED_HEAP        0
+#define configAPPLICATION_ALLOCATED_HEAP		1
 #define configUSE_PREEMPTION					1
 #define configMAX_PRIORITIES					( 5 )
 #define configCPU_CLOCK_HZ						( 8000000 )
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configTOTAL_HEAP_SIZE					( 14 * 1024 )
-//#define configTOTAL_HEAP_SIZE                   ( 14 * 1024 * 8 )
-#define configTOTAL_HEAP_SIZE                   ( 4 * 1024 )
-//#define configTOTAL_HEAP_SIZE                   ( 512 )
-//#define configTOTAL_HEAP_SIZE                   ( 140 )
-//#define configTOTAL_HEAP_SIZE                   ( 24 )
 #define configMAX_TASK_NAME_LEN					( 15 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0

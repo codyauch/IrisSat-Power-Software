@@ -102,7 +102,38 @@ void Init_Ports(void)
 
 }
 
+void Init_interrupts(void) // this function configures the timer and pin interrupts
+{
 
+
+    //setup the interrupt pins: P4.5 & P4.6 are for Coulomb counter
+    P4DIR &= ~(BIT5 + BIT6);
+    P4REN |= BIT5 + BIT6; //enable resistor
+    P4OUT |= BIT5 + BIT6;
+
+    P4IES |= BIT5; // sensitivity high-to-low
+
+
+    //setup IRQ
+//    P4IE |= BIT5; // enable P4.5 IRG
+
+
+    //setup timer
+    TB0CTL |= TBCLR;            // reset timer
+    TB0CTL |= TBSSEL__SMCLK;    // clock = SMCLK
+    TB0CTL |= MC__CONTINOUS;    // mode=continuous
+
+    //setup interrupt
+    TB0CTL |= TBIE;
+
+    __enable_interrupt();
+
+
+    P4IFG &= ~BIT5; // clear P4.5 IRQ flag
+    TB0CTL &= ~TBIFG;   // clear flag
+
+
+}
 
 void setSolar(uint8_t n, uint8_t val) //n=[1~7], val=[HIGH/LOW]
 {

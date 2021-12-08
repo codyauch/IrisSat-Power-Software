@@ -5,25 +5,16 @@
  *      Author: asgaria/mckoyj
  */
 
+#include "driverlib.h"
 #include "drivers/protocol/spi.h"
+#include "tasks/telemetry.h"
 
 #ifndef INCLUDE_DRIVERS_ADCS_DRIVER_H_
 #define INCLUDE_DRIVERS_ADCS_DRIVER_H_
 
-#define POWER_DOWN  0x08
-#define POWER_ON    0x09
-#define TELEMETRY   0x10
-#define READOUT     0x11
-#define MAG1_ON     0x2A
-#define MAG2_ON     0x2B
-#define MAG3_ON     0x2C
-#define MAG1_OFF    0x3A
-#define MAG2_OFF    0x3B
-#define MAG3_OFF    0x3C
-#define RESET_ADCS  0xAA
-
-
-void set_magnetorquer(unsigned char num, unsigned char val);
+void vTestADCS(void *prvParameters);
+bool set_pwm_torquerodx(uint8_t num_tr, uint8_t pwm_value);
+bool set_magnetorquerx(uint8_t num_tr, bool turnon);
 void read_sunsensor();
 
 

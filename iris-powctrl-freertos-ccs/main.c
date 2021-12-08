@@ -58,9 +58,16 @@ functionality in an interrupt. */
 /* TI includes. */
 #include "driverlib.h"
 
+/* Application includes. */
+#include "drivers/peripheral_driver.h"
+#include "drivers/protocol/spi.h"
+#include "drivers/protocol/can.h"
+#include "drivers/adcbankAB_driver.h"
+#include "drivers/adcs_driver.h"
+
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	3
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
@@ -71,6 +78,7 @@ void main_simple_task2(void *pvParameters);
  * Configure the hardware as necessary to run this demo.
  */
 static void prvSetupHardware( void );
+static void prvSetupHardwareDemo( void );
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -106,7 +114,7 @@ int main( void )
 	/* See http://www.FreeRTOS.org/MSP430FR5969_Free_RTOS_Demo.html */
 
 	/* Configure the hardware ready to run the demo. */
-//	prvSetupHardware();
+	prvSetupHardware();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -124,7 +132,8 @@ int main( void )
 	}
     #else
 	{
-	    main_powctrl();
+//	    main_powctrl();
+	    vTestADCS(NULL);
 	}
 	#endif
 
@@ -142,8 +151,10 @@ void main_simple(void)
                  tskIDLE_PRIORITY,                                 /* The task's priority. */
                  NULL );                            /* Task handle is not needed, so NULL is passed. */
 
-//    xTaskCreate( main_simple_task2, "Task2", configMINIMAL_STACK_SIZE, NULL, 1, NULL );
+    xTaskCreate( main_simple_task2, "Task2", configMINIMAL_STACK_SIZE, NULL, 1, NULL );
 
+//    xPortGetFreeHeapSize();
+//    xPortGetMinimumEverFreeHeapSize();
     /* Start the scheduler. */
     vTaskStartScheduler();
 }
@@ -254,6 +265,23 @@ const unsigned short usACLK_Frequency_Hz = 32768;
 
 static void prvSetupHardware( void )
 {
+    WDT_A_hold(WDT_A_BASE);
+    // GPIO
+    Init_Ports();
+    Init_SPI();
+//    CAN_Wake();
+//    Init_CAN();
+    //////// Initiate ADC ICs
+    Init_ADC_A();
+    Init_ADC_B();
+    // Disable the GPIO power-on default high-impedance mode
+    // to activate previously configured port settings
+    PMM_unlockLPM5();
+    // Interrupts
+    Init_interrupts();
+}
+static void prvSetupHardwareDemo( void )
+{
     /* Stop Watchdog timer. */
     WDT_A_hold( __MSP430_BASEADDRESS_WDT_A__ );
 
@@ -279,21 +307,27 @@ static void prvSetupHardware( void )
 	GPIO_setAsPeripheralModuleFunctionInputPin(  GPIO_PORT_PJ, GPIO_PIN4 + GPIO_PIN5, GPIO_PRIMARY_MODULE_FUNCTION  );
 
 //	/* Set DCO frequency to 8 MHz. */
+	CSCTL1 |= (011 << 1);
 //	CS_setDCOFreq( CS_DCORSEL_0, CS_DCOFSEL_6 );
 //
 //	/* Set external clock frequency to 32.768 KHz. */
+	CS_setExternalClockSource(32768);
 //	CS_setExternalClockSource( 32768, 0 );
 //
 //	/* Set ACLK = LFXT. */
+    CS_initClockSignal( CS_ACLK, CS_XT1CLK_SELECT, CS_CLOCK_DIVIDER_1 );
 //	CS_initClockSignal( CS_ACLK, CS_LFXTCLK_SELECT, CS_CLOCK_DIVIDER_1 );
 //
 //	/* Set SMCLK = DCO with frequency divider of 1. */
+	CS_initClockSignal( CS_SMCLK, CS_DCOCLKDIV_SELECT, CS_CLOCK_DIVIDER_1 );
 //	CS_initClockSignal( CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
 //
 //	/* Set MCLK = DCO with frequency divider of 1. */
+    CS_initClockSignal( CS_MCLK, CS_DCOCLKDIV_SELECT, CS_CLOCK_DIVIDER_1 );
 //	CS_initClockSignal( CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
 //
 //	/* Start XT1 with no time out. */
+//    CS_turnOnXT1LF(CS_XT1_DRIVE_0);
 //	CS_turnOnLFXT( CS_LFXT_DRIVE_0 );
 
 	/* Disable the GPIO power-on default high-impedance mode. */
