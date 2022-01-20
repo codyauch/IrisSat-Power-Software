@@ -1,3 +1,5 @@
+#include "main_powctrl.h"
+
 #include "driverlib.h"
 #include "drivers/peripheral_driver.h"
 #include "drivers/adcbankAB_driver.h"
@@ -28,16 +30,6 @@
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 
-int main_powctrl(void);
-void readAllSensors(void *pvParameters);
-void Init_GPIO(void);
-void TestSolarCells(void);
-void TestPowerSupply(void);
-void Init_interrupts_main(void);
-float read_temperature(unsigned char therm); /// input ADC channel from 0 to 6
-float read_solar_current(unsigned char solar);
-float read_load_current(unsigned char load);
-float read_MSB_voltage();
 
 int COULOMB=0;
 double BATT_CURR=0;
@@ -55,7 +47,7 @@ typedef struct ADC_A_pins{
 
 
 
-int main_powctrl(void) {
+int powctrl_main(void) {
 
 //     Initialization - moved to prvSetupHardware (new main.c)
 //    WDT_A_hold(WDT_A_BASE);

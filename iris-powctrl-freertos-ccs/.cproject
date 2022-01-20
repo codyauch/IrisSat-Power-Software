@@ -272,7 +272,7 @@
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/FreeRTOS_Source/include}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/CCS/MSP430X}"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/Full_Demo/FreeRTOS+CLI}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/Full_Demo/FreeRTOS-Plus-CLI}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/Full_Demo/Standard_Demo_Tasks/include}"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
 								</option>

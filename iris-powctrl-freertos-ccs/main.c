@@ -59,6 +59,7 @@ functionality in an interrupt. */
 #include "driverlib.h"
 
 /* Application includes. */
+#include "main_powctrl.h"
 #include "drivers/peripheral_driver.h"
 #include "drivers/protocol/spi.h"
 #include "drivers/protocol/can.h"
@@ -132,8 +133,8 @@ int main( void )
 	}
     #else
 	{
-//	    main_powctrl();
-	    vTestADCS(NULL);
+//	    powctrl_main();
+//	    vTestADCS(NULL);
 	}
 	#endif
 
