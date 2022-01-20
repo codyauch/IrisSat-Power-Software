@@ -180,13 +180,14 @@ float read_MSB_voltage()
 
 void set_POW_mode(unsigned char mode)
 {
+    /*
     switch (mode)
     {
     case POW_MODE_NORMAL:
         break;
 
 
-    }
+    }*/
 }
 
 void Init_GPIO(void)
