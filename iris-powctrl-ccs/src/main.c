@@ -1,19 +1,12 @@
-#include "driverlib.h"
+#include <math.h>
+#include "main.h"
 #include "drivers/peripheral_driver.h"
 #include "drivers/adcbankAB_driver.h"
 #include "drivers/protocol/spi.h"
 #include "driverlib/MSP430FR2xx_4xx/eusci_a_spi.h"
-#include <math.h>
+#include "application.h"
 
 
-void Init_GPIO(void);
-void TestSolarCells(void);
-void TestPowerSupply(void);
-void Init_interrupts(void);
-float read_temperature(unsigned char therm); /// input ADC channel from 0 to 6
-float read_solar_current(unsigned char solar);
-float read_load_current(unsigned char load);
-float read_MSB_voltage();
 
 int COULOMB=0;
 double BATT_CURR=0;
@@ -72,22 +65,14 @@ int main(void) {
     Init_ADC_A();
     Init_ADC_B();
 
-    while (1)
-    {
-        temp_tmp = read_temperature(6);
 
+    /* Command handling loop */
+    commandHandler();
+//    commandHandler_noInterrupt();
 
-        setLoads(3, 1);
-        temp_tmp = read_load_current(2);
-
-//        temp_tmp = read_MSB_voltage();
-
-
-//        read_ADC_B(1)
-    }
 }
 
-float read_temperature(unsigned char therm) /// input ADC channel from 0 to 6
+float read_temperature(uint8_t therm) /// input ADC channel from 0 to 6
 {
     float R, T, ADC_voltage;
     ADC_voltage = (3*read_ADC_A(therm))/4095.0;
@@ -98,7 +83,7 @@ float read_temperature(unsigned char therm) /// input ADC channel from 0 to 6
 }
 
 
-float read_solar_current(unsigned char solar) /// load number from 0 to 6
+float read_solar_current(uint8_t solar) /// load number from 0 to 6
 {
     const float offset_values[7]        = {13.6,    13.6,   15.4,   13.9,   14.1,   12.0,   12.9};
     const float conversion_factors[7]   = {2.026,   2.000,  1.992,  2.020,  1.992,  2.010,  1.982};
@@ -123,7 +108,7 @@ float read_solar_current(unsigned char solar) /// load number from 0 to 6
 }
 
 
-float read_load_current(unsigned char load) /// load number from 0 to 6
+float read_load_current(uint8_t load) /// load number from 0 to 6
 {
     // load switch current sense orders:
     // ADC_B pin    Load
@@ -178,8 +163,9 @@ float read_MSB_voltage()
     return MSB_voltage;
 }
 
-void set_POW_mode(unsigned char mode)
+void set_POW_mode(uint8_t mode)
 {
+    /*
     switch (mode)
     {
     case POW_MODE_NORMAL:
@@ -187,14 +173,15 @@ void set_POW_mode(unsigned char mode)
 
 
     }
+    */
 }
 
 void Init_GPIO(void)
 {
     Init_Ports();
     Init_SPI();
-//    CAN_Wake();
-//    Init_CAN();
+    CAN_Wake();
+    Init_CAN();
 
     // Disable the GPIO power-on default high-impedance mode
     // to activate previously configured port settings

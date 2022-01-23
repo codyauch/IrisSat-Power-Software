@@ -113,8 +113,8 @@ PDE_DEPS__QUOTED :=
 SUBDIRS := \
 . \
 driverlib/MSP430FR2xx_4xx \
+src \
 src/drivers \
 src/drivers/device/tcan4x5x \
 src/drivers/protocol \
-src \
 

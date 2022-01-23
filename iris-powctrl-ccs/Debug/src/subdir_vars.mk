@@ -2,25 +2,35 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-SHELL = cmd.exe
-
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/main.c 
+../src/application.c \
+../src/main.c \
+../src/telemetry.c 
 
 C_DEPS += \
-./src/main.d 
+./src/application.d \
+./src/main.d \
+./src/telemetry.d 
 
 OBJS += \
-./src/main.obj 
+./src/application.obj \
+./src/main.obj \
+./src/telemetry.obj 
 
 OBJS__QUOTED += \
-"src\main.obj" 
+"src/application.obj" \
+"src/main.obj" \
+"src/telemetry.obj" 
 
 C_DEPS__QUOTED += \
-"src\main.d" 
+"src/application.d" \
+"src/main.d" \
+"src/telemetry.d" 
 
 C_SRCS__QUOTED += \
-"../src/main.c" 
+"../src/application.c" \
+"../src/main.c" \
+"../src/telemetry.c" 
 
 

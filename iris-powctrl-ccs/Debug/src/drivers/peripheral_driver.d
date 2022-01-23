@@ -1,117 +1,174 @@
 # FIXED
 
 src/drivers/peripheral_driver.obj: ../src/drivers/peripheral_driver.c
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/peripheral_driver.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/inc/hw_memmap.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430fr2475.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/ccs_base/msp430/include/in430.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/intrinsics.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/intrinsics_legacy_undefs.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/ccs_base/msp430/include/legacy.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdint.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/_ti_config.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/linkage.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/_stdint40.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/stdint.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/cdefs.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/_types.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/machine/_types.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/machine/_stdint.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/_stdint.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdbool.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_driverlib.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_map_driverlib.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/lcd_e.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_i2c.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/ecomp.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/cs.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sac.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_b.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/framctl.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_spi.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_uart.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tia.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tlv.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_a.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/pmm.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sysctl.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sfr.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/mpy32.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/wdt_a.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/icc.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/gpio.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_spi.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/adc.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/crc.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rtc.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/spi.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdio.h
-src/drivers/peripheral_driver.obj: C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdarg.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/can.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4550.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_SPI.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Reg.h
-src/drivers/peripheral_driver.obj: C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Data_Structs.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/peripheral_driver.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/inc/hw_memmap.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/msp430.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/msp430fr2475.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/in430.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics_legacy_undefs.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/legacy.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdint.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_ti_config.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/linkage.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_stdint40.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/stdint.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/cdefs.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_types.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_types.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_stdint.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_stdint.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdbool.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_driverlib.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_map_driverlib.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/lcd_e.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_i2c.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/ecomp.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/cs.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sac.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_b.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/framctl.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_spi.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_uart.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tia.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tlv.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_a.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/pmm.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sysctl.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sfr.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/mpy32.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/wdt_a.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/icc.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/gpio.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_spi.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/adc.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/crc.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rtc.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/spi.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdio.h
+src/drivers/peripheral_driver.obj: /home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdarg.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/can.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4550.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_SPI.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Reg.h
+src/drivers/peripheral_driver.obj: /home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Data_Structs.h
 
-../src/drivers/peripheral_driver.c: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/peripheral_driver.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/inc/hw_memmap.h: 
-C:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430.h: 
-C:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430fr2475.h: 
-C:/ti/ccs1020/ccs/ccs_base/msp430/include/in430.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/intrinsics.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/intrinsics_legacy_undefs.h: 
-C:/ti/ccs1020/ccs/ccs_base/msp430/include/legacy.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdint.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/_ti_config.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/linkage.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/_stdint40.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/stdint.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/cdefs.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/_types.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/machine/_types.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/machine/_stdint.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/sys/_stdint.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdbool.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_driverlib.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_map_driverlib.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/lcd_e.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_i2c.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/ecomp.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/cs.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sac.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_b.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/framctl.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_spi.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_uart.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tia.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tlv.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_a.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/pmm.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sysctl.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sfr.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/mpy32.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/wdt_a.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/icc.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/gpio.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_spi.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/adc.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/crc.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rtc.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/spi.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdio.h: 
-C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.2.LTS/include/stdarg.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/can.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4550.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_SPI.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Reg.h: 
-C:/Users/asgaria1/OneDrive\ -\ University\ of\ Manitoba/Documents/GitHub/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Data_Structs.h: 
+../src/drivers/peripheral_driver.c:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/peripheral_driver.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/inc/hw_memmap.h:
+
+/home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/msp430.h:
+
+/home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/msp430fr2475.h:
+
+/home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/in430.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/intrinsics_legacy_undefs.h:
+
+/home/jayden/ti/ccs1040/ccs/ccs_base/msp430/include/legacy.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdint.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_ti_config.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/linkage.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/_stdint40.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/stdint.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/cdefs.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_types.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_types.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/machine/_stdint.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/sys/_stdint.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdbool.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_driverlib.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rom_map_driverlib.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/lcd_e.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_i2c.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/ecomp.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/cs.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sac.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_b.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/framctl.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_spi.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_a_uart.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tia.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/tlv.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/timer_a.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/pmm.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sysctl.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/sfr.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/mpy32.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/wdt_a.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/icc.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/gpio.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/eusci_b_spi.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/adc.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/crc.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/rtc.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/spi.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdio.h:
+
+/home/jayden/ti/ccs1040/ccs/tools/compiler/ti-cgt-msp430_20.2.5.LTS/include/stdarg.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/protocol/can.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4550.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_SPI.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/driverlib/MSP430FR2xx_4xx/driverlib.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Reg.h:
+
+/home/jayden/iris/IrisSat-Power-Software/iris-powctrl-ccs/include/drivers/device/tcan4x5x/TCAN4x5x_Data_Structs.h:
+
