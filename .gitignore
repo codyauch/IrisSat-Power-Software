@@ -1,5 +1,9 @@
 # Ignored files and folders
 
+*/Debug/*
+iris-powctrl-ccs/.cproject
+iris-powctrl-ccs/.launches/*
+
 # Workspace folders
 /.jxbrowser.userdata
 /.jxbrowser-data

@@ -8,7 +8,6 @@
 #include "telemetry.h"
 #include "drivers/device/tcan4x5x/TCAN4550.h"
 
-#define CDH_TXID 0x144
 
 TCAN4x5x_MCAN_TX_Header cdhTx_header = {0};
 
@@ -19,8 +18,8 @@ void initTelemetry(void)
 {
     cdhTx_header.DLC = MCAN_DLC_4B;                       // Set the DLC to be equal to or less than the data payload (it is ok to pass a 64 byte data array into the WriteTXFIFO function if your DLC is 8 bytes, only the first 8 bytes will be read)
     cdhTx_header.TXID = CDH_TXID;                                // Set the ID
-    cdhTx_header.FDF = 1;                                 // CAN FD frame enabled
-    cdhTx_header.BRS = 1;                                 // Bit rate switch enabled
+//    cdhTx_header.FDF = 1;                                 // CAN FD frame enabled
+//    cdhTx_header.BRS = 1;                                 // Bit rate switch enabled
     cdhTx_header.EFC = 0;
     cdhTx_header.MM  = 0;
     cdhTx_header.RTR = 0;
@@ -38,9 +37,17 @@ void unpackTelemetry(uint8_t * data, telemetryPacket_t* output)
     output->data = tempBuff;
 }
 
-void sendTelemetryRaw(uint8_t * data)
+void sendTelemetryRaw(uint8_t tlm_id, uint8_t * data)
 {
-    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, data);
+    uint8_t tlm_data[8] = {0};
+    tlm_data[0] = tlm_id;
+    uint8_t len = sizeof(data)/sizeof(uint8_t);
+    if(len > 7) return;
+    int i;
+    for(i=0; i < len; i++){
+        tlm_data[i+1] = data[i];
+    }
+    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, tlm_data);
     TCAN4x5x_MCAN_TransmitBufferContents(0);
 }
 
@@ -48,8 +55,11 @@ void sendTelemetryRaw(uint8_t * data)
 void sendTelemetry(telemetryPacket_t * packet)
 {
     // Unpack the packet into a uint8_t array
+//    int length = sizeof(packet->telem_id) + packet->length;
+//    uint8_t txData[length] = {0};
     uint8_t length = sizeof(packet->telem_id) + packet->length;
-    uint8_t txData[length];
+    uint8_t txData[20];
+//    txData = {0};
     txData[0] = packet->telem_id;
     int i;
     for(i=0; i < length-1; i++){

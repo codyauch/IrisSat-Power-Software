@@ -12,9 +12,14 @@
 #define RX_CANMSG_DELAY 1000
 extern volatile uint8_t TCAN_Int_Cnt;
 
+
+
 void commandHandler(void)
 {
     initTelemetry();
+    uint8_t data[4] = {0x55, 0x66, 0x77, 0x88};     // Define the data payload
+//    sendTelemetryRaw(data);
+
 
     // Wait for CAN message
     while (1)
@@ -63,31 +68,43 @@ void commandHandler(void)
 }
 
 
-void handleCommand(telemetryPacket_t* command)
+void handleCommand(CdhCmd_t * command)
 {
-    switch(command->telem_id)
+    switch(command->cmd_id)
     {
+        case 0:
+        {
+            uint8_t data[8] = {0x55, 0x66, 0x77, 0x88,0x11,0x22,0x33,0x44};
+//            sendTelemetryRaw(data);
+            break;
+        }
         case POWER_READ_TEMP_CMD:
         {
             // Get data
-            uint8_t therm = command->data[0];
-            float temp = read_temperature(therm);
-            // Send telemetry
-            telemetryPacket_t telemetry;
-            telemetry.telem_id = POWER_READ_TEMP_ID;
-            Calendar_t timestamp = {0};
-            telemetry.timestamp = timestamp;
-            telemetry.length = sizeof(float);
+            uint8_t therm = command->params[0];
+            float temp = 0;
+            temp = read_temperature(therm);
+            // Send CAN message
             uint8_t data[sizeof(float)];
             memcpy(data,&temp,sizeof(float));
-            telemetry.data = data;
-            sendTelemetry(&telemetry);
+            // Currently missing MSB for some reason (probably POW CAN send side)
+            sendTelemetryRaw(POWER_READ_TEMP_ID,data);
+            // Send telemetry
+//            telemetryPacket_t telemetry;
+//            telemetry.telem_id = POWER_READ_TEMP_ID;
+//            Calendar_t timestamp = {0};
+//            telemetry.timestamp = timestamp;
+//            telemetry.length = sizeof(float);
+//            uint8_t data[sizeof(float)];
+//            memcpy(data,&temp,sizeof(float));
+//            telemetry.data = data;
+//            sendTelemetry(&telemetry);
             break;
         }
         case POWER_READ_SOLAR_CURRENT_CMD:
         {
             // Get data
-            uint8_t solar = command->data[0];
+            uint8_t solar = command->params[0];
             float solar_current = read_solar_current(solar);
             // Send telemetry
             telemetryPacket_t telemetry;
@@ -104,7 +121,7 @@ void handleCommand(telemetryPacket_t* command)
         case POWER_READ_LOAD_CURRENT_CMD:
         {
             // Get data
-            uint8_t load = command->data[0];
+            uint8_t load = command->params[0];
             float load_current = read_load_current(load);
             // Send telemetry
             telemetryPacket_t telemetry;
@@ -136,7 +153,7 @@ void handleCommand(telemetryPacket_t* command)
         }
         case POWER_SET_POW_MODE_CMD:
         {
-            uint8_t mode = command->data[0];
+            uint8_t mode = command->params[0];
             set_POW_mode(mode);
             break;
         }
@@ -150,6 +167,7 @@ void handleCommand(telemetryPacket_t* command)
 
 void commandHandler_noInterrupt(void)
 {
+    initTelemetry();
     TCAN4x5x_Device_Interrupts dev_ir = {0};            // Define a new Device IR object for device (non-CAN) interrupt checking
     TCAN4x5x_MCAN_Interrupts mcan_ir = {0};             // Setup a new MCAN IR object for easy interrupt checking
     while (1)
@@ -170,10 +188,17 @@ void commandHandler_noInterrupt(void)
 
             numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
 
+            if (MsgHeader.RXID == CDH_RXID)        // Example of how you can do an action based off a received address
+            {
+                CdhCmd_t command;
+                command.cmd_id = dataPayload[0];
+                command.params[0] = dataPayload[1];
+                handleCommand(&command);
+            }
             // Process the command
-            telemetryPacket_t command;
-            unpackTelemetry(dataPayload, &command);
-            handleCommand(&command);
+//            telemetryPacket_t command;
+//            unpackTelemetry(dataPayload, &command);
+//            handleCommand(&command);
 
         }
         else

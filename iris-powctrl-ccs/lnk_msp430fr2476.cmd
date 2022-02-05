@@ -30,7 +30,7 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-* Default linker command file for Texas Instruments MSP430FR2475
+* Default linker command file for Texas Instruments MSP430FR2476
 *
 *****************************************************************************/
 
@@ -61,8 +61,9 @@ MEMORY
     INFO                    : origin = 0x1800, length = 0x200
     TLVMEM                  : origin = 0x1A00, length = 0x200
     BOOTCODE                : origin = 0x1C00, length = 0x400
-    RAM                     : origin = 0x2000, length = 0x1000
+    RAM                     : origin = 0x2000, length = 0x2000
     FRAM                    : origin = 0x8000, length = 0x7F80
+    FRAM2                   : origin = 0x10000,length = 0x8000
     ROMLIB                  : origin = 0xC0000, length = 0x4000
     BSL1                    : origin = 0xFFC00, length = 0x400
     JTAGSIGNATURE           : origin = 0xFF80, length = 0x0004, fill = 0xFFFF
@@ -147,14 +148,29 @@ SECTIONS
 
         GROUP(EXECUTABLE_MEMORY)
         {
-            .text       : {}                   /* Code                              */
             .text:_isr  : {}                   /* Code ISRs                         */
         }
     } > FRAM
 
+#ifndef __LARGE_DATA_MODEL__
+    .const            : {} > FRAM           /* Constant data                     */
+#else
+    .const            : {} >> FRAM | FRAM2  /* Constant data                     */
+#endif
+
+#ifndef __LARGE_CODE_MODEL__
+    .text             : {} > FRAM           /* Code                              */
+#else
+    .text             : {} >> FRAM2 | FRAM  /* Code                              */
+#endif
+
     #ifdef __TI_COMPILER_VERSION__
         #if __TI_COMPILER_VERSION__ >= 15009000
-            .TI.ramfunc : {} load=FRAM, run=RAM, table(BINIT)
+            #ifndef __LARGE_CODE_MODEL__
+                .TI.ramfunc : {} load=FRAM, run=RAM, table(BINIT)
+            #else
+                .TI.ramfunc : {} load=FRAM | FRAM2, run=RAM, table(BINIT)
+            #endif
         #endif
     #endif
 
@@ -245,6 +261,6 @@ SECTIONS
 /* INCLUDE PERIPHERALS MEMORY MAP                                           */
 /****************************************************************************/
 
--l msp430fr2475.cmd
+-l msp430fr2476.cmd
 
 

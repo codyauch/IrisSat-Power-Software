@@ -10,6 +10,9 @@
 
 #include "driverlib.h"
 
+#define CDH_RXID 0x824
+#define CDH_TXID 0x721
+
 /* TELEMETRY STRUCTS */
 typedef struct
 {
@@ -34,14 +37,14 @@ typedef struct
 /* TELEMETRY IDS AND COMMANDS */
 typedef enum
 {
-POWER_READ_TEMP_ID = 0,
+POWER_READ_TEMP_ID = 50,
 POWER_READ_SOLAR_CURRENT_ID,
 POWER_READ_LOAD_CURRENT_ID,
 POWER_READ_MSB_VOLTAGE_ID,
 } powerTelemetry_t;
 typedef enum
 {
-POWER_READ_TEMP_CMD = 0,
+POWER_READ_TEMP_CMD = 1,
 POWER_READ_SOLAR_CURRENT_CMD,
 POWER_READ_LOAD_CURRENT_CMD,
 POWER_READ_MSB_VOLTAGE_CMD,
@@ -51,7 +54,7 @@ POWER_SET_POW_MODE_CMD,
 /* Functions */
 void initTelemetry(void);
 void unpackTelemetry(uint8_t * data, telemetryPacket_t* output);
-void sendTelemetryRaw(uint8_t * data);
+void sendTelemetryRaw(uint8_t tlm_id, uint8_t * data);
 void sendTelemetry(telemetryPacket_t * packet);
 
 

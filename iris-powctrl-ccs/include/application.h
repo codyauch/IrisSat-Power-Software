@@ -10,9 +10,14 @@
 
 #include "telemetry.h"
 
+typedef struct {
+    uint8_t cmd_id;
+    uint8_t params[4];
+} CdhCmd_t;
+
 void commandHandler(void);
 void commandHandler_noInterrupt(void);
-void handleCommand(telemetryPacket_t* command);
+void handleCommand(CdhCmd_t * command);
 
 
 #endif /* INCLUDE_APPLICATION_H_ */

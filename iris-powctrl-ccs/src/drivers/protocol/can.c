@@ -381,22 +381,22 @@ void CAN_Test2(void)
  * PORT6 Interrupt Service Routine
  * Handles Interrupt from the TCAN4550 on P6.0
  */
-#pragma vector = PORT6_VECTOR
-__interrupt void PORT6_ISR(void)
-{
-    switch(__even_in_range(P6IV, P6IV_P6IFG7))
-    {
-    case P6IV_NONE : break;
-    case P6IV_P6IFG0 : TCAN_Int_Cnt++; break;
-    case P6IV_P6IFG1 : break;
-    case P6IV_P6IFG2 : break;
-    case P6IV_P6IFG3 : break;
-    case P6IV_P6IFG4 : break;
-    case P6IV_P6IFG5 : break;
-    case P6IV_P6IFG6 : break;
-    case P6IV_P6IFG7 : break;
-    }
-}
+//#pragma vector = PORT6_VECTOR
+//__interrupt void PORT6_ISR(void)
+//{
+//    switch(__even_in_range(P6IV, P6IV_P6IFG7))
+//    {
+//    case P6IV_NONE : break;
+//    case P6IV_P6IFG0 : TCAN_Int_Cnt++; break;
+//    case P6IV_P6IFG1 : break;
+//    case P6IV_P6IFG2 : break;
+//    case P6IV_P6IFG3 : break;
+//    case P6IV_P6IFG4 : break;
+//    case P6IV_P6IFG5 : break;
+//    case P6IV_P6IFG6 : break;
+//    case P6IV_P6IFG7 : break;
+//    }
+//}
 
 
 void CAN_Error(uint8_t error_code)

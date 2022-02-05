@@ -14,6 +14,19 @@
 
 #include "drivers/device/tcan4x5x/TCAN4550.h"
 
+typedef struct
+{
+    uint32_t id;                         // Message ID.
+    uint8_t  dlc;                        // Data length code (i.e. number of bytes).
+
+    /**< Frame Data - 0 to 8 bytes */
+    union __attribute__((aligned(8))) {
+        uint8_t data[8];
+        uint16_t data16[4];
+        uint32_t data32[2];
+    };
+} CANMessage_t;
+
 // CAN port numbers
 #define GPIO_PORT_CAN_SE                                GPIO_PORT_P4
 #define GPIO_PORT_CAN_SCLK_MISO_MOSI_WAKE_RST           GPIO_PORT_P5

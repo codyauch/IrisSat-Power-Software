@@ -15,6 +15,8 @@ unsigned int CC_milis=0;
 
 int tmp = 0;
 
+extern volatile uint8_t TCAN_Int_Cnt;
+
 /*
 typedef struct ADC_A_pins{
 
@@ -67,8 +69,8 @@ int main(void) {
 
 
     /* Command handling loop */
-    commandHandler();
-//    commandHandler_noInterrupt();
+//    commandHandler();
+    commandHandler_noInterrupt();
 
 }
 
@@ -287,4 +289,21 @@ __interrupt void ISR_TB0_Overflow(void)
     CC_milis++;
     // clear flag
     TB0CTL &= ~TBIFG;   // clear flag
+}
+
+#pragma vector = PORT6_VECTOR
+__interrupt void PORT6_ISR(void)
+{
+    switch(__even_in_range(P6IV, P6IV_P6IFG7))
+    {
+    case P6IV_NONE : break;
+    case P6IV_P6IFG0 : TCAN_Int_Cnt++; break;
+    case P6IV_P6IFG1 : break;
+    case P6IV_P6IFG2 : break;
+    case P6IV_P6IFG3 : break;
+    case P6IV_P6IFG4 : break;
+    case P6IV_P6IFG5 : break;
+    case P6IV_P6IFG6 : break;
+    case P6IV_P6IFG7 : break;
+    }
 }
