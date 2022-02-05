@@ -37,37 +37,59 @@ void unpackTelemetry(uint8_t * data, telemetryPacket_t* output)
     output->data = tempBuff;
 }
 
-void sendTelemetryRaw(uint8_t tlm_id, uint8_t * data)
+void sendTelemetryRaw(uint8_t telem_id, uint8_t * data)
 {
-    uint8_t tlm_data[8] = {0};
-    tlm_data[0] = tlm_id;
-    uint8_t len = sizeof(data)/sizeof(uint8_t);
-    if(len > 7) return;
+    // Send telem_id
+    uint8_t id[4] = {0};
+    id[3] = telem_id;
+    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, id);
+    TCAN4x5x_MCAN_TransmitBufferContents(0);
+//    __delay_cycles(1000);
+    // Send data
+    uint8_t txData[4] = {0};
+    int length = 4;
+    int i;
+    for(i=0; i < length-1; i++){
+        txData[i+1] = data[i];
+    }
+    // Send using TCAN4550
+//    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, txData);
+    TCAN4x5x_MCAN_WriteTXBuffer(1, &cdhTx_header, data);
+    TCAN4x5x_MCAN_TransmitBufferContents(1);
+}
+
+void sendTelemetryRaw1(uint8_t * data)
+{
+    uint8_t tlm_data[4] = {0};
+    uint8_t len = 4;
     int i;
     for(i=0; i < len; i++){
         tlm_data[i+1] = data[i];
     }
-    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, tlm_data);
+//    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, tlm_data);
+    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, data);
     TCAN4x5x_MCAN_TransmitBufferContents(0);
 }
 
 
 void sendTelemetry(telemetryPacket_t * packet)
 {
-    // Unpack the packet into a uint8_t array
-//    int length = sizeof(packet->telem_id) + packet->length;
-//    uint8_t txData[length] = {0};
-    uint8_t length = sizeof(packet->telem_id) + packet->length;
-    uint8_t txData[20];
-//    txData = {0};
-    txData[0] = packet->telem_id;
-    int i;
-    for(i=0; i < length-1; i++){
-        txData[i+1] = packet->data[i];
-    }
-    // Send using TCAN4550
-    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, txData);
-    TCAN4x5x_MCAN_TransmitBufferContents(0);
+//    // Send telem_id
+//    uint8_t id[4] = {0};
+//    id[3] = packet->id;
+//    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, id);
+//    TCAN4x5x_MCAN_TransmitBufferContents(0);
+//    __delay_cycles(100);
+//    // Send data
+//    uint8_t txData[4] = {0};
+//    int i;
+//    for(i=0; i < length-1; i++){
+//        txData[i+1] = packet->data[i];
+//    }
+//    // Send using TCAN4550
+////    TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, txData);
+//    TCAN4x5x_MCAN_WriteTXBuffer(1, &cdhTx_header, packet->data);
+//    TCAN4x5x_MCAN_TransmitBufferContents(1);
 }
 
 

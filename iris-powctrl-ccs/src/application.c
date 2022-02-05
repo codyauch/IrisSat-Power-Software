@@ -13,7 +13,6 @@
 extern volatile uint8_t TCAN_Int_Cnt;
 
 
-
 void commandHandler(void)
 {
     initTelemetry();
@@ -67,7 +66,6 @@ void commandHandler(void)
     }
 }
 
-
 void handleCommand(CdhCmd_t * command)
 {
     switch(command->cmd_id)
@@ -75,7 +73,6 @@ void handleCommand(CdhCmd_t * command)
         case 0:
         {
             uint8_t data[8] = {0x55, 0x66, 0x77, 0x88,0x11,0x22,0x33,0x44};
-//            sendTelemetryRaw(data);
             break;
         }
         case POWER_READ_TEMP_CMD:
@@ -85,7 +82,7 @@ void handleCommand(CdhCmd_t * command)
             float temp = 0;
             temp = read_temperature(therm);
             // Send CAN message
-            uint8_t data[sizeof(float)];
+            uint8_t data[sizeof(float)] = {0};
             memcpy(data,&temp,sizeof(float));
             // Currently missing MSB for some reason (probably POW CAN send side)
             sendTelemetryRaw(POWER_READ_TEMP_ID,data);
