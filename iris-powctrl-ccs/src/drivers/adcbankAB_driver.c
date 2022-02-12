@@ -5,8 +5,8 @@
  *      Author: asgaria/mckoyj
  */
 
-#include "drivers/adcbankAB_driver.h"
-#include "driverlib/MSP430FR2xx_4xx/eusci_b_spi.h"
+#include "adcbankAB_driver.h"
+#include "eusci_b_spi.h"
 
 
 #define WAIT_FOR_TRANSMIT_B0               while ((HWREG16(SPI_HW_ADDR + OFS_UCBxIFG) & UCTXIFG))

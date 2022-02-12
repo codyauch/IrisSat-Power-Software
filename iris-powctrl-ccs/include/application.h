@@ -18,6 +18,7 @@ typedef struct {
 void commandHandler(void);
 void commandHandler_noInterrupt(void);
 void handleCommand(CdhCmd_t * command);
+void checkCommands(void);
 
 
 #endif /* INCLUDE_APPLICATION_H_ */

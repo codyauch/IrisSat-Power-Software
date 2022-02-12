@@ -6,7 +6,7 @@
  */
 
 #include "telemetry.h"
-#include "drivers/device/tcan4x5x/TCAN4550.h"
+#include "TCAN4550.h"
 
 
 TCAN4x5x_MCAN_TX_Header cdhTx_header = {0};

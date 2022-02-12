@@ -185,7 +185,6 @@ void Init_CAN(void)
     // Check for any initialization errors.
     if(can_init_ec != 0) CAN_Error(0xFF);
 
-    return can_init_ec;
 }
 
 void CAN_Test1(void)

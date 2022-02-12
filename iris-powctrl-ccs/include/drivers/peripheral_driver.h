@@ -9,10 +9,9 @@
 #define INCLUDE_DRIVERS_PERIPHERAL_DRIVER_H_
 
 
-#include <driverlib.h>
+
 #include <msp430.h>
-#include "drivers/protocol/spi.h"
-#include "drivers/protocol/can.h"
+#include <driverlib.h>
 
 
 // Solar cell enable ports
@@ -34,7 +33,7 @@
 // Subsystem enable ports
 #define GPIO_PORT_ADCS_EN           GPIO_PORT_P2
 #define GPIO_PORT_CDH_EN            GPIO_PORT_P3
-#define GPIO_PORT_COM_EN            GPIO_PORT_P5
+#define GPIO_PORT_COMS_EN           GPIO_PORT_P5
 #define GPIO_PORT_PLD_EN            GPIO_PORT_P3
 #define GPIO_PORT_A_DPL_EN          GPIO_PORT_P3
 #define GPIO_PORT_S_DPL_EN          GPIO_PORT_P3
@@ -42,7 +41,7 @@
 // Subsystem enable pins
 #define GPIO_PIN_ADCS_EN            BIT2
 #define GPIO_PIN_CDH_EN             BIT6
-#define GPIO_PIN_COM_EN             BIT5
+#define GPIO_PIN_COMS_EN            BIT5
 #define GPIO_PIN_PLD_EN             BIT2
 #define GPIO_PIN_A_DPL_EN           BIT0
 #define GPIO_PIN_S_DPL_EN           BIT5
@@ -50,8 +49,13 @@
 
 
 void Init_Ports(void);
-
+float read_temperature(uint8_t therm); /// input ADC channel from 0 to 6
+float read_solar_current(uint8_t solar);
+float read_load_current(uint8_t load);
+float read_MSB_voltage();
+void TestSolarCells(void);
+void TestPowerSupply(void);
 void setSolar(uint8_t n, uint8_t val);
-void setLoads(uint8_t n, uint8_t val);
+void setLoad(uint8_t port, uint8_t pin, uint8_t val);
 
 #endif /* INCLUDE_DRIVERS_PERIPHERAL_DRIVER_H_ */

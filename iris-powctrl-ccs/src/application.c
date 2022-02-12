@@ -7,16 +7,21 @@
 
 #include "application.h"
 #include "main.h"
-#include "drivers/device/tcan4x5x/TCAN4550.h"
+#include "TCAN4550.h"
+#include "peripheral_driver.h"
+#include "power_modes.h"
 
 #define RX_CANMSG_DELAY 1000
 extern volatile uint8_t TCAN_Int_Cnt;
+// MOVE dev_ir and mcan_ir to commandHandler task once FreeRTOS is implemented
+TCAN4x5x_Device_Interrupts dev_ir = {0};            // Define a new Device IR object for device (non-CAN) interrupt checking
+TCAN4x5x_MCAN_Interrupts mcan_ir = {0};             // Setup a new MCAN IR object for easy interrupt checking
 
 
 void commandHandler(void)
 {
     initTelemetry();
-    uint8_t data[4] = {0x55, 0x66, 0x77, 0x88};     // Define the data payload
+//    uint8_t data[4] = {0x55, 0x66, 0x77, 0x88};     // Define the data payload
 //    sendTelemetryRaw(data);
 
 
@@ -45,9 +50,13 @@ void commandHandler(void)
                 numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
 
                 // Process the command
-                telemetryPacket_t command;
-                unpackTelemetry(dataPayload, &command);
-                handleCommand(&command);
+                if (MsgHeader.RXID == CDH_RXID)        // Example of how you can do an action based off a received address
+                            {
+                                CdhCmd_t command;
+                                command.cmd_id = dataPayload[0];
+                                command.params[0] = dataPayload[1];
+                                handleCommand(&command);
+                            }
 
 
 
@@ -72,7 +81,7 @@ void handleCommand(CdhCmd_t * command)
     {
         case 0:
         {
-            uint8_t data[8] = {0x55, 0x66, 0x77, 0x88,0x11,0x22,0x33,0x44};
+//            uint8_t data[8] = {0x55, 0x66, 0x77, 0x88,0x11,0x22,0x33,0x44};
             break;
         }
         case POWER_READ_TEMP_CMD:
@@ -151,7 +160,7 @@ void handleCommand(CdhCmd_t * command)
         case POWER_SET_POW_MODE_CMD:
         {
             uint8_t mode = command->params[0];
-            set_POW_mode(mode);
+            setPowMode(mode);
             break;
         }
         default:
@@ -165,8 +174,8 @@ void handleCommand(CdhCmd_t * command)
 void commandHandler_noInterrupt(void)
 {
     initTelemetry();
-    TCAN4x5x_Device_Interrupts dev_ir = {0};            // Define a new Device IR object for device (non-CAN) interrupt checking
-    TCAN4x5x_MCAN_Interrupts mcan_ir = {0};             // Setup a new MCAN IR object for easy interrupt checking
+//    TCAN4x5x_Device_Interrupts dev_ir = {0};            // Define a new Device IR object for device (non-CAN) interrupt checking
+//    TCAN4x5x_MCAN_Interrupts mcan_ir = {0};             // Setup a new MCAN IR object for easy interrupt checking
     while (1)
     {
         TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register
@@ -202,5 +211,38 @@ void commandHandler_noInterrupt(void)
         {
             __delay_cycles(RX_CANMSG_DELAY);
         }
+    }
+}
+
+void checkCommands(void)
+{
+    TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register
+    TCAN4x5x_MCAN_ReadInterrupts(&mcan_ir);             // Read the interrupt register
+
+    if (dev_ir.SPIERR)                                  // If the SPIERR flag is set
+        TCAN4x5x_Device_ClearSPIERR();                  // Clear the SPIERR flag
+
+    if (mcan_ir.RF0N)                                   // If a new message in RX FIFO 0
+    {
+        TCAN4x5x_MCAN_RX_Header MsgHeader = {0};        // Initialize to 0 or you'll get garbage
+        uint8_t numBytes = 0;                           // Used since the ReadNextFIFO function will return how many bytes of data were read
+        uint8_t dataPayload[64] = {0};                  // Used to store the received data
+
+        TCAN4x5x_MCAN_ClearInterrupts(&mcan_ir);        // Clear any of the interrupt bits that are set.
+
+        numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
+
+        if (MsgHeader.RXID == CDH_RXID)        // Example of how you can do an action based off a received address
+        {
+            CdhCmd_t command;
+            command.cmd_id = dataPayload[0];
+            command.params[0] = dataPayload[1];
+            handleCommand(&command);
+        }
+        // Process the command
+//            telemetryPacket_t command;
+//            unpackTelemetry(dataPayload, &command);
+//            handleCommand(&command);
+
     }
 }
