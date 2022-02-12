@@ -13,7 +13,6 @@
 #include "driverlib.h"
 
 typedef enum {
-    POST_EJECTION_HOLD_MODE,
     DETUMBLE_MODE,
     CRITICAL_HOLD_MODE,
     SURVIVAL_MODE,

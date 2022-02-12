@@ -13,7 +13,9 @@ typedef enum{
     ADCS_MODE_EN,
     COMS_MODE_EN,
     CDH_MODE_EN,
-    PLD_MODE_EN
+    PLD_MODE_EN,
+    DPL_SW_A_EN,
+    DPL_SW_S_EN,
 } ModeEnable_t;
 
 static uint8_t mode = -1;
@@ -44,18 +46,17 @@ void setMode(uint8_t m)
 
 void setPowMode()
 {
-    bool power_en[5] = {0};
+    bool power_en[7] = {0};
     // power_en:
     // [0]: Battery Heater
     // [1]: ADCS
     // [2]: COMMS
     // [3]: CDH
     // [4]: PLD
+    // [5]: DPL SW A
+    // [6]: DPL SW 1
     switch (mode)
     {
-        case POST_EJECTION_HOLD_MODE:
-            // All already off
-            break;
         case DETUMBLE_MODE:
             power_en[BATT_HTR_MODE_EN] = true;
             power_en[ADCS_MODE_EN] = true;
@@ -99,6 +100,8 @@ void setPowMode()
     setLoad(GPIO_PORT_COMS_EN,GPIO_PIN_COMS_EN,power_en[COMS_MODE_EN]);
     setLoad(GPIO_PORT_CDH_EN,GPIO_PIN_CDH_EN,power_en[CDH_MODE_EN]);
     setLoad(GPIO_PORT_PLD_EN,GPIO_PIN_PLD_EN,power_en[PLD_MODE_EN]);
+    setLoad(GPIO_PORT_A_DPL_EN,GPIO_PIN_A_DPL_EN,power_en[DPL_SW_A_EN]);
+    setLoad(GPIO_PORT_S_DPL_EN,GPIO_PIN_S_DPL_EN,power_en[DPL_SW_S_EN]);
 
 }
 

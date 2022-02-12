@@ -160,7 +160,8 @@ void handleCommand(CdhCmd_t * command)
         case POWER_SET_POW_MODE_CMD:
         {
             uint8_t mode = command->params[0];
-            setPowMode(mode);
+            setMode(mode);
+            setPowMode();
             break;
         }
         default:
