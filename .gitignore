@@ -5,6 +5,7 @@ iris-powctrl-ccs/Debug/*
 iris-powctrl-ccs/.cproject
 iris-powctrl-ccs/.launches/*
 *.obj
+*/.settings/*
 
 # Workspace folders
 /.jxbrowser.userdata

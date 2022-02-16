@@ -44,7 +44,7 @@ void sendTelemetryRaw(uint8_t telem_id, uint8_t * data)
     id[3] = telem_id;
     TCAN4x5x_MCAN_WriteTXBuffer(0, &cdhTx_header, id);
     TCAN4x5x_MCAN_TransmitBufferContents(0);
-//    __delay_cycles(1000);
+    __delay_cycles(1000);
     // Send data
     uint8_t txData[4] = {0};
     int length = 4;

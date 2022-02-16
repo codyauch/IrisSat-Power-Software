@@ -8,6 +8,8 @@
 #include "power_modes.h"
 #include "peripheral_driver.h"
 
+const float MAX_VOLTAGE = 7.3;
+
 typedef enum{
     BATT_HTR_MODE_EN,
     ADCS_MODE_EN,
@@ -36,7 +38,12 @@ void monitorSoc(void)
 
 float getBatterySoc(void)
 {
-    return COULOMB/45.0;
+    float msbVoltage = read_MSB_voltage();
+    float coulomb_count = COULOMB/45.0;
+    // Determine state of charge
+    float soc = msbVoltage/MAX_VOLTAGE;
+
+    return soc;
 }
 
 void setMode(uint8_t m)

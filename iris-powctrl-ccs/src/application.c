@@ -79,11 +79,6 @@ void handleCommand(CdhCmd_t * command)
 {
     switch(command->cmd_id)
     {
-        case 0:
-        {
-//            uint8_t data[8] = {0x55, 0x66, 0x77, 0x88,0x11,0x22,0x33,0x44};
-            break;
-        }
         case POWER_READ_TEMP_CMD:
         {
             // Get data
@@ -93,18 +88,7 @@ void handleCommand(CdhCmd_t * command)
             // Send CAN message
             uint8_t data[sizeof(float)] = {0};
             memcpy(data,&temp,sizeof(float));
-            // Currently missing MSB for some reason (probably POW CAN send side)
             sendTelemetryRaw(POWER_READ_TEMP_ID,data);
-            // Send telemetry
-//            telemetryPacket_t telemetry;
-//            telemetry.telem_id = POWER_READ_TEMP_ID;
-//            Calendar_t timestamp = {0};
-//            telemetry.timestamp = timestamp;
-//            telemetry.length = sizeof(float);
-//            uint8_t data[sizeof(float)];
-//            memcpy(data,&temp,sizeof(float));
-//            telemetry.data = data;
-//            sendTelemetry(&telemetry);
             break;
         }
         case POWER_READ_SOLAR_CURRENT_CMD:
@@ -112,16 +96,10 @@ void handleCommand(CdhCmd_t * command)
             // Get data
             uint8_t solar = command->params[0];
             float solar_current = read_solar_current(solar);
-            // Send telemetry
-            telemetryPacket_t telemetry;
-            telemetry.telem_id = POWER_READ_SOLAR_CURRENT_ID;
-            Calendar_t timestamp = {0};
-            telemetry.timestamp = timestamp;
-            telemetry.length = sizeof(float);
-            uint8_t data[sizeof(float)];
+            // Send CAN message
+            uint8_t data[sizeof(float)] = {0};
             memcpy(data,&solar_current,sizeof(float));
-            telemetry.data = data;
-            sendTelemetry(&telemetry);
+            sendTelemetryRaw(POWER_READ_SOLAR_CURRENT_ID,data);
             break;
         }
         case POWER_READ_LOAD_CURRENT_CMD:
@@ -129,38 +107,29 @@ void handleCommand(CdhCmd_t * command)
             // Get data
             uint8_t load = command->params[0];
             float load_current = read_load_current(load);
-            // Send telemetry
-            telemetryPacket_t telemetry;
-            telemetry.telem_id = POWER_READ_LOAD_CURRENT_ID;
-            Calendar_t timestamp = {0};
-            telemetry.timestamp = timestamp;
-            telemetry.length = sizeof(float);
-            uint8_t data[sizeof(float)];
+            // Send CAN message
+            uint8_t data[sizeof(float)] = {0};
             memcpy(data,&load_current,sizeof(float));
-            telemetry.data = data;
-            sendTelemetry(&telemetry);
+            sendTelemetryRaw(POWER_READ_LOAD_CURRENT_ID,data);
             break;
         }
         case POWER_READ_MSB_VOLTAGE_CMD:
         {
             // Get data
-            float MSB_voltage = read_MSB_voltage();
-            uint8_t data[sizeof(float)];
-            // Send telemetry
-            telemetryPacket_t telemetry;
-            telemetry.telem_id = POWER_READ_MSB_VOLTAGE_ID;
-            Calendar_t timestamp = {0};
-            telemetry.timestamp = timestamp;
-            telemetry.length = sizeof(float);
-            memcpy(data,&MSB_voltage,sizeof(float));
-            telemetry.data = data;
-            sendTelemetry(&telemetry);
+            float msbVoltage = read_MSB_voltage();
+            // Send CAN message
+            uint8_t data[sizeof(float)] = {0};
+            memcpy(data,&msbVoltage,sizeof(float));
+            sendTelemetryRaw(POWER_READ_MSB_VOLTAGE_ID,data);
             break;
         }
         case POWER_SET_POW_MODE_CMD:
         {
+            // Get mode
             uint8_t mode = command->params[0];
+            // Set mode
             setMode(mode);
+            // Enable mode
             setPowMode();
             break;
         }
