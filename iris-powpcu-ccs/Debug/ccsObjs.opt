@@ -1,1 +1,0 @@
-"./src/main.obj" "./src/mission_timing.obj" "./src/pin_control.obj" "../lnk_msp430g2231.cmd" -llibc.a 

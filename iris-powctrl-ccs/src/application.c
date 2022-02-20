@@ -84,7 +84,7 @@ void handleCommand(CdhCmd_t * command)
             // Get data
             uint8_t therm = command->params[0];
             float temp = 0;
-            temp = read_temperature(therm);
+            temp = readTemperature(therm);
             // Send CAN message
             uint8_t data[sizeof(float)] = {0};
             memcpy(data,&temp,sizeof(float));
@@ -95,7 +95,7 @@ void handleCommand(CdhCmd_t * command)
         {
             // Get data
             uint8_t solar = command->params[0];
-            float solar_current = read_solar_current(solar);
+            float solar_current = readSolarCurrent(solar);
             // Send CAN message
             uint8_t data[sizeof(float)] = {0};
             memcpy(data,&solar_current,sizeof(float));
@@ -106,7 +106,7 @@ void handleCommand(CdhCmd_t * command)
         {
             // Get data
             uint8_t load = command->params[0];
-            float load_current = read_load_current(load);
+            float load_current = readLoadCurrent(load);
             // Send CAN message
             uint8_t data[sizeof(float)] = {0};
             memcpy(data,&load_current,sizeof(float));
@@ -116,11 +116,39 @@ void handleCommand(CdhCmd_t * command)
         case POWER_READ_MSB_VOLTAGE_CMD:
         {
             // Get data
-            float msbVoltage = read_MSB_voltage();
+            float msbVoltage = readMsbVoltage();
             // Send CAN message
             uint8_t data[sizeof(float)] = {0};
             memcpy(data,&msbVoltage,sizeof(float));
             sendTelemetryRaw(POWER_READ_MSB_VOLTAGE_ID,data);
+            break;
+        }
+        case POWER_SET_LOAD_OFF_CMD:
+        {
+            // Get mode
+            uint8_t loadNumber = command->params[0];
+            setLoadSwitch(loadNumber,GPIO_INPUT_PIN_LOW);
+            break;
+        }
+        case POWER_SET_LOAD_ON_CMD:
+        {
+            // Get mode
+            uint8_t loadNumber = command->params[0];
+            setLoadSwitch(loadNumber,GPIO_INPUT_PIN_HIGH);
+            break;
+        }
+        case POWER_SET_SOLAR_OFF_CMD:
+        {
+            // Get mode
+            uint8_t solarArrayNumber = command->params[0];
+            setSolarArraySwitch(solarArrayNumber,GPIO_INPUT_PIN_LOW);
+            break;
+        }
+        case POWER_SET_SOLAR_ON_CMD:
+        {
+            // Get mode
+            uint8_t solarArrayNumber = command->params[0];
+            setSolarArraySwitch(solarArrayNumber,GPIO_INPUT_PIN_HIGH);
             break;
         }
         case POWER_SET_POW_MODE_CMD:

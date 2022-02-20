@@ -1,6 +1,7 @@
 # Ignored files and folders
 
 iris-powctrl-ccs/Debug/*
+iris-powpcu-ccs/Debug/*
 */Debug/*
 iris-powctrl-ccs/.cproject
 iris-powctrl-ccs/.launches/*

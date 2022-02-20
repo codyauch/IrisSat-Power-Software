@@ -38,17 +38,17 @@ void monitorSoc(void)
 
 float getBatterySoc(void)
 {
-    float msbVoltage = read_MSB_voltage();
-    float coulomb_count = COULOMB/45.0;
+    float msbVoltage = readMsbVoltage();
     // Determine state of charge
-    float soc = msbVoltage/MAX_VOLTAGE;
-
+    float soc = COULOMB/45.0;
+//    float soc = msbVoltage/MAX_VOLTAGE;
     return soc;
 }
 
 void setMode(uint8_t m)
 {
     mode = m;
+//    GPIO_t test = {1,1};
 }
 
 void setPowMode()
@@ -61,37 +61,37 @@ void setPowMode()
     // [3]: CDH
     // [4]: PLD
     // [5]: DPL SW A
-    // [6]: DPL SW 1
+    // [6]: DPL SW S
     switch (mode)
     {
         case DETUMBLE_MODE:
-            power_en[BATT_HTR_MODE_EN] = true;
-            power_en[ADCS_MODE_EN] = true;
+            power_en[LS_HTR] = true;
+            power_en[LS_ADCS] = true;
             break;
         case CRITICAL_HOLD_MODE:
             // All already off
             break;
         case SURVIVAL_MODE:
-            power_en[BATT_HTR_MODE_EN] = true;
-            power_en[COMS_MODE_EN] = true;
+            power_en[LS_HTR] = true;
+            power_en[LS_COMS] = true;
             break;
         case LOW_POWER_MODE:
-            power_en[BATT_HTR_MODE_EN] = true;
-            power_en[ADCS_MODE_EN] = true;
-            power_en[COMS_MODE_EN] = true;
-            power_en[CDH_MODE_EN] = true;
+            power_en[LS_HTR] = true;
+            power_en[LS_ADCS] = true;
+            power_en[LS_COMS] = true;
+            power_en[LS_CDH] = true;
             break;
         case IDLE_MODE:
-            power_en[BATT_HTR_MODE_EN] = true;
-            power_en[COMS_MODE_EN] = true;
-            power_en[CDH_MODE_EN] = true;
+            power_en[LS_HTR] = true;
+            power_en[LS_COMS] = true;
+            power_en[LS_CDH] = true;
             break;
         case NORMAL_MODE:
-            power_en[BATT_HTR_MODE_EN] = true;
-            power_en[ADCS_MODE_EN] = true;
-            power_en[COMS_MODE_EN] = true;
-            power_en[CDH_MODE_EN] = true;
-            power_en[PLD_MODE_EN] = true;
+            power_en[LS_HTR] = true;
+            power_en[LS_ADCS] = true;
+            power_en[LS_COMS] = true;
+            power_en[LS_CDH] = true;
+            power_en[LS_PLD] = true;
             break;
         case SUN_POINTING_MODE:
             break;
@@ -102,13 +102,11 @@ void setPowMode()
     }
 
     // Set output loads
-    setLoad(GPIO_PORT_HTR_EN,GPIO_PIN_HTR_EN,power_en[BATT_HTR_MODE_EN]);
-    setLoad(GPIO_PORT_ADCS_EN,GPIO_PIN_ADCS_EN,power_en[ADCS_MODE_EN]);
-    setLoad(GPIO_PORT_COMS_EN,GPIO_PIN_COMS_EN,power_en[COMS_MODE_EN]);
-    setLoad(GPIO_PORT_CDH_EN,GPIO_PIN_CDH_EN,power_en[CDH_MODE_EN]);
-    setLoad(GPIO_PORT_PLD_EN,GPIO_PIN_PLD_EN,power_en[PLD_MODE_EN]);
-    setLoad(GPIO_PORT_A_DPL_EN,GPIO_PIN_A_DPL_EN,power_en[DPL_SW_A_EN]);
-    setLoad(GPIO_PORT_S_DPL_EN,GPIO_PIN_S_DPL_EN,power_en[DPL_SW_S_EN]);
+    int i;
+    for(i=0; i < NUM_LOAD_SWITCHES; i++)
+    {
+        setLoadSwitch(i,power_en[i]);
+    }
 
 }
 
