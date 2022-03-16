@@ -20,7 +20,8 @@ typedef enum{
     DPL_SW_S_EN,
 } ModeEnable_t;
 
-static uint8_t mode = -1;
+static uint8_t mode = CRITICAL_HOLD_MODE;
+static uint8_t prev_mode = -1;
 int COULOMB=0;
 double BATT_CURR=0;
 extern unsigned int CC_milis;
@@ -33,7 +34,12 @@ void monitorSoc(void)
     else if(soc < 0.3) mode = SURVIVAL_MODE;
     else if(soc < 0.4) mode = LOW_POWER_MODE;
 
-    setPowMode();
+    // Check if mode has changed
+    if(mode != prev_mode)
+    {
+        setPowMode();
+        prev_mode = mode;
+    }
 }
 
 float getBatterySoc(void)
@@ -53,45 +59,62 @@ void setMode(uint8_t m)
 
 void setPowMode()
 {
-    bool power_en[7] = {0};
-    // power_en:
-    // [0]: Battery Heater
-    // [1]: ADCS
-    // [2]: COMMS
-    // [3]: CDH
-    // [4]: PLD
-    // [5]: DPL SW A
-    // [6]: DPL SW S
     switch (mode)
     {
         case DETUMBLE_MODE:
-            power_en[LS_HTR] = true;
-            power_en[LS_ADCS] = true;
+            setLoadSwitch(LS_HTR,1);
+            setLoadSwitch(LS_ADCS,1);
+            setLoadSwitch(LS_COMS,0);
+            setLoadSwitch(LS_CDH,0);
+            setLoadSwitch(LS_PLD,0);
+            setLoadSwitch(LS_DPL_A,0);
+            setLoadSwitch(LS_DPL_S,0);
             break;
         case CRITICAL_HOLD_MODE:
             // All already off
+            setLoadSwitch(LS_HTR,0);
+            setLoadSwitch(LS_ADCS,0);
+            setLoadSwitch(LS_COMS,0);
+            setLoadSwitch(LS_CDH,0);
+            setLoadSwitch(LS_PLD,0);
+            setLoadSwitch(LS_DPL_A,0);
+            setLoadSwitch(LS_DPL_S,0);
             break;
         case SURVIVAL_MODE:
-            power_en[LS_HTR] = true;
-            power_en[LS_COMS] = true;
+            setLoadSwitch(LS_HTR,1);
+            setLoadSwitch(LS_ADCS,0);
+            setLoadSwitch(LS_COMS,1);
+            setLoadSwitch(LS_CDH,0);
+            setLoadSwitch(LS_PLD,0);
+            setLoadSwitch(LS_DPL_A,0);
+            setLoadSwitch(LS_DPL_S,0);
             break;
         case LOW_POWER_MODE:
-            power_en[LS_HTR] = true;
-            power_en[LS_ADCS] = true;
-            power_en[LS_COMS] = true;
-            power_en[LS_CDH] = true;
+            setLoadSwitch(LS_HTR,1);
+            setLoadSwitch(LS_ADCS,1);
+            setLoadSwitch(LS_COMS,1);
+            setLoadSwitch(LS_CDH,1);
+            setLoadSwitch(LS_PLD,0);
+            setLoadSwitch(LS_DPL_A,0);
+            setLoadSwitch(LS_DPL_S,0);
             break;
         case IDLE_MODE:
-            power_en[LS_HTR] = true;
-            power_en[LS_COMS] = true;
-            power_en[LS_CDH] = true;
+            setLoadSwitch(LS_HTR,1);
+            setLoadSwitch(LS_ADCS,0);
+            setLoadSwitch(LS_COMS,1);
+            setLoadSwitch(LS_CDH,1);
+            setLoadSwitch(LS_PLD,0);
+            setLoadSwitch(LS_DPL_A,0);
+            setLoadSwitch(LS_DPL_S,0);
             break;
         case NORMAL_MODE:
-            power_en[LS_HTR] = true;
-            power_en[LS_ADCS] = true;
-            power_en[LS_COMS] = true;
-            power_en[LS_CDH] = true;
-            power_en[LS_PLD] = true;
+            setLoadSwitch(LS_HTR,1);
+            setLoadSwitch(LS_ADCS,1);
+            setLoadSwitch(LS_COMS,1);
+            setLoadSwitch(LS_CDH,1);
+            setLoadSwitch(LS_PLD,1);
+            setLoadSwitch(LS_DPL_A,0);
+            setLoadSwitch(LS_DPL_S,0);
             break;
         case SUN_POINTING_MODE:
             break;
@@ -99,13 +122,6 @@ void setPowMode()
             break;
         default:
             break;
-    }
-
-    // Set output loads
-    int i;
-    for(i=0; i < NUM_LOAD_SWITCHES; i++)
-    {
-        setLoadSwitch(i,power_en[i]);
     }
 
 }

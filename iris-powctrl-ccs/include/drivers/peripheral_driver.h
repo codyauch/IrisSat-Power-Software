@@ -49,7 +49,7 @@
 // Number of solar arrays
 #define NUM_SOLAR_ARRAYS 7
 // Enums
-typedef enum LoadSwitchNumbers
+typedef enum
 {
     LS_HTR,
     LS_ADCS,
@@ -59,7 +59,8 @@ typedef enum LoadSwitchNumbers
     LS_DPL_A,
     LS_DPL_S,
     NUM_LOAD_SWITCHES
-};
+} LoadSwitchNumbers_t;
+
 // Structs
 typedef struct {
     uint8_t port;

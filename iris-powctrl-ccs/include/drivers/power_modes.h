@@ -20,7 +20,8 @@ typedef enum {
     IDLE_MODE,
     NORMAL_MODE,
     SUN_POINTING_MODE,
-    SCIENCE_MODE
+    SCIENCE_MODE,
+    NUM_POWER_MODES
 } PowerMode_t;
 
 void monitorSoc(void);

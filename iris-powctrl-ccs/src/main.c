@@ -8,12 +8,13 @@
 #include "application.h"
 #include "power_modes.h"
 
+#define TEST_ADCS_SPI 0
+
 void Init_GPIO(void);
 void Init_interrupts(void);
 
 
 unsigned int CC_milis=0;
-//float temp_tmp;
 
 
 int main(void) {
@@ -48,10 +49,14 @@ int main(void) {
     // Once FreeRTOS is integrated, these will become FreeRTOS tasks
     while(1)
     {
+#if TEST_ADCS_SPI
+        testAdcsSpi();
+#else
         /* Attend to CDH commands */
         checkCommands();
         /* Check Battery State of Charge */
         monitorSoc();
+#endif
     }
 
 

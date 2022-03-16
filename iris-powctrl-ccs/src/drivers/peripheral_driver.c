@@ -15,8 +15,8 @@ GPIO_t LoadSwitchGpio[NUM_LOAD_SWITCHES] =
 {
  {GPIO_PORT_HTR_EN,GPIO_PIN_HTR_EN},
  {GPIO_PORT_ADCS_EN,GPIO_PIN_ADCS_EN},
- {GPIO_PORT_COMS_EN,GPIO_PIN_CDH_EN},
- {GPIO_PORT_CDH_EN,GPIO_PIN_COMS_EN},
+ {GPIO_PORT_COMS_EN,GPIO_PIN_COMS_EN},
+ {GPIO_PORT_CDH_EN,GPIO_PIN_CDH_EN},
  {GPIO_PORT_PLD_EN,GPIO_PIN_PLD_EN},
  {GPIO_PORT_A_DPL_EN,GPIO_PIN_A_DPL_EN},
  {GPIO_PORT_S_DPL_EN,GPIO_PIN_S_DPL_EN}
@@ -69,18 +69,18 @@ float readSolarCurrent(uint8_t solar) /// load number from 0 to 6
     return I;
 }
 
-
+const uint8_t adc_b_channels[7] = {7,8,9,10,11,12,14};
 float readLoadCurrent(uint8_t load) /// load number from 0 to 6
 {
     // load switch current sense orders:
     // ADC_B pin    Load
-    // 7            MINCO
-    // 8            ANT_DPL
-    // 9            COMS
-    // 10           ADCS
-    // 11           DATEC
-    // 12           PLD
-    // 14           CDH
+    // 7            MINCO (0)
+    // 8            ANT_DPL (1)
+    // 9            COMS (2)
+    // 10           ADCS (3)
+    // 11           DATEC (4)
+    // 12           PLD (5)
+    // 14           CDH (6)
     // loads[7] = {ADCS_EN, CDH_EN, COM_EN, PLD_EN, A_DPL_EN, S_DPL_EN, HTR_EN};
 
     // TODO: These values shall be updated for FM
@@ -90,8 +90,9 @@ float readLoadCurrent(uint8_t load) /// load number from 0 to 6
     float I, ADC_voltage;
     unsigned char load_ADC, cntr;
 
-    if(load < 6)        load_ADC = load+7;
-    else if(load == 6)  load_ADC = 14;
+    //if(load < 6)        load_ADC = load+7;
+    //else if(load == 6)  load_ADC = 14;
+    load_ADC = adc_b_channels[load];
 
     ADC_voltage = 0;
     for (cntr = 0; cntr<32; cntr++)
