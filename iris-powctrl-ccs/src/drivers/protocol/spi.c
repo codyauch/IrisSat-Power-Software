@@ -93,7 +93,8 @@ void Init_SPIA1()
     // UCMODE_1 idle-line multiprocessor mode
     // set to UCMODE_2 if you need CS=0 when active
     // UCSTEM   next frame transmitted is a break or a break/synch
-    UCA1CTLW0 |= UCMST|UCSYNC|UCCKPL|UCMSB|UCMODE_2|UCSTEM;
+//    UCA1CTLW0 |= UCMST|UCSYNC|UCCKPL|UCMSB|UCMODE_2|UCSTEM;
+    UCA1CTLW0 |= UCMST|UCSYNC|UCMSB|UCMODE_2|UCSTEM;
     // UCSSEL__ACLK sets clock source to device specific
     //UCA1CTLW0 |= UCSSEL__ACLK;                // Select ACLK
     UCA1CTLW0 |= UCSSEL__SMCLK;
