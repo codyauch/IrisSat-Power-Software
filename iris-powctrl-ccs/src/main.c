@@ -8,7 +8,7 @@
 #include "application.h"
 #include "power_modes.h"
 
-#define TEST_ADCS_SPI 0
+#define TEST_ADCS_SPI 1
 
 void Init_GPIO(void);
 void Init_interrupts(void);

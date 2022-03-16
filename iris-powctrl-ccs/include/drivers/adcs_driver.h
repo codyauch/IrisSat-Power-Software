@@ -22,7 +22,7 @@
 
 bool pingAdcs(void);
 bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle);
-void getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements);
+bool getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements);
 void getMagnetometerMeasurements(uint8_t magnetometerNumber, uint8_t * magnetometerMeasurements);
 void testAdcsSpi(void);
 

@@ -9,6 +9,8 @@
 #include "spi.h"
 #include "telemetry.h"
 
+uint8_t g_ack = -1;
+uint8_t g_cmd_id = -1;
 
 bool pingAdcs(void)
 {
@@ -45,7 +47,7 @@ bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle)
         return false;
 }
 
-void getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements)
+bool getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements)
 {
     // Get command ID
     uint8_t cmd_id = -1;
@@ -64,8 +66,15 @@ void getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements)
     int size = sizeof(gyroMeasurements);
     //if(sizeof(gyroMeasurements) != GYRO_DATA_NUM_BYTES) return;
     // Send command
-    uint8_t ack = 0;
-    ack = adcsTxRx(cmd_id);
+    g_ack = adcsTxRx(cmd_id);
+//    uint8_t ack = adcsTxRx(cmd_id);
+    uint8_t ack = g_ack;
+    if(ack != ADCS_ACK)
+        return false;
+    // Confirm command id
+    g_cmd_id = adcsTxRx(ADCS_ACK);
+    if(cmd_id != g_cmd_id)
+        return false;
     // Get measurements
     int i;
     for(i=0; i < GYRO_DATA_NUM_BYTES; i++){
@@ -109,17 +118,17 @@ void testAdcsSpi(void)
 //    adcs_available = pingAdcs();
 
     // Set torque rod PWM
-    setTorqueRodPwm(TORQUE_ROD_1,0x33);
-    __delay_cycles(10000);
-    setTorqueRodPwm(TORQUE_ROD_2,0x44);
-    __delay_cycles(10000);
-    setTorqueRodPwm(TORQUE_ROD_3,0x55);
-    __delay_cycles(50000);
+//    setTorqueRodPwm(TORQUE_ROD_1,0x33);
+//    __delay_cycles(10000);
+//    setTorqueRodPwm(TORQUE_ROD_2,0x44);
+//    __delay_cycles(10000);
+//    setTorqueRodPwm(TORQUE_ROD_3,0x55);
+//    __delay_cycles(50000);
 
      //Get Gyro 1 measurements
-//    uint8_t gyroMeasurements[6];
-//    getGyroMeasurements(GYRO_1, gyroMeasurements);
-//    __delay_cycles(50000);
+    uint8_t gyroMeasurements[6];
+    getGyroMeasurements(GYRO_1, gyroMeasurements);
+    __delay_cycles(50000);
 
     // Get Magnetometer 1 measurements
 //    uint8_t magnetometerMeasurements[6];
