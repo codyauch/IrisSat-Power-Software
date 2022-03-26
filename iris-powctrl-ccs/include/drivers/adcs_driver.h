@@ -21,6 +21,7 @@
 #define MAGNETOMETER_DATA_NUM_BYTES 6
 
 bool pingAdcs(void);
+void adcsSyncSpi(void);
 bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle);
 bool getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements);
 void getMagnetometerMeasurements(uint8_t magnetometerNumber, uint8_t * magnetometerMeasurements);

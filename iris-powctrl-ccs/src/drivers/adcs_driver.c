@@ -10,7 +10,8 @@
 #include "telemetry.h"
 
 uint8_t g_ack = -1;
-uint8_t g_cmd_id = -1;
+uint8_t g_cmd_ack = -1;
+int g_size = -1;
 
 bool pingAdcs(void)
 {
@@ -18,6 +19,12 @@ bool pingAdcs(void)
     return response == ADCS_ACK;
 }
 
+void adcsSyncSpi(void)
+{
+    do{
+        g_cmd_ack = adcsTxRx(ADCS_SYNC_SPI);
+    } while(g_cmd_ack != ADCS_SYNC_SPI);
+}
 bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle)
 {
     uint8_t cmd_id = -1;
@@ -35,18 +42,24 @@ bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle)
     default:
         return;
     }
+    // Globals for testing
+    g_ack = adcsTxRx(cmd_id);
+    g_cmd_ack = adcsTxRx(dutyCycle);
+    return true;
     // Send command code
-    uint8_t ack = adcsTxRx(cmd_id);
-    if(ack != ADCS_ACK)
-        return false;
-    // Send duty cycle
-    uint8_t cmd_ack = adcsTxRx(dutyCycle);
-    if(cmd_ack == cmd_id)
-        return true;
-    else
-        return false;
+//    uint8_t ack = adcsTxRx(cmd_id);
+//    if(ack != ADCS_ACK)
+//        return false;
+//    // Send duty cycle
+//    uint8_t cmd_ack = adcsTxRx(dutyCycle);
+//    if(cmd_ack == cmd_id)
+//        return true;
+//    else
+//        return false;
 }
-
+uint8_t gyro_x1, gyro_x2;
+uint8_t gyro_y1, gyro_y2;
+uint8_t gyro_z1, gyro_z2;
 bool getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements)
 {
     // Get command ID
@@ -62,27 +75,38 @@ bool getGyroMeasurements(uint8_t gyroNumber, uint8_t * gyroMeasurements)
     default:
         return;
     }
-    // Check size of output array
-    int size = sizeof(gyroMeasurements);
-    //if(sizeof(gyroMeasurements) != GYRO_DATA_NUM_BYTES) return;
-    // Send command
+    // Globals for testing
     g_ack = adcsTxRx(cmd_id);
+    g_cmd_ack = adcsTxRx(0x00);
+    g_size = sizeof(gyroMeasurements);
+    // Check size of output array
+//    int size = sizeof(gyroMeasurements);
+//    if(sizeof(gyroMeasurements) != GYRO_DATA_NUM_BYTES) return;
+    // Send command
 //    uint8_t ack = adcsTxRx(cmd_id);
-    uint8_t ack = g_ack;
-    if(ack != ADCS_ACK)
-        return false;
+//    if(ack != ADCS_ACK)
+//        return false;
     // Confirm command id
-    g_cmd_id = adcsTxRx(ADCS_ACK);
-    if(cmd_id != g_cmd_id)
-        return false;
+//    uint8_t cmd_ack = adcsTxRx(ADCS_ACK);
+//    if(cmd_ack != cmd_id)
+//        return false;
     // Get measurements
-    int i;
-    for(i=0; i < GYRO_DATA_NUM_BYTES; i++){
-        gyroMeasurements[i] = adcsTxRx(0x00);
-    }
+    gyro_x1 = adcsTxRx(0x00);
+    gyro_x2 = adcsTxRx(0x00);
+    gyro_y1 = adcsTxRx(0x00);
+    gyro_y2 = adcsTxRx(0x00);
+    gyro_z1 = adcsTxRx(0x00);
+    gyro_z2 = adcsTxRx(0x00);
+    g_cmd_ack = adcsTxRx(0x00);
+    return true;
+//    int i;
+//    for(i=0; i < GYRO_DATA_NUM_BYTES; i++){
+//        gyroMeasurements[i] = adcsTxRx(0x00);
+//    }
 }
 
-
+uint8_t magneto = -1;
+int magnetoCounter = 0;
 void getMagnetometerMeasurements(uint8_t magnetometerNumber, uint8_t * magnetometerMeasurements)
 {
     // Get command ID
@@ -98,21 +122,32 @@ void getMagnetometerMeasurements(uint8_t magnetometerNumber, uint8_t * magnetome
     default:
         return;
     }
+    // Testing
+    g_ack = adcsTxRx(cmd_id);
+    g_cmd_ack = adcsTxRx(0x00);
+    __delay_cycles(1000000);
+    magnetoCounter = 0;
+    do{
+        magneto = adcsTxRx(85);
+        magnetoCounter++;
+    } while(magneto != ADCS_MAGNETO_ACK && magnetoCounter < 10);
     // Check size of output array
     //if(sizeof(magnetometerMeasurements) != MAGNETOMETER_DATA_NUM_BYTES) return;
     // Send command
-    uint8_t ack = 0;
-    ack = adcsTxRx(cmd_id);
-    // Get measurements
-    int i;
-    for(i=0; i < MAGNETOMETER_DATA_NUM_BYTES; i++){
-        magnetometerMeasurements[i] = adcsTxRx(0x00);
-    }
+//    uint8_t ack = 0;
+//    ack = adcsTxRx(cmd_id);
+//    // Get measurements
+//    int i;
+//    for(i=0; i < MAGNETOMETER_DATA_NUM_BYTES; i++){
+//        magnetometerMeasurements[i] = adcsTxRx(0x00);
+//    }
 }
 
 
 void testAdcsSpi(void)
 {
+    // Sync the ADCS SPI connection
+    adcsSyncSpi();
     // Ping
 //    bool adcs_available;
 //    adcs_available = pingAdcs();
@@ -126,13 +161,14 @@ void testAdcsSpi(void)
 //    __delay_cycles(50000);
 
      //Get Gyro 1 measurements
-    uint8_t gyroMeasurements[6];
-    getGyroMeasurements(GYRO_1, gyroMeasurements);
-    __delay_cycles(50000);
+//    adcsSyncSpi();
+//    uint8_t gyroMeasurements[6];
+//    getGyroMeasurements(GYRO_1, gyroMeasurements);
+//    __delay_cycles(50000);
 
     // Get Magnetometer 1 measurements
-//    uint8_t magnetometerMeasurements[6];
-//    getMagnetometerMeasurements(MAGNETOMETER_1, magnetometerMeasurements);
+    uint8_t magnetometerMeasurements[6];
+    getMagnetometerMeasurements(MAGNETOMETER_1, magnetometerMeasurements);
 }
 
 
@@ -140,9 +176,10 @@ uint8_t adcsTxRx(uint8_t tx_data)
 {
     uint8_t rx_data;
     EUSCI_A_SPI_transmitData(ADCS_SPI_ADDR, tx_data);
+//    __delay_cycles(100);
+//    EUSCI_A_SPI_transmitData(ADCS_SPI_ADDR, 0x00);
     __delay_cycles(100);
-    EUSCI_A_SPI_transmitData(ADCS_SPI_ADDR, 0x00);
-    __delay_cycles(100);
-    rx_data = HWREG8(ADCS_SPI_ADDR + OFS_UCAxRXBUF);
-    return rx_data;
+    return EUSCI_A_SPI_receiveData(ADCS_SPI_ADDR);
+//    rx_data = HWREG8(ADCS_SPI_ADDR + OFS_UCAxRXBUF);
+//    return rx_data;
 }
