@@ -22,6 +22,7 @@ bool pingAdcs(void)
 void adcsSyncSpi(void)
 {
     do{
+
         g_cmd_ack = adcsTxRx(ADCS_SYNC_SPI);
     } while(g_cmd_ack != ADCS_SYNC_SPI);
 }
