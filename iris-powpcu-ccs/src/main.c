@@ -21,18 +21,21 @@ void main(void)
 	volatile unsigned int i;		// volatile to prevent optimization
 
 	initPins();
+	setSSR(MPB, LOW);
+	setSSR(MPB, LOW);
+	setSSR(MPB, LOW);
 	setSSR(APB, HIGH);
 
     setSSR(MPB, LOW);
 
-    setSSR(APB, LOW);
+    setSSR(APB, HIGH);
 
 	timerA2_init();
 
 	while(1)
 	{
 
-	    if (digitalRead(RBF) == LOW)
+	    if (digitalRead(RBF) == LOW) //RBF removed
 	    {
 	        if(is_counting == 0)
 	        {
@@ -65,7 +68,7 @@ void __attribute__ ((interrupt(TIMERA0_VECTOR))) Timer_A (void)
     ms+=10;
     aux_ms1+=10;
 
-    if (aux_ms1 >= 50)
+    if (aux_ms1 >= 50)      // this is for resetting the WDT
     {
         P1OUT ^= 0x80;
         aux_ms1 = 0;

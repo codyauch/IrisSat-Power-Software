@@ -36,28 +36,29 @@ void startTMR()
 
 void checkTimers()
 {
-    if (s>=3)
+    if (s>5 | m>1 | h>1) //(m>30 | h>1) this should be this for FM
         digital_TMR = 1;
     else
         digital_TMR = 0;
 
     timer_vote = digitalRead(ATMR1) + digitalRead(ATMR2) + digital_TMR;
 
-    if(timer_vote == 1) // I changed 2 and 1 to test something
+    if(timer_vote < 1) // I changed 2 and 1 to test something
     {
         // Begin a 10-second timer (Timer A interrupt routine)
         // If 10 seconds have elapsed and there has still been only 1 vote, reset the timers
-        if(one_vote_TTR_sec >= TTR_SEC)
-        {
-           startTMR();
-        }
-        setSSR(MPB, HIGH);//just for test
+       // if(one_vote_TTR_sec >= TTR_SEC)
+       // {
+        //   startTMR();
+        //}
+        setSSR(MPB, LOW);//just for test
     }
-    else if(timer_vote >= 2)
+    else if(timer_vote >= 1)
     {
         setSSR(MPB, HIGH);
         //setAPB(ON);
         // Do something after..?
+        //while (1);
     }
 
 }

@@ -51,12 +51,12 @@ void setSSR(char ssr, char state)
     if (ssr == MPB)
     {
         digitalWrite(MPB, LOW);
-        delay(1000);
+        delay(100);
         digitalWrite(MPB, HIGH);
     }else if (ssr == APB)
     {
         digitalWrite(APB, LOW);
-        delay(1000);
+        delay(100);
         digitalWrite(APB, HIGH);
     }
 }
