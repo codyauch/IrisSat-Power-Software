@@ -12,6 +12,7 @@
 #include "driverlib.h"
 
 
+#define AIT_MODE
 
 
 

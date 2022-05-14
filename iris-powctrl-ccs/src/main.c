@@ -10,7 +10,6 @@
 #include "checkout_activities.h"
 #include "ait_functions.h"
 
-#define AIT_MODE
 
 void Init_GPIO(void);
 void Init_interrupts(void);
@@ -46,6 +45,8 @@ int main(void) {
     initTelemetry();
     // Perform post-ejection chcekout activities
     CheckoutActivities();
+    // Initialize state for SoC estimation
+    InitEstimateSoc(1.0);
 
 #ifdef AIT_MODE
     while(1)
@@ -101,11 +102,12 @@ void Init_interrupts(void) // this function configures the timer and pin interru
     P4REN |= BIT5 + BIT6; //enable resistor
     P4OUT |= BIT5 + BIT6;
 
-    P4IES |= BIT5; // sensitivity high-to-low
+//    P4IES |= BIT5; // sensitivity high-to-low
+    P4IES |= BIT6; // sensitivity high-to-low
 
 
     //setup IRQ
-//    P4IE |= BIT5; // enable P4.5 IRG
+    P4IE |= BIT6; // enable P4.5 IRG
 
 
     //setup timer
@@ -119,13 +121,34 @@ void Init_interrupts(void) // this function configures the timer and pin interru
     __enable_interrupt();
 
 
-    P4IFG &= ~BIT5; // clear P4.5 IRQ flag
+//    P4IFG &= ~BIT5; // clear P4.5 IRQ flag
+    P4IFG &= ~BIT6; // clear P4.5 IRQ flag
     TB0CTL &= ~TBIFG;   // clear flag
 
 
 }
 
-
+//#pragma vector = PORT4_VECTOR
+//__interrupt void ISR_Port4_S6(void)
+//{
+//    //each time this interrupt happens, 1 Coulomb is passed
+//    if (P4IN & BIT6)
+//    {
+//        COULOMB++;
+//        BATT_CURR = -(111300/(32.75*0.01))/CC_milis;
+//    }
+//    else
+//    {
+//        COULOMB--;
+//        BATT_CURR = (111300/(32.75*0.01))/CC_milis;
+//    }
+//    // also add a timer read option here to estimate current
+//
+//
+////    P4IFG &= ~BIT5; // clear P4.5 IRQ flag
+//    P4IFG &= ~BIT6; // clear P4.5 IRQ flag
+//    CC_milis = 0;
+//}
 
 
 #pragma vector = TIMER0_B1_VECTOR
