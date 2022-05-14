@@ -27,7 +27,10 @@ typedef enum {
 void monitorSoc(void);
 float getBatterySoc(void);
 uint8_t loadOperatingMode(void);
+bool GetMode(void);
 void setMode(uint8_t m);
+bool UpdatePrevMode(void);
+bool GetModeChange(void);
 void setPowMode();
 
 

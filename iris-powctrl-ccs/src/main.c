@@ -7,21 +7,18 @@
 #include "can.h"
 #include "application.h"
 #include "power_modes.h"
+#include "checkout_activities.h"
+#include "ait_functions.h"
 
-#define TEST_ADCS_SPI 0
+#define AIT_MODE
 
 void Init_GPIO(void);
 void Init_interrupts(void);
-
 
 unsigned int CC_milis=0;
 
 
 int main(void) {
-
-//    int cnt = 0;
-//    unsigned int bank[16]={0};
-
 
 //     Initialization
     WDT_A_hold(WDT_A_BASE);
@@ -44,21 +41,34 @@ int main(void) {
     //////////////////////////////////////////////////////////////////////////////////
     // Progress                                                         //  80%     //
     //////////////////////////////////////////////////////////////////////////////////
+
     // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
     initTelemetry();
-    // Once FreeRTOS is integrated, these will become FreeRTOS tasks
+    // Perform post-ejection chcekout activities
+    CheckoutActivities();
+
+#ifdef AIT_MODE
     while(1)
     {
-#if TEST_ADCS_SPI
-        testAdcsSpi();
+        /* Attend to CDH commands */
+        checkCommands();
+        /* Check Battery State of Charge */
+        AitMonitorSoc();
+        /* ADCS control algorithm */
+        AitAdcsControl();
+    }
 #else
+    // Once FreeRTOS is integrated, these will become FreeRTOS taskS
+    while(1)
+    {
         /* Attend to CDH commands */
         checkCommands();
         /* Check Battery State of Charge */
         monitorSoc();
-#endif
+        /* ADCS control algorithm */
+        testAdcsSpi();
     }
-
+#endif
 
 }
 

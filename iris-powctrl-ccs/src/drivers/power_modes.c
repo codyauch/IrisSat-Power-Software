@@ -5,6 +5,7 @@
  *      Author: mckoyj
  */
 
+#include "main.h"
 #include "power_modes.h"
 #include "peripheral_driver.h"
 #include "intrinsics.h"
@@ -21,9 +22,10 @@ typedef enum{
     DPL_SW_S_EN,
 } ModeEnable_t;
 
-static uint8_t operating_mode = IDLE_MODE;
+static uint8_t operating_mode = LOW_POWER_MODE;
 static uint8_t prev_mode = 0xFF;
-int COULOMB=0;
+//int COULOMB=0;
+int COULOMB=23.0;
 double BATT_CURR=0;
 extern unsigned int CC_milis;
 
@@ -72,13 +74,28 @@ uint8_t loadOperatingMode(void)
     return operating_mode;
 }
 
+bool GetMode(void)
+{
+    return operating_mode;
+}
+
 void setMode(uint8_t m)
 {
     // intrinsics.h, lines 83-86
-    __set_R4_register((unsigned short) m);
-    __set_R5_register((unsigned short) m);
+//    __set_R4_register((unsigned short) m);
+//    __set_R5_register((unsigned short) m);
 
     operating_mode = m;
+}
+
+bool UpdatePrevMode(void)
+{
+    return prev_mode = operating_mode;
+}
+
+bool GetModeChange(void)
+{
+    return prev_mode != operating_mode;
 }
 
 void setPowMode()

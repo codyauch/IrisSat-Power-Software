@@ -10,6 +10,7 @@
 #include "TCAN4550.h"
 #include "peripheral_driver.h"
 #include "power_modes.h"
+#include "ait_functions.h"
 
 #define RX_CANMSG_DELAY 1000
 extern volatile uint8_t TCAN_Int_Cnt;
@@ -123,6 +124,26 @@ void handleCommand(CdhCmd_t * command)
             sendTelemetryRaw(POWER_READ_MSB_VOLTAGE_ID,data);
             break;
         }
+        case POWER_GET_BATTERY_SOC_CMD:
+        {
+            // Get data
+            float soc = 0;
+            soc = getBatterySoc();
+            // Send CAN message
+            uint8_t data[sizeof(float)] = {0};
+            memcpy(data,&soc,sizeof(float));
+            sendTelemetryRaw(POWER_GET_BATTERY_SOC_ID,data);
+            break;
+        }
+        case POWER_GET_ECLIPSE_CMD:
+        {
+            uint8_t data[4];
+            if(AitGetEclipse()) data[0] = 1;
+            else data[0] = 2;
+            // Send CAN message
+            sendTelemetryRaw(POWER_GET_ECLIPSE_ID,data);
+            break;
+        }
         case POWER_SET_LOAD_OFF_CMD:
         {
             // Get mode
@@ -159,6 +180,23 @@ void handleCommand(CdhCmd_t * command)
             setMode(mode);
             // Enable mode
             setPowMode();
+            break;
+        }
+        case AIT_POWER_SET_BATTERY_SOC_CMD:
+        {
+            float soc;
+            memcpy(&soc,command->params[0],4);
+            AitSetBatterySoc(soc);
+            break;
+        }
+        case AIT_POWER_SET_ECLIPSE:
+        {
+            uint8_t param = command->params[0];
+            bool in_eclipse;
+            if(param == 0) in_eclipse = false;
+            else if(param == 1) in_eclipse = true;
+            else return;
+            AitSetEclipse(in_eclipse);
             break;
         }
         default:
