@@ -60,6 +60,17 @@ typedef enum
     LS_DPL_S,
     NUM_LOAD_SWITCHES
 } LoadSwitchNumbers_t;
+typedef enum
+{
+    LC_MINCO,
+    LC_ANT_DPL,
+    LC_COMS,
+    LC_ADCS,
+    LC_DATEC,
+    LC_PLD,
+    LC_CDH,
+    NUM_LOAD_CURRENTS,
+} LoadCurrentNumbers_t;
 
 // Structs
 typedef struct {

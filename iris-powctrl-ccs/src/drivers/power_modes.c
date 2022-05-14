@@ -7,6 +7,7 @@
 
 #include "power_modes.h"
 #include "peripheral_driver.h"
+#include "intrinsics.h"
 
 const float MAX_VOLTAGE = 7.3;
 
@@ -20,8 +21,8 @@ typedef enum{
     DPL_SW_S_EN,
 } ModeEnable_t;
 
-static uint8_t mode = CRITICAL_HOLD_MODE;
-static uint8_t prev_mode = -1;
+static uint8_t operating_mode = IDLE_MODE;
+static uint8_t prev_mode = 0xFF;
 int COULOMB=0;
 double BATT_CURR=0;
 extern unsigned int CC_milis;
@@ -30,15 +31,15 @@ void monitorSoc(void)
 {
     float soc = getBatterySoc();
 
-    if(soc < 0.25) mode = CRITICAL_HOLD_MODE;
-    else if(soc < 0.3) mode = SURVIVAL_MODE;
-    else if(soc < 0.4) mode = LOW_POWER_MODE;
+    if(soc < 0.25) operating_mode = CRITICAL_HOLD_MODE;
+    else if(soc < 0.3) operating_mode = SURVIVAL_MODE;
+    else if(soc < 0.4) operating_mode = LOW_POWER_MODE;
 
     // Check if mode has changed
-    if(mode != prev_mode)
+    if(operating_mode != prev_mode)
     {
         setPowMode();
-        prev_mode = mode;
+        prev_mode = operating_mode;
     }
 }
 
@@ -51,15 +52,38 @@ float getBatterySoc(void)
     return soc;
 }
 
+uint8_t loadOperatingMode(void)
+{
+    // intrinsics.h, lines 83-86
+    // Using general-purpose registers R4 and R5 to store mode
+    // Not sure if they're non-volatile??
+    unsigned short mode = __get_R4_register();
+    unsigned short modeRedundant = __get_R5_register();
+    if(mode == modeRedundant)
+    {
+        operating_mode = (uint8_t) mode;
+    }
+    else
+    {
+        // What mode to go to if mode != modeRedundant???
+        operating_mode = IDLE_MODE;
+    }
+
+    return operating_mode;
+}
+
 void setMode(uint8_t m)
 {
-    mode = m;
-//    GPIO_t test = {1,1};
+    // intrinsics.h, lines 83-86
+    __set_R4_register((unsigned short) m);
+    __set_R5_register((unsigned short) m);
+
+    operating_mode = m;
 }
 
 void setPowMode()
 {
-    switch (mode)
+    switch (operating_mode)
     {
         case DETUMBLE_MODE:
             setLoadSwitch(LS_HTR,1);
