@@ -26,6 +26,7 @@ typedef enum {
 
 void monitorSoc(void);
 void InitEstimateSoc(float soc_t0);
+float EstimateSocCoulomb(void);
 float EstimateSoc(void);
 float getBatterySoc(void);
 uint8_t loadOperatingMode(void);

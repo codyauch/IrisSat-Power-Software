@@ -25,14 +25,18 @@ typedef enum{
 static uint8_t operating_mode = LOW_POWER_MODE;
 static uint8_t prev_mode = 0xFF;
 //int COULOMB=0;
-int COULOMB=23.0;
+float BATT_CAPACITY_COULOMB_MAX = 16200.0;
+float G_VF = 32.0;
+float R_SENSE = 0.01;
+float COULOMB=16200.0;
 double BATT_CURR=0;
 extern unsigned int CC_milis;
 // SOC estimation
 double C_RATED = 4500.0;
 //double mA_hours_to_secs =
 float V_CHARGED = 7.1;
-float DOD_t, SOC_t;
+float SOC_t;
+float soc_coulomb;
 
 void monitorSoc(void)
 {
@@ -53,34 +57,27 @@ void monitorSoc(void)
 void InitEstimateSoc(float soc_t0)
 {
     SOC_t = soc_t0;
-    DOD_t = 1.0 - soc_t0;
+    soc_coulomb = soc_t0;
 }
 
+float EstimateSocCoulomb(void)
+{
+    soc_coulomb = COULOMB / BATT_CAPACITY_COULOMB_MAX;
+}
 float EstimateSoc(void)
 {
     // Measure V and I at time t
     float voltage = readMsbVoltage();
     double I = BATT_CURR;
-    float dt = (float) CC_milis;
-    float delta_dod_t = -(I*dt)/C_RATED/3600.0;
-//    DOD_t = DOD_t + delta_dod_t;
     // Check charge vs. discharge and fully charged
-    if(I > 0) // Charging mode
+    if(I > 0 && voltage > V_CHARGED) // Charging mode
     {
-        // Check if fully battery fully charged
-        if(voltage > V_CHARGED) // Fully charged
-        {
-            SOC_t = 1.0;
-        }
-        else
-        {
-//            SOC_t = fSOC + DOD_t;
-            SOC_t = SOC_t + delta_dod_t;
-        }
+        SOC_t = 1.0;
     }
     else // Discharging mode
     {
-//        SOC_t = fSOC - DOD_t;
+        float dt = (float) CC_milis;
+        float delta_dod_t = -(I*dt)/C_RATED/3600.0;
         SOC_t = SOC_t + delta_dod_t;
     }
 }
@@ -215,20 +212,21 @@ __interrupt void ISR_Port4_S6(void)
     //each time this interrupt happens, 1 Coulomb is passed
     if (P4IN & BIT5)
     {
-        COULOMB++;
-        BATT_CURR = -(111300/(32.75*0.01))/CC_milis;
+        COULOMB += 1/(G_VF*R_SENSE);
+        if(COULOMB > BATT_CAPACITY_COULOMB_MAX) COULOMB = BATT_CAPACITY_COULOMB_MAX;
+        BATT_CURR = -2947.2/CC_milis;
     }
     else
     {
-        COULOMB--;
-//        BATT_CURR = (111300/(32.75*0.01))/CC_milis;
-//        BATT_CURR = (111300/(32.75))/CC_milis;
+        COULOMB -= 1/(G_VF*R_SENSE);
+        if(COULOMB < 0.0) COULOMB = 0.0;
         BATT_CURR = 2947.2/CC_milis;
     }
     // also add a timer read option here to estimate current
 
     // Estimate soc
     EstimateSoc();
+    EstimateSocCoulomb();
 
 //    P4IFG &= ~BIT5; // clear P4.5 IRQ flag
     P4IFG &= ~BIT6; // clear P4.5 IRQ flag

@@ -15,6 +15,10 @@ void CheckoutActivities(void)
     uint8_t i;
     // Measure battery SoC
     float soc = getBatterySoc();
+    // Check battery temperature
+    float temp[2];
+    temp[0] = readTemperature(0);
+    temp[1] = readTemperature(1);
     // Check if battery heater is on
     float mincoCurrent = readLoadCurrent(0);
     // Verify all internal/external power rail voltages/currents???
