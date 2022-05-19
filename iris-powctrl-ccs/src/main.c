@@ -9,6 +9,7 @@
 #include "power_modes.h"
 #include "checkout_activities.h"
 #include "ait_functions.h"
+#include "thermal_control.h"
 
 
 void Init_GPIO(void);
@@ -57,6 +58,12 @@ int main(void) {
         AitMonitorSoc();
         /* ADCS control algorithm */
         AitAdcsControl();
+        /* Thermal control algorithm */
+#ifdef THERMAL_CONTROL
+        MainThermalControl();
+#endif
+
+
     }
 #else
     // Once FreeRTOS is integrated, these will become FreeRTOS taskS

@@ -13,6 +13,7 @@
 
 
 #define AIT_MODE
+#define THERMAL_CONTROL
 
 
 
