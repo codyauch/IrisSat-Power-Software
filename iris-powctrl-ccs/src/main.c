@@ -22,6 +22,8 @@ int main(void) {
 
 //     Initialization
     WDT_A_hold(WDT_A_BASE);
+    // Get mode from NVM
+    uint8_t initial_mode = GetStoredMode();
     Init_interrupts();
     Init_GPIO();
 
