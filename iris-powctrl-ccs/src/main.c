@@ -10,6 +10,7 @@
 #include "checkout_activities.h"
 #include "ait_functions.h"
 #include "thermal_control.h"
+#include "fram_driver.h"
 
 
 void Init_GPIO(void);
@@ -23,7 +24,6 @@ int main(void) {
 //     Initialization
     WDT_A_hold(WDT_A_BASE);
     // Get mode from NVM
-    uint8_t initial_mode = GetStoredMode();
     Init_interrupts();
     Init_GPIO();
 
@@ -44,6 +44,9 @@ int main(void) {
     // Progress                                                         //  80%     //
     //////////////////////////////////////////////////////////////////////////////////
 
+    // Initialize non-volatile storage used for telemetry logging
+    NvsLogInit();
+    TestNvsLog();
     // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
     initTelemetry();
     // Perform post-ejection chcekout activities
