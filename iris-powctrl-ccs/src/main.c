@@ -10,7 +10,24 @@
 #include "checkout_activities.h"
 #include "ait_functions.h"
 #include "thermal_control.h"
+// FreeRTOS
+/* Scheduler include files. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 
+/* Prototypes for the standard FreeRTOS callback/hook functions implemented
+within this file. */
+void vApplicationMallocFailedHook( void );
+void vApplicationIdleHook( void );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationTickHook( void );
+
+/* The heap is allocated here so the "persistent" qualifier can be used.  This
+requires configAPPLICATION_ALLOCATED_HEAP to be set to 1 in FreeRTOSConfig.h.
+See http://www.freertos.org/a00111.html for more information. */
+#pragma PERSISTENT( ucHeap )    /* CCS version. */
+uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
 
 void Init_GPIO(void);
 void Init_interrupts(void);
@@ -24,24 +41,6 @@ int main(void) {
     WDT_A_hold(WDT_A_BASE);
     Init_interrupts();
     Init_GPIO();
-
-    //////////////////////////////////////////////////////////////////////////////////
-    // the set of activities that this program runs are as follows      //  Status  //
-    //////////////////////////////////////////////////////////////////////////////////
-    // reset WDT: done through timer overflow interrupt                 //  done!   //
-    // Read ADC bank A:                                                 //  done!   //
-    // Read ADC bank B:                                                 //  done!   //
-    // Read battery SOC: done through the pin interrupts configured     //  done!   //
-    // Turn on solar panel inputs:                                      //  done!   //
-    // do load shedding                                                 //  TBD     //
-    // switch mode between load shedding and detumbling                 //  TBD     //
-    // check CAN messages                                               //  done!   //
-    // make Telemetry data                                              //  done!   //
-    // send CAN message                                                 //  done!   //
-    //////////////////////////////////////////////////////////////////////////////////
-    // Progress                                                         //  80%     //
-    //////////////////////////////////////////////////////////////////////////////////
-
     // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
     initTelemetry();
     // Perform post-ejection chcekout activities
@@ -49,34 +48,25 @@ int main(void) {
     // Initialize state for SoC estimation
     InitEstimateSoc(1.0);
 
-#ifdef AIT_MODE
-    while(1)
-    {
-        /* Attend to CDH commands */
-        checkCommands();
-        /* Check Battery State of Charge */
-        AitMonitorSoc();
-        /* ADCS control algorithm */
-        AitAdcsControl();
-        /* Thermal control algorithm */
-#ifdef THERMAL_CONTROL
-        MainThermalControl();
-#endif
+    // Create tasks
+    xTaskCreate( checkCommands,         /* Task entry point. */
+                 "CheckCmds",           /* Text name for the task - not used by the kernel. */
+                 500,                   /* Stack to allocate to the task - in words not bytes! */
+                 NULL,                  /* The parameter passed into the task. */
+                 1,                     /* The task's priority. */
+                 NULL );                /* Task handle. */
 
 
-    }
-#else
-    // Once FreeRTOS is integrated, these will become FreeRTOS taskS
-    while(1)
-    {
-        /* Attend to CDH commands */
-        checkCommands();
-        /* Check Battery State of Charge */
-        monitorSoc();
-        /* ADCS control algorithm */
-        testAdcsSpi();
-    }
-#endif
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+    /* If all is well, the scheduler will now be running, and the following
+    line will never be reached.  If the following line does execute, then
+    there was either insufficient FreeRTOS heap memory available for the idle
+    and/or timer tasks to be created.  See the memory management section on the
+    FreeRTOS web site for more details on the FreeRTOS heap
+    http://www.freertos.org/a00111.html. */
+    for( ;; );
 
 }
 
@@ -173,3 +163,79 @@ __interrupt void ISR_TB0_Overflow(void)
     TB0CTL &= ~TBIFG;   // clear flag
 }
 
+/*-----------------------------------------------------------*/
+
+void vApplicationMallocFailedHook( void )
+{
+    /* Called if a call to pvPortMalloc() fails because there is insufficient
+    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+    internally by FreeRTOS API functions that create tasks, queues, software
+    timers, and semaphores.  The size of the FreeRTOS heap is set by the
+    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+
+    /* Force an assert. */
+    configASSERT( ( volatile void * ) NULL );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+{
+    ( void ) pcTaskName;
+    ( void ) pxTask;
+
+    /* Run time stack overflow checking is performed if
+    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected.
+    See http://www.freertos.org/Stacks-and-stack-overflow-checking.html */
+
+    /* Force an assert. */
+    configASSERT( ( volatile void * ) NULL );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+    __bis_SR_register( LPM4_bits + GIE );
+    __no_operation();
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+    /* Force an assert. */
+    configASSERT( ( volatile void * ) NULL );
+}
+/*-----------------------------------------------------------*/
+
+/* The MSP430X port uses this callback function to configure its tick interrupt.
+This allows the application to choose the tick interrupt source.
+configTICK_VECTOR must also be set in FreeRTOSConfig.h to the correct
+interrupt vector for the chosen tick interrupt source.  This implementation of
+vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
+case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
+void vApplicationSetupTimerInterrupt( void )
+{
+const unsigned short usACLK_Frequency_Hz = 32768;
+
+    /* Ensure the timer is stopped. */
+    TA0CTL = 0;
+
+    /* Run the timer from the ACLK. */
+    TA0CTL = TASSEL_1;
+
+    /* Clear everything to start with. */
+    TA0CTL |= TACLR;
+
+    /* Set the compare match value according to the tick rate we want. */
+    TA0CCR0 = usACLK_Frequency_Hz / configTICK_RATE_HZ;
+
+    /* Enable the interrupts. */
+    TA0CCTL0 = CCIE;
+
+    /* Start up clean. */
+    TA0CTL |= TACLR;
+
+    /* Up mode. */
+    TA0CTL |= MC_1;
+}
+/*-----------------------------------------------------------*/
