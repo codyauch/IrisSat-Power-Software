@@ -5,7 +5,7 @@
 Limit_t ThermistorErrorLimits = {-273.0,100.0,0.05,0.05};
 Limit_t ThermistorControlLimits = {12.0,20.0,0.0,0.0};
 
-bool thermistor_control_status = false;
+bool primary_thermistor_on = false;
 bool thermistor_error_status[2] = {true,true};
 
 void LowPowerThermalControl(void)
@@ -54,20 +54,15 @@ void BatteryHeaterControl(void)
         return;
     }
     // Enable/disable heater
-    if(CheckLimits(tempCelsius,&ThermistorControlLimits)){
-        // Battery temperature is within limits
-        // Turn on battery saddle heater only if not already on
-        if(!thermistor_control_status){
-            thermistor_control_status = true;
-            setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_HIGH);
-        }
-    } else {
-        // Battery temperature is NOT within limits
-        // Turn OFF battery saddle heater only if not already on
-        if(thermistor_control_status){
-            thermistor_control_status = false;
-            setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_LOW);
-        }
+    if(tempCelsius > ThermistorControlLimits.upper_value && primary_thermistor_on)
+    {
+        primary_thermistor_on = false;
+        setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_HIGH);
+    }
+    else if (tempCelsius < ThermistorControlLimits.lower_value && !primary_thermistor_on)
+    {
+        primary_thermistor_on = true;
+        setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_LOW);
     }
 }
 
