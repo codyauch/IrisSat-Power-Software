@@ -45,7 +45,7 @@ int main(void) {
     //////////////////////////////////////////////////////////////////////////////////
 
     // Initialize non-volatile storage used for telemetry logging
-    NvsLogInit();
+    NvsInit();
     TestNvsLog();
     // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
     initTelemetry();

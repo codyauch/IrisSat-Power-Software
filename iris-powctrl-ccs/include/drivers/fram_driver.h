@@ -24,7 +24,7 @@
 uint8_t TestNvsLog(void);
 uint16_t LogAddMode(uint8_t mode);
 uint8_t GetModeLog(uint8_t * log_data);
-uint8_t NvsLogInit(void);
+uint8_t NvsInit(void);
 uint8_t NvsLogReset(void);
 
 
