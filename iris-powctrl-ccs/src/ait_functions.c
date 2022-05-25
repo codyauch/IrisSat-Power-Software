@@ -11,7 +11,7 @@
 
 bool eclipse = true;
 bool prev_eclipse = true;
-float soc = 0.50;
+float gg_soc = 0.50;
 
 
 void AitAdcsControl(void)
@@ -47,9 +47,9 @@ void AitMonitorSoc(void)
 {
     uint8_t operating_mode = GetMode();
 
-    if(soc < 0.25) operating_mode = CRITICAL_HOLD_MODE;
-    else if(soc < 0.3) operating_mode = SURVIVAL_MODE;
-    else if(soc < 0.4) operating_mode = LOW_POWER_MODE;
+    if(gg_soc < 0.25) operating_mode = CRITICAL_HOLD_MODE;
+    else if(gg_soc < 0.3) operating_mode = SURVIVAL_MODE;
+    else if(gg_soc < 0.4) operating_mode = LOW_POWER_MODE;
 
     setMode(operating_mode);
 
@@ -64,5 +64,5 @@ void AitMonitorSoc(void)
 
 void AitSetBatterySoc(float percent_soc)
 {
-    soc = percent_soc;
+    gg_soc = percent_soc;
 }

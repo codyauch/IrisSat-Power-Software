@@ -15,12 +15,12 @@
 nvs_log_handle nvsHandleMode;
 #pragma DATA_SECTION(nvsMode,".infoA")
 uint8_t nvsMode[NVS_DATA_STORAGE_SIZE(sizeof(uint8_t))];
-uint8_t mode;
+uint8_t g_mode;
 // State of charge
 nvs_log_handle nvsHandleSoc;
 #pragma DATA_SECTION(nvsSoc,".infoB")
 float nvsSoc[NVS_DATA_STORAGE_SIZE(sizeof(float))];
-float soc;
+float g_soc;
 
 /***** Data Logging *****/ // ---> Needs to be changed to ring!!!
 // Operation mode
@@ -40,13 +40,13 @@ uint16_t TestNvsLog(void)
     uint16_t status;
 
     // Test Mode NVS
-    status = NvsCommitMode(++mode);
+    status = NvsCommitMode(++g_mode);
     if (status != NVS_OK) {
         while (1);
     }
 
     // Test Soc NVS
-    status = NvsCommitSoc(++soc);
+    status = NvsCommitSoc(++g_soc);
     if (status != NVS_OK) {
         while (1);
     }
@@ -54,7 +54,7 @@ uint16_t TestNvsLog(void)
     // Test Mode log
     // Write some values to the log
     for(i=0; i < MODE_NVS_RING_SIZE; i++){
-        status = LogAddMode(i*mode);
+        status = LogAddMode(i*g_mode);
         if (status != NVS_OK) {
             while (1);
         }
@@ -69,7 +69,7 @@ uint16_t TestNvsLog(void)
     // Test Soc log
     // Write some values to the log
     for(i=0; i < SOC_NVS_RING_SIZE; i++){
-        status = LogAddSoc((float)i*mode);
+        status = LogAddSoc((float)i*g_mode);
         if (status != NVS_OK) {
             while (1);
         }
@@ -143,7 +143,7 @@ uint16_t GetSocLog(float * log_data)
 uint16_t NvsCommitMode(uint8_t mode)
 {
     uint16_t status;
-    status = nvs_data_commit(nvsHandleMode, &odometer);
+    status = nvs_data_commit(nvsHandleMode, &mode);
     return status;
 }
 
@@ -160,12 +160,13 @@ uint8_t NvsInit(void)
 //    uint8_t mode;
 //    float soc;
 
-    nvsHandleMode = nvs_data_init(nvsMode, sizeof(mode)); // Check integrity of NVS container and initialize if required
-    status = nvs_data_restore(nvsHandleMode, &mode);switch (status) {
+    nvsHandleMode = nvs_data_init(nvsMode, sizeof(g_mode)); // Check integrity of NVS container and initialize if required
+    status = nvs_data_restore(nvsHandleMode, &g_mode);
+    switch (status) {
     case NVS_OK: break;
     case NVS_EMPTY:
         // Initialize mode value.
-        mode = 0;
+        g_mode = 0;
         break;
     default:
         /*
@@ -175,18 +176,19 @@ uint8_t NvsInit(void)
          */
         while (1);
     }
-    nvsHandleSoc = nvs_data_init(nvsSoc, sizeof(soc));
-    status = nvs_data_restore(nvsHandleSoc, &soc);switch (status) {
+    nvsHandleSoc = nvs_data_init(nvsSoc, sizeof(g_soc));
+    status = nvs_data_restore(nvsHandleSoc, &g_soc);
+    switch (status) {
     case NVS_OK: break;
     case NVS_EMPTY:
-        soc = 0.0;
+        g_soc = 0.0;
         break;
     default:
         while (1);
     }
 
     nvsHandleModeLog = nvs_ring_init(nvsModeLog, sizeof(uint8_t), MODE_NVS_RING_SIZE); // Check integrity of NVS container and initialize if required;
-    nvsHandleModeSoc = nvs_ring_init(nvsSocLog, sizeof(float), SOC_NVS_RING_SIZE);
+    nvsHandleSocLog = nvs_ring_init(nvsSocLog, sizeof(float), SOC_NVS_RING_SIZE);
 
 
     return 0;
