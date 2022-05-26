@@ -57,12 +57,12 @@ void BatteryHeaterControl(void)
     if(tempCelsius > ThermistorControlLimits.upper_value && primary_thermistor_on)
     {
         primary_thermistor_on = false;
-        setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_HIGH);
+        setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_LOW);
     }
     else if (tempCelsius < ThermistorControlLimits.lower_value && !primary_thermistor_on)
     {
         primary_thermistor_on = true;
-        setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_LOW);
+        setLoadSwitch(LS_HTR,GPIO_INPUT_PIN_HIGH);
     }
 }
 
@@ -108,7 +108,7 @@ bool CheckLimits(float value, Limit_t * limits)
     // Calculate limits
     float lower = limits->lower_value * (1.0 - limits->lower_margin);
     float upper = limits->upper_value * (1.0 - limits->upper_margin);
-    return lower > value || value > upper;
+    return lower < value || value < upper;
 }
 
 

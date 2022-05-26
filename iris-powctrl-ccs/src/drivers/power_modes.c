@@ -140,7 +140,7 @@ void setPowMode()
     switch (operating_mode)
     {
         case DETUMBLE_MODE:
-            setLoadSwitch(LS_HTR,1);
+//            setLoadSwitch(LS_HTR,1);
             setLoadSwitch(LS_ADCS,1);
             setLoadSwitch(LS_COMS,0);
             setLoadSwitch(LS_CDH,0);
@@ -150,7 +150,7 @@ void setPowMode()
             break;
         case CRITICAL_HOLD_MODE:
             // All already off
-            setLoadSwitch(LS_HTR,0);
+//            setLoadSwitch(LS_HTR,0);
             setLoadSwitch(LS_ADCS,0);
             setLoadSwitch(LS_COMS,0);
             setLoadSwitch(LS_CDH,0);
@@ -159,7 +159,7 @@ void setPowMode()
             setLoadSwitch(LS_DPL_S,0);
             break;
         case SURVIVAL_MODE:
-            setLoadSwitch(LS_HTR,1);
+//            setLoadSwitch(LS_HTR,1);
             setLoadSwitch(LS_ADCS,0);
             setLoadSwitch(LS_COMS,1);
             setLoadSwitch(LS_CDH,0);
@@ -168,7 +168,7 @@ void setPowMode()
             setLoadSwitch(LS_DPL_S,0);
             break;
         case LOW_POWER_MODE:
-            setLoadSwitch(LS_HTR,1);
+//            setLoadSwitch(LS_HTR,1);
             setLoadSwitch(LS_ADCS,1);
             setLoadSwitch(LS_COMS,1);
             setLoadSwitch(LS_CDH,1);
@@ -177,7 +177,7 @@ void setPowMode()
             setLoadSwitch(LS_DPL_S,0);
             break;
         case IDLE_MODE:
-            setLoadSwitch(LS_HTR,1);
+//            setLoadSwitch(LS_HTR,1);
             setLoadSwitch(LS_ADCS,0);
             setLoadSwitch(LS_COMS,1);
             setLoadSwitch(LS_CDH,1);
@@ -186,7 +186,7 @@ void setPowMode()
             setLoadSwitch(LS_DPL_S,0);
             break;
         case NORMAL_MODE:
-            setLoadSwitch(LS_HTR,1);
+//            setLoadSwitch(LS_HTR,1);
             setLoadSwitch(LS_ADCS,1);
             setLoadSwitch(LS_COMS,1);
             setLoadSwitch(LS_CDH,1);
