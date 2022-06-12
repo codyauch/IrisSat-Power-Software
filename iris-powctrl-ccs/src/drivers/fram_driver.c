@@ -5,105 +5,73 @@
  *      Author: Jayden McKoy
  */
 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "main.h"
 #include "fram_driver.h"
 #include "nvs.h"
 #include "power_modes.h"
+// Note:
+// - nvs: non-volatile storage
+// - nvsh: nvs handle
+// - nvss: nvs storage
+/***** Single value storage (with redundant copy) *****/
+#define REDUNDANT_COPIES 2
+// --- Boot Count ---
+nvs_log_handle nvsh_bootcount;
+#pragma NOINIT(nvsStorage)
+uint8_t nvss_bootcount[NVS_RING_STORAGE_SIZE(sizeof(uint16_t), REDUNDANT_COPIES)];
+//uint16_t g_bootcount;
+// --- Operation Mode ---
+nvs_log_handle nvsh_opmode;
+#pragma NOINIT(nvss_opmode)
+uint8_t nvss_opmode[NVS_RING_STORAGE_SIZE(sizeof(uint8_t), REDUNDANT_COPIES)];
+//uint8_t g_mode;
+// --- State of Charge ---
+nvs_log_handle nvsh_soc;
+#pragma NOINIT(nvss_soc)
+float nvss_soc[NVS_RING_STORAGE_SIZE(sizeof(float), REDUNDANT_COPIES)];
+//float g_soc;
 
-/***** Single value storage *****/
-// Operation mode
-nvs_log_handle nvsHandleMode;
-#pragma DATA_SECTION(nvsMode,".infoA")
-uint8_t nvsMode[NVS_DATA_STORAGE_SIZE(sizeof(uint8_t))];
-uint8_t g_mode;
-// State of charge
-nvs_log_handle nvsHandleSoc;
-#pragma DATA_SECTION(nvsSoc,".infoB")
-float nvsSoc[NVS_DATA_STORAGE_SIZE(sizeof(float))];
-float g_soc;
-
-/***** Data Logging *****/ // ---> Needs to be changed to ring!!!
-// Operation mode
-#define MODE_NVS_RING_SIZE 8 // Maximum number of entries in data log
-#pragma PERSISTENT(nvsModeLog)
-nvs_log_handle nvsHandleModeLog;
-uint8_t nvsModeLog[NVS_RING_STORAGE_SIZE(sizeof(uint8_t), MODE_NVS_RING_SIZE)] = {0};
-// State of charge
-#define SOC_NVS_RING_SIZE 8
-nvs_log_handle nvsHandleSocLog;
-float nvsSocLog[NVS_RING_STORAGE_SIZE(sizeof(float), SOC_NVS_RING_SIZE)] = {0};
-
-uint16_t TestNvsLog(void)
+uint16_t LogBootCount(uint8_t bootcount)
 {
-    // Assuming logs have already been initialized
     int i;
     uint16_t status;
-
-    // Test Mode NVS
-    status = NvsCommitMode(++g_mode);
-    if (status != NVS_OK) {
-        while (1);
+    for(i=0; i < REDUNDANT_COPIES; i++){
+        status = nvs_ring_add(nvsh_bootcount, &bootcount);
     }
-
-    // Test Soc NVS
-    status = NvsCommitSoc(++g_soc);
-    if (status != NVS_OK) {
-        while (1);
-    }
-
-    // Test Mode log
-    // Write some values to the log
-    for(i=0; i < MODE_NVS_RING_SIZE; i++){
-        status = LogAddMode(i*g_mode);
-        if (status != NVS_OK) {
-            while (1);
-        }
-    }
-    // Retrieve Mode log
-    uint8_t mode_log_data[MODE_NVS_RING_SIZE-1];
-    status = GetModeLog(mode_log_data);
-    if (status != NVS_OK) {
-        while (1);
-    }
-
-    // Test Soc log
-    // Write some values to the log
-    for(i=0; i < SOC_NVS_RING_SIZE; i++){
-        status = LogAddSoc((float)i*g_mode);
-        if (status != NVS_OK) {
-            while (1);
-        }
-    }
-    // Retrieve Soc log
-    uint8_t soc_log_data[SOC_NVS_RING_SIZE-1];
-    status = GetModeLog(soc_log_data);
-    if (status != NVS_OK) {
-        while (1);
-    }
-
-    return NVS_OK;
+    return status;
 }
 
-uint16_t LogAddMode(uint8_t mode)
+uint16_t LogOpMode(uint8_t opmode)
 {
-//    return nvs_log_add(nvsHandle_mode, mode);
-    return nvs_ring_add(nvsHandleModeLog, &mode);
+    int i;
+    uint16_t status;
+    for(i=0; i < REDUNDANT_COPIES; i++){
+        status = nvs_ring_add(nvsh_opmode, &opmode);
+    }
+    return status;
 }
 
 uint16_t LogAddSoc(float soc)
 {
-//    return nvs_log_add(nvsHandle_mode, mode);
-    return nvs_ring_add(nvsHandleSocLog, &soc);
+    int i;
+    uint16_t status;
+    for(i=0; i < REDUNDANT_COPIES; i++){
+        status = nvs_ring_add(nvsh_soc, &soc);
+    }
+    return status;
 }
 
-uint16_t GetModeLog(uint8_t * log_data)
+uint16_t RetrieveBootCount(uint8_t * prevBootCount)
 {
     int i;
     uint16_t status;
-    for(i=0; i < MODE_NVS_RING_SIZE-1; i++){
+    for(i=0; i < REDUNDANT_COPIES; i++){
         // Retrieve log sample
-//        status = nvs_log_retrieve(nvsHandle_mode, log_data[i], i);
-        status = nvs_ring_retrieve(nvsHandleModeLog, &log_data[i], i);
+        status = nvs_ring_retrieve(nvsh_bootcount, prevBootCount, i);
         /*
          * Status should never be not NVS_OK but if it happens trap execution.
          * Potential reason for NVS_NOK, NVS_CRC_ERROR or NVS_INDEX_OUT_OF BOUND:
@@ -111,21 +79,20 @@ uint16_t GetModeLog(uint8_t * log_data)
          *     2. nvsStorage got corrupted by other task (buffer overflow?)
          *     3. index outside MAX_LOG_ENTRY
          */
-        if (status != NVS_OK) {
-            return status;
+        if (status == NVS_OK) {
+            return NVS_OK;
         }
     }
-    return NVS_OK;
+    return status;
 }
 
-uint16_t GetSocLog(float * log_data)
+uint16_t RetrieveOpMode(uint8_t * prevOpMode)
 {
     int i;
     uint16_t status;
-    for(i=0; i < SOC_NVS_RING_SIZE-1; i++){
+    for(i=0; i < REDUNDANT_COPIES; i++){
         // Retrieve log sample
-//        status = nvs_log_retrieve(nvsHandle_mode, log_data[i], i);
-        status = nvs_ring_retrieve(nvsHandleSocLog, &log_data[i], i);
+        status = nvs_ring_retrieve(nvsh_opmode, prevOpMode, i);
         /*
          * Status should never be not NVS_OK but if it happens trap execution.
          * Potential reason for NVS_NOK, NVS_CRC_ERROR or NVS_INDEX_OUT_OF BOUND:
@@ -133,64 +100,30 @@ uint16_t GetSocLog(float * log_data)
          *     2. nvsStorage got corrupted by other task (buffer overflow?)
          *     3. index outside MAX_LOG_ENTRY
          */
-        if (status != NVS_OK) {
-            return status;
+        if (status == NVS_OK) {
+            return NVS_OK;
         }
     }
-    return NVS_OK;
-}
-
-uint16_t NvsCommitMode(uint8_t mode)
-{
-    uint16_t status;
-    status = nvs_data_commit(nvsHandleMode, &mode);
     return status;
 }
 
-uint16_t NvsCommitSoc(float soc)
+uint16_t RetrieveSoc(float * prevSoc)
 {
+    int i;
     uint16_t status;
-    status = nvs_data_commit(nvsHandleSoc, &soc);
+    for(i=0; i < REDUNDANT_COPIES; i++){
+        status = nvs_ring_retrieve(nvsh_soc, prevSoc, i);
+        if (status == NVS_OK) {
+            return NVS_OK;
+        }
+    }
     return status;
 }
-
 uint8_t NvsInit(void)
 {
-    uint16_t status;
-//    uint8_t mode;
-//    float soc;
-
-    nvsHandleMode = nvs_data_init(nvsMode, sizeof(g_mode)); // Check integrity of NVS container and initialize if required
-    status = nvs_data_restore(nvsHandleMode, &g_mode);
-    switch (status) {
-    case NVS_OK: break;
-    case NVS_EMPTY:
-        // Initialize mode value.
-        g_mode = 0;
-        break;
-    default:
-        /*
-         * Status should never be NVS_NOK or NVS_CRC_ERROR, potential reasons:
-         *     1. nvsStorage not initialized
-         *     2. nvsStorage got corrupted by other task (buffer overflow?)
-         */
-        while (1);
-    }
-    nvsHandleSoc = nvs_data_init(nvsSoc, sizeof(g_soc));
-    status = nvs_data_restore(nvsHandleSoc, &g_soc);
-    switch (status) {
-    case NVS_OK: break;
-    case NVS_EMPTY:
-        g_soc = 0.0;
-        break;
-    default:
-        while (1);
-    }
-
-    nvsHandleModeLog = nvs_ring_init(nvsModeLog, sizeof(uint8_t), MODE_NVS_RING_SIZE); // Check integrity of NVS container and initialize if required;
-    nvsHandleSocLog = nvs_ring_init(nvsSocLog, sizeof(float), SOC_NVS_RING_SIZE);
-
-
+    nvsh_bootcount = nvs_ring_init(nvss_bootcount, sizeof(uint8_t), REDUNDANT_COPIES); // Check integrity of NVS container and initialize if required;
+    nvsh_opmode = nvs_ring_init(nvss_opmode, sizeof(float), REDUNDANT_COPIES);
+    nvsh_soc = nvs_ring_init(nvss_soc, sizeof(float), REDUNDANT_COPIES);
     return 0;
 }
 

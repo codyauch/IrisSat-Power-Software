@@ -11,6 +11,7 @@
 #include "peripheral_driver.h"
 #include "power_modes.h"
 #include "ait_functions.h"
+#include "fram_driver.h"
 
 #define RX_CANMSG_DELAY 1000
 extern volatile uint8_t TCAN_Int_Cnt;
@@ -80,6 +81,16 @@ void handleCommand(CdhCmd_t * command)
 {
     switch(command->cmd_id)
     {
+//        case POWER_GET_BOOT_COUNT:
+//        {
+//            uint16_t boot_count = GetBootCount();
+//            // Send CAN message
+//            uint8_t data[4] = {0};
+//            data[0] = boot_count & 0xFF;
+//            data[1] = (boot_count >> 8) & 0xFF;
+//            sendTelemetryRaw(POWER_GET_BOOT_COUNT_ID,data);
+//            break;
+//        }
         case POWER_READ_TEMP_CMD:
         {
             // Get data

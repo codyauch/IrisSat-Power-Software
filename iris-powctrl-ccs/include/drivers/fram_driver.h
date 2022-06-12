@@ -20,14 +20,12 @@
 //  - SoC
 //  -
 
-
-uint16_t TestNvsLog(void);
-uint16_t LogAddMode(uint8_t mode);
-uint16_t LogAddSoc(float soc);
-uint16_t GetModeLog(uint8_t * log_data);
-uint16_t GetSocLog(float * log_data);
-uint16_t NvsCommitMode(uint8_t mode);
-uint16_t NvsCommitSoc(float soc);
+uint16_t LogBootCount(uint8_t bootcount);
+uint16_t LogOpMode(uint8_t opmode);
+uint16_t LogSoc(float soc);
+uint16_t RetrieveBootCount(uint8_t * prevBootCount);
+uint16_t GetModeLog(uint8_t * prevOpMode);
+uint16_t RetrieveSoc(float * prevSoc);
 uint8_t NvsInit(void);
 
 

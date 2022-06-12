@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #include <driverlib.h>
-#include <msp430fr2475.h>
+#include <msp430fr2476.h>
 
 // SPI A0 ports
 #define GPIO_PORT_SPIA0_CS                  GPIO_PORT_P4

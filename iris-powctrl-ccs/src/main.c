@@ -23,6 +23,7 @@ int main(void) {
 
 //     Initialization
     WDT_A_hold(WDT_A_BASE);
+//    WDTCTL = WDTPW | WDTHOLD;
     // Get mode from NVM
     Init_interrupts();
     Init_GPIO();
@@ -46,7 +47,6 @@ int main(void) {
 
     // Initialize non-volatile storage used for telemetry logging
     NvsInit();
-    TestNvsLog();
     // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
     initTelemetry();
     // Perform post-ejection chcekout activities
