@@ -28,9 +28,8 @@ void digitalWrite (char p, char v);
 void delay(unsigned int t);
 void delaydelay(unsigned int tt);
 void setSSR(char ssr, char state);
-void initPins(); // sets initial states and values of the pins
 char digitalRead(char p);
-void resetATMRS();
+void resetATMRS(void);
 
 
 #endif /* PIN_CONTROL_H_ */

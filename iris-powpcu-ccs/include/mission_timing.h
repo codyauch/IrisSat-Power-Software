@@ -13,6 +13,7 @@
 
 volatile unsigned int ms, s, m, h, aux_ms1, one_vote_TTR_sec, timer_vote, digital_TMR;
 
+void MainPostEjectionHold(void);
 void timerA2_init();
 void startTMR();
 void checkTimers();

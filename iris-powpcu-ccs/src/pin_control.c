@@ -61,41 +61,7 @@ void setSSR(char ssr, char state)
     }
 }
 
-void initPins() // sets initial states and values of the pins
-{
-    // pin      I/O?    Value?
-    //_________________________
-    // MPB      OUTPUT  1
-    // TMROUT   OUTPUT  0
-    // APB      OUTPUT  1
-    // RBF      INPUT   1
-    // ATMR1    INPUT   0*
-    // ATMR2    INPUT   0*
-    // TMRRST   OUTPUT  1**
-    // WDI      OUTPUT  1
-    //__________________________
-    // * value might change later depending on the circuit
-    // ** change to "0" if reset is active high
 
-    pinMode(MPB, OUTPUT);
-    pinMode(TMROUT, OUTPUT);
-    pinMode(APB, OUTPUT);
-    pinMode(RBF, INPUT);
-    pinMode(ATMR1, INPUT);
-    pinMode(ATMR2, INPUT);
-    pinMode(TMRRST, OUTPUT);
-    pinMode(WDI, OUTPUT);
-
-    digitalWrite(MPB, HIGH);
-    digitalWrite(TMROUT, LOW);
-    digitalWrite(APB, HIGH);
-    digitalWrite(RBF, HIGH);
-    digitalWrite(ATMR1, LOW);
-    digitalWrite(ATMR2, LOW);
-    digitalWrite(TMRRST, HIGH);
-    digitalWrite(WDI, HIGH);
-
-}
 
 char digitalRead(char p)
 {
@@ -106,7 +72,7 @@ char digitalRead(char p)
         return HIGH;
 }
 
-void resetATMRS()
+void resetATMRS(void)
 {
     digitalWrite(TMRRST, LOW);
     delay(1000);

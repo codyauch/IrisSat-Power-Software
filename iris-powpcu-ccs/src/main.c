@@ -4,92 +4,69 @@
  *  Created on: Jun. 5, 2021
  *      Author: asgari1
  */
-
-#include <msp430.h>				
+#include "main.h"
 #include "pin_control.h"
 #include "mission_timing.h"
+#include "nvs.h"
 
 
-char is_counting = 0;
+void MainInitGpio(void); // sets initial states and values of the pins
+void NormalModeInitGpio(void);
 
 void main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;		// stop watchdog timer
 
-	pinMode (7, HIGH);
+	MainInitGpio();
 
-	volatile unsigned int i;		// volatile to prevent optimization
+//	WriteOpMode(MODE_POST_EJECTION_HOLD);
 
-	initPins();
-	setSSR(MPB, LOW);
-	setSSR(MPB, LOW);
-	setSSR(MPB, LOW);
-	setSSR(APB, HIGH);
+	uint8_t opmode = GetOpMode();
 
-    setSSR(MPB, LOW);
-
-    setSSR(APB, HIGH);
-
-	timerA2_init();
+	if(opmode == MODE_POST_EJECTION_HOLD)
+	{
+	    MainPostEjectionHold();
+	}
+	else
+	{
+	    NormalModeInitGpio();
+	}
 
 	while(1)
 	{
-
-	    if (digitalRead(RBF) == LOW) //RBF removed
-	    {
-	        if(is_counting == 0)
-	        {
-	            startTMR();
-	            is_counting = 1;
-	        }
-	        else
-	            checkTimers();
-	    }
-	    else
-	    {
-	        setSSR(MPB, LOW);
-	        is_counting = 0;
-	    }
-
+	    __no_operation();
 	}
+
 }
 
-
-// Timer A0 interrupt service routine
-#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
-#pragma vector = TIMERA0_VECTOR
-__interrupt void Timer_A (void)
-#elif defined(__GNUC__)
-void __attribute__ ((interrupt(TIMERA0_VECTOR))) Timer_A (void)
-#else
-#error Compiler not supported!
-#endif
+void NormalModeInitGpio(void)
 {
-    ms+=10;
-    aux_ms1+=10;
 
-    if (aux_ms1 >= 50)      // this is for resetting the WDT
-    {
-        P1OUT ^= 0x80;
-        aux_ms1 = 0;
-    }
+}
 
-    if (ms >= 977)
-    {
+void MainInitGpio(void) // sets initial states and values of the pins
+{
+    // pin      I/O?    Value?
+    //_________________________
+    // MPB      OUTPUT  1
+    // TMROUT   OUTPUT  0
+    // APB      OUTPUT  1
+    // RBF      INPUT   1
+    // ATMR1    INPUT   0*
+    // ATMR2    INPUT   0*
+    // TMRRST   OUTPUT  1**
+    // WDI      OUTPUT  1
+    //__________________________
+    // * value might change later depending on the circuit
+    // ** change to "0" if reset is active high
 
-        ms=0;
-        if (is_counting == 1)
-            s++;
+    pinMode(MPB, OUTPUT);
+    pinMode(TMROUT, OUTPUT);
+    pinMode(APB, OUTPUT);
+    pinMode(RBF, INPUT);
+    pinMode(ATMR1, INPUT);
+    pinMode(ATMR2, INPUT);
+    pinMode(TMRRST, OUTPUT);
+    pinMode(WDI, OUTPUT);
 
-        if (s>=60)
-        {
-            s=0;
-            m++;
-            if(m>=60)
-            {
-                m=0;
-                h++;
-            }
-        }
-    }
 }

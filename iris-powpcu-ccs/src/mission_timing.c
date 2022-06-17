@@ -8,7 +8,52 @@
 #include <msp430.h>
 #include "mission_timing.h"
 #include "pin_control.h"
+#include "nvs.h"
 
+
+char is_counting = 0;
+
+
+void MainPostEjectionHold(void)
+{
+
+    digitalWrite(MPB, HIGH);
+    digitalWrite(TMROUT, LOW);
+    digitalWrite(APB, HIGH);
+    digitalWrite(RBF, HIGH);
+    digitalWrite(ATMR1, LOW);
+    digitalWrite(ATMR2, LOW);
+    digitalWrite(TMRRST, HIGH);
+    digitalWrite(WDI, HIGH);
+
+    setSSR(MPB, LOW);
+    setSSR(APB, HIGH);
+
+    timerA2_init();
+
+    while(1)
+    {
+
+        if (digitalRead(RBF) == LOW) //RBF removed
+        {
+            if(is_counting == 0)
+            {
+                startTMR();
+                is_counting = 1;
+            }
+            else
+                checkTimers();
+        }
+        else
+        {
+            WriteOpMode(MODE_NORMAL_OPERATIONS);
+            setSSR(MPB, LOW);
+            is_counting = 0;
+            return;
+        }
+
+    }
+}
 
 
 void timerA2_init()
@@ -61,4 +106,43 @@ void checkTimers()
         //while (1);
     }
 
+}
+
+// Timer A0 interrupt service routine
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector = TIMERA0_VECTOR
+__interrupt void Timer_A (void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(TIMERA0_VECTOR))) Timer_A (void)
+#else
+#error Compiler not supported!
+#endif
+{
+    ms+=10;
+    aux_ms1+=10;
+
+    if (aux_ms1 >= 50)      // this is for resetting the WDT
+    {
+        P1OUT ^= 0x80;
+        aux_ms1 = 0;
+    }
+
+    if (ms >= 977)
+    {
+
+        ms=0;
+        if (is_counting == 1)
+            s++;
+
+        if (s>=60)
+        {
+            s=0;
+            m++;
+            if(m>=60)
+            {
+                m=0;
+                h++;
+            }
+        }
+    }
 }
