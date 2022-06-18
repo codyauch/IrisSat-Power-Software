@@ -20,6 +20,7 @@ void main(void)
 	MainInitGpio();
 
 //	WriteOpMode(MODE_POST_EJECTION_HOLD);
+//	WriteOpMode(MODE_NORMAL_OPERATIONS);
 
 	uint8_t opmode = GetOpMode();
 
