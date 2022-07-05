@@ -157,16 +157,16 @@ void handleCommand(CdhCmd_t * command)
         }
         case POWER_SET_LOAD_OFF_CMD:
         {
-            // Get mode
-            uint8_t loadNumber = command->params[0];
-            setLoadSwitch(loadNumber,GPIO_INPUT_PIN_LOW);
+            // Get switch number
+            uint8_t switchNumber = command->params[0];
+            setLoadSwitch(switchNumber,GPIO_INPUT_PIN_LOW);
             break;
         }
         case POWER_SET_LOAD_ON_CMD:
         {
-            // Get mode
-            uint8_t loadNumber = command->params[0];
-            setLoadSwitch(loadNumber,GPIO_INPUT_PIN_HIGH);
+            // Get switch number
+            uint8_t switchNumber = command->params[0];
+            setLoadSwitch(switchNumber,GPIO_INPUT_PIN_HIGH);
             break;
         }
         case POWER_SET_SOLAR_OFF_CMD:
@@ -191,6 +191,18 @@ void handleCommand(CdhCmd_t * command)
             setMode(mode);
             // Enable mode
             setPowMode();
+            break;
+        }
+        case POWER_RESET_LOAD_SWITCH_CMD:
+        {
+            // Get switch number
+            uint8_t switchNumber = command->params[0];
+            setLoadSwitch(switchNumber,GPIO_INPUT_PIN_LOW);
+            __delay_cycles(100);
+            setLoadSwitch(switchNumber,GPIO_INPUT_PIN_HIGH);
+            // Send confirmation
+            uint8_t data[sizeof(float)] = {0};
+            sendTelemetryRaw(POWER_RESET_LOAD_SWITCH_ID,data);
             break;
         }
         case AIT_POWER_SET_BATTERY_SOC_CMD:
