@@ -76,6 +76,18 @@ void commandHandler(void)
     }
 }
 
+void task1(TimerHandle_t) {
+
+}
+
+void task2(TimerHandle_t) {
+
+}
+
+void task3(TimerHandle_t) {
+
+}
+
 void handleCommand(CdhCmd_t * command)
 {
     switch(command->cmd_id)

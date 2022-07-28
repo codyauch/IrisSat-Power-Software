@@ -15,6 +15,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "timers.h"
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */
@@ -55,6 +56,22 @@ int main(void) {
                  NULL,                  /* The parameter passed into the task. */
                  1,                     /* The task's priority. */
                  NULL );                /* Task handle. */
+
+
+   TimerHandle_t timer1, timer2, timer3;
+
+   timer1 = xTimerCreate("timer1", pdMS_TO_TICKS(333), pdTRUE, (void *) 1, task1);
+   timer2 = xTimerCreate("timer2", pdMS_TO_TICKS(333), pdTRUE, (void *) 2, task2);
+   timer3 = xTimerCreate("timer3", pdMS_TO_TICKS(333), pdTRUE, (void *) 3, task3);
+
+   TimerHandle_t timers[] = {timer1, timer2, timer3};
+
+   int i;
+   for(i = 0; i < 3; i++) {
+       xTimerStart(timers[i], 0);
+       vTaskDelay(pdMS_TO_TICKS(333));
+   }
+
 
 
 
