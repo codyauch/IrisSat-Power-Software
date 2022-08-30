@@ -71,6 +71,7 @@ void commandHandler(void)
         }
         else
         {
+
             __delay_cycles(RX_CANMSG_DELAY);
         }
     }
