@@ -168,7 +168,9 @@ void testAdcsSpi(void)
 
     // Get Magnetometer 1 measurements
     uint8_t magnetometerMeasurements[6];
+
     getMagnetometerMeasurements(MAGNETOMETER_1, magnetometerMeasurements);
+    volatile int j = 1;
 }
 
 

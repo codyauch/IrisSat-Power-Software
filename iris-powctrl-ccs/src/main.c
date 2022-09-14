@@ -32,6 +32,7 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
 
 void Init_GPIO(void);
 void Init_interrupts(void);
+void detumbleDriver(void);
 
 unsigned int CC_milis=0;
 
@@ -40,7 +41,7 @@ int main(void) {
 
 //     Initialization
     WDT_A_hold(WDT_A_BASE);
-    Init_interrupts();
+    //Init_interrupts();
     Init_GPIO();
     // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
     initTelemetry();
@@ -58,22 +59,8 @@ int main(void) {
                  NULL );                /* Task handle. */
 
 
-   TimerHandle_t timer1, timer2, timer3;
 
-   timer1 = xTimerCreate("timer1", pdMS_TO_TICKS(333), pdTRUE, (void *) 1, task1);
-   timer2 = xTimerCreate("timer2", pdMS_TO_TICKS(333), pdTRUE, (void *) 2, task2);
-   timer3 = xTimerCreate("timer3", pdMS_TO_TICKS(333), pdTRUE, (void *) 3, task3);
-
-   TimerHandle_t timers[] = {timer1, timer2, timer3};
-
-   int i;
-   for(i = 0; i < 3; i++) {
-       xTimerStart(timers[i], 0);
-       vTaskDelay(pdMS_TO_TICKS(333));
-   }
-
-
-
+    xTaskCreate(detumbleDriver, "detumble", 1000, NULL, 1, NULL);
 
     /* Start the scheduler. */
     vTaskStartScheduler();
@@ -87,6 +74,72 @@ int main(void) {
 
 }
 
+typedef enum DETUMBLE_STATES {
+    COLLECT_DATA = 1,
+    CALCULATE_DIPOLE = 2,
+    EXECUTE_DIPOLE = 3
+};
+
+volatile int magData[100] = {0};
+volatile int dipole[3] = {0};
+TimerHandle_t detumbleTimer;
+
+void collectMagData() {
+    int tempMagData[6];
+    int i;
+    int magDataIndex = 0;
+    while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
+        getMagnetometerMeasurements(1, tempMagData);
+        for(i = 0; i < 6; i++) {
+            magData[magDataIndex] = tempMagData[i];
+            magDataIndex++;
+        }
+    }
+}
+
+void calculateDipole() {
+    while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE) {
+        //wait for data ready
+        //calculate finite difference
+        //calculate dipole
+        //wait till 1/3 seconds up
+        //set dipole ready
+    }
+}
+
+void executeDipole() {
+    while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
+
+    }
+}
+
+void vHandleTimer(TimerHandle_t xTimer) {
+    int currentID = pvTimerGetTimerID(xTimer);
+    currentID++;
+
+    if(currentID > 3) {
+        currentID = 1;
+    }
+
+    vTimerSetTimerID(xTimer, currentID);
+}
+
+void detumbleDriver(void) {
+    detumbleTimer = xTimerCreate("detumbleTimer", pdMS_TO_TICKS(333), pdTRUE, COLLECT_DATA, vHandleTimer);
+    for(;;) {
+        while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
+            collectMagData();
+        }
+
+        while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE) {
+            calculateDipole();
+        }
+
+        while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
+            executeDipole();
+        }
+    }
+}
 
 
 void Init_GPIO(void)
