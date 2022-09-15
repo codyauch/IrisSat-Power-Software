@@ -80,30 +80,55 @@ typedef enum DETUMBLE_STATES {
     EXECUTE_DIPOLE = 3
 };
 
-volatile int magData[100] = {0};
-volatile int dipole[3] = {0};
+volatile int magData[100][3] = {0};
+volatile int dipole[3] = {0}; //x, y, z dipoles
 TimerHandle_t detumbleTimer;
 
 void collectMagData() {
-    int tempMagData[6];
+    uint8_t rawMagData[6] = {0};
+    uint16_t tempMagData[3];
     int i;
     int magDataIndex = 0;
     while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
-        getMagnetometerMeasurements(1, tempMagData);
-        for(i = 0; i < 6; i++) {
-            magData[magDataIndex] = tempMagData[i];
-            magDataIndex++;
+        getMagnetometerMeasurements(1, rawMagData);
+
+        tempMagData[0] = (rawMagData[0] << 8) | rawMagData[1];
+        tempMagData[1] = (rawMagData[2] << 8) | rawMagData[3];
+        tempMagData[2] = (rawMagData[4] << 8) | rawMagData[5];
+
+        for(i = 0; i < 3; i++) {
+            magData[magDataIndex][i] = tempMagData[i];
         }
+        magDataIndex++;
     }
 }
 
 void calculateDipole() {
+    int diffs[100][3] = {0};
+    float dipole[3];
+    int totalMeasurements = 0;
+    int i, j;
     while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE) {
-        //wait for data ready
-        //calculate finite difference
-        //calculate dipole
-        //wait till 1/3 seconds up
-        //set dipole ready
+        for(i = 0; i < 99; i++) {
+            if(magData[i][0] != 0 && magData[i+1][0] != 0) {
+                for(j = 0; j < 3; j++) {
+                    diffs[i][j] = magData[i+1][j] - magData[i][j];
+                }
+                totalMeasurements++;
+            }
+        }
+
+        for(i = 0; i < totalMeasurements; i++) {
+            dipole[0] += diffs[i][0];
+            dipole[1] += diffs[i][1];
+            dipole[2] += diffs[i][2];
+        }
+
+        dipole[0] = dipole[0] / totalMeasurements;
+        dipole[1] = dipole[1] / totalMeasurements;
+        dipole[2] = dipole[2] / totalMeasurements;
+
+        while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE); // wait after calc
     }
 }
 
