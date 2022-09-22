@@ -20,6 +20,18 @@ void setTorqueRodState(uint8_t cmd_id)
     g_ack = adcsTxRx(cmd_id);
 }
 
+void setTorqueRodPolarity(uint8_t cmd_id, uint8_t polarity)
+{
+    g_ack = adcsTxRx(cmd_id);
+    g_ack = adcsTxRx(polarity);
+}
+
+void setTorqueRodPwm(uint8_t cmd_id, uint8_t pwm)
+{
+    g_ack = adcsTxRx(cmd_id);
+    g_ack = adcsTxRx(pwm);
+}
+
 bool pingAdcs(void)
 {
     uint8_t response = adcsTxRx(ADCS_CMD_PING);

@@ -36,7 +36,10 @@
 
 void set_magnetorquer(unsigned char num, unsigned char val);
 void read_sunsensor();
+void getMagnetometerMeasurements(uint8_t magnetometerNumber, uint8_t * magnetometerMeasurements);
 void setTorqueRodState(uint8_t cmd_id);
+void setTorqueRodPolarity(uint8_t cmd_id, uint8_t polarity);
+void setTorqueRodPwm(uint8_t cmd_id, uint8_t pwm);
 
 
 #endif /* INCLUDE_DRIVERS_ADCS_DRIVER_H_ */
