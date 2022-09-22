@@ -400,7 +400,7 @@ void CAN_Test2(void)
 
 void CAN_Error(uint8_t error_code)
 {
-    while(1){
+    while(0){
         __delay_cycles(1000);
     }
 }

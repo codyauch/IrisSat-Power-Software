@@ -22,6 +22,17 @@
 #define MAG3_OFF    0x3C
 #define RESET_ADCS  0xAA
 
+#define ADCS_SPI_ADDR EUSCI_A1_BASE
+#define TORQUE_ROD_1 1
+#define TORQUE_ROD_2 2
+#define TORQUE_ROD_3 3
+#define GYRO_1 1
+#define GYRO_2 2
+#define MAGNETOMETER_1 1
+#define MAGNETOMETER_2 2
+#define GYRO_DATA_NUM_BYTES 6
+#define MAGNETOMETER_DATA_NUM_BYTES 6
+
 
 void set_magnetorquer(unsigned char num, unsigned char val);
 void read_sunsensor();
