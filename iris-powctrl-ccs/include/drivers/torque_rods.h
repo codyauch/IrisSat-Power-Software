@@ -17,4 +17,6 @@ The maximum dipole is +-0.2Am^2 at 5V
 
 #define MAX_VOLTAGE 5.0
 
+#define MAX_PWM 255.0
+
 float dipoleToVoltage(float dipole);

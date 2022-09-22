@@ -11,6 +11,8 @@
 #include "ait_functions.h"
 #include "thermal_control.h"
 #include "fram_driver.h"
+#include "adcs_drivers.h"
+#include "torque_rods.h"
 // FreeRTOS
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -113,6 +115,11 @@ void collectMagData() {
     int i;
     int magDataIndex = 0;
     while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
+        // Turn torque rods off
+        setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_1);
+        setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_2);
+        setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_3);
+        // Get measurements
         getMagnetometerMeasurements(1, rawMagData);
 
         tempMagData[0] = (rawMagData[0] << 8) | rawMagData[1];
@@ -126,11 +133,15 @@ void collectMagData() {
     }
 }
 
+volatile const float gain = -1.0;
+volatile uint8_t polarity[3] = {0};
+volatile uint8_t pwm[3] = {0};
 void calculateDipole() {
     int diffs[100][3] = {0};
     float dipole[3];
     int totalMeasurements = 0;
     int i, j;
+    float voltage = 0.0;
     while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE) {
         for(i = 0; i < 99; i++) {
             if(magData[i][0] != 0 && magData[i+1][0] != 0) {
@@ -146,10 +157,21 @@ void calculateDipole() {
             dipole[1] += diffs[i][1];
             dipole[2] += diffs[i][2];
         }
-
+        // Calculate dipole
         dipole[0] = dipole[0] / totalMeasurements;
         dipole[1] = dipole[1] / totalMeasurements;
         dipole[2] = dipole[2] / totalMeasurements;
+        // Calculate polarity, pwm
+        for(i=0; i < 3; i++){
+            // Gain
+            dipole[i] *= gain;
+            // Voltage
+            voltage = dipoleToVoltage(dipole[i]);
+            // Polarity
+            polarity[i] = ((voltage >= 0) ? 1 : 0);
+            // PWM
+            pwm[i] = (uint8_t)( ((polarity[1]-1) * voltage ) * ( MAX_VOLTAGE / MAX_PWM ))
+        }
 
         while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE); // wait after calc
     }
@@ -157,7 +179,19 @@ void calculateDipole() {
 
 void executeDipole() {
     while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
-
+        // Set polarity
+        setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_1,polarity[0]);
+        setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_2,polarity[1]);
+        setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_3,polarity[2]);
+        // Set PWM
+        setTorqueRodPwm(ADCS_CMD_SET_PWM_TORQUE_ROD_1,pwm[0]);
+        setTorqueRodPwm(ADCS_CMD_SET_PWM_TORQUE_ROD_2,pwm[1]);
+        setTorqueRodPwm(ADCS_CMD_SET_PWM_TORQUE_ROD_3,pwm[2]);
+        // Turn torque rods on
+        setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_1);
+        setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_2);
+        setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_3);
+        while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE); // wait after calc
     }
 }
 

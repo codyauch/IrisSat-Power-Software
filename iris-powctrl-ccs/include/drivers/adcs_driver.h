@@ -36,6 +36,7 @@
 
 void set_magnetorquer(unsigned char num, unsigned char val);
 void read_sunsensor();
+void setTorqueRodState(uint8_t cmd_id);
 
 
 #endif /* INCLUDE_DRIVERS_ADCS_DRIVER_H_ */

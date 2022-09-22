@@ -9,9 +9,16 @@
 #include "spi.h"
 #include "telemetry.h"
 
+#define TORQUE_ROD_OFF 0
+
 uint8_t g_ack = -1;
 uint8_t g_cmd_ack = -1;
 int g_size = -1;
+
+void setTorqueRodState(uint8_t cmd_id)
+{
+    g_ack = adcsTxRx(cmd_id);
+}
 
 bool pingAdcs(void)
 {
