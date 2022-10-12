@@ -16,6 +16,15 @@
 #define THERMAL_CONTROL
 
 
+//volatile uint32_t ulRunTimeCounterOverflows;
+//void vConfigureTimerForRunTimeStats( void )
+//{
+//    /* Force an assert. */
+////    configASSERT( ( volatile void * ) NULL );
+//}
+//void vPeriodicEventGroupsProcessing( void );
+//void xNotifyTaskFromISR( void );
+
 
 
 #endif /* INCLUDE_MAIN_H_ */

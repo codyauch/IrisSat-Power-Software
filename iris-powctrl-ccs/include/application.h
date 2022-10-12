@@ -19,6 +19,10 @@ void commandHandler(void);
 void commandHandler_noInterrupt(void);
 void handleCommand(CdhCmd_t * command);
 void checkCommands(void);
+void task1(TimerHandle_t);
+void task2(TimerHandle_t);
+void task3(TimerHandle_t);
+
 
 
 #endif /* INCLUDE_APPLICATION_H_ */
