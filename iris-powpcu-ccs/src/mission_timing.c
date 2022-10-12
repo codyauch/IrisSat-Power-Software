@@ -23,7 +23,7 @@ void MainPostEjectionHold(void)
     digitalWrite(RBF, HIGH);
     digitalWrite(ATMR1, LOW);
     digitalWrite(ATMR2, LOW);
-    digitalWrite(TMRRST, HIGH);
+    digitalWrite(TMRRST, HIGH); //********* for FM this needs to be LOW
     digitalWrite(WDI, HIGH);
 
     setSSR(MPB, LOW);
@@ -34,7 +34,7 @@ void MainPostEjectionHold(void)
     while(1)
     {
 
-        if (digitalRead(RBF) == LOW) //RBF removed
+        if (digitalRead(RBF) == HIGH) //RBF removed //****** for FM the RBF logic is reversed (this is HIGH for FM)
         {
             if(is_counting == 0)
             {
@@ -46,10 +46,10 @@ void MainPostEjectionHold(void)
         }
         else
         {
-            WriteOpMode(MODE_NORMAL_OPERATIONS);
+            //WriteOpMode(MODE_NORMAL_OPERATIONS);
             setSSR(MPB, LOW);
             is_counting = 0;
-            return;
+            //return;
         }
 
     }
@@ -81,7 +81,7 @@ void startTMR()
 
 void checkTimers()
 {
-    if (s>5 | m>1 | h>1) //(m>30 | h>1) this should be this for FM
+    if (s>10 | m>0 | h>0) //(m>30 | h>0) this should be this for FM
         digital_TMR = 1;
     else
         digital_TMR = 0;
@@ -104,6 +104,7 @@ void checkTimers()
         //setAPB(ON);
         // Do something after..?
         //while (1);
+        WriteOpMode(MODE_NORMAL_OPERATIONS);
     }
 
 }
@@ -136,12 +137,15 @@ void __attribute__ ((interrupt(TIMERA0_VECTOR))) Timer_A (void)
 
         if (s>=60)
         {
-            s=0;
+
             m++;
+            s=0;
+
             if(m>=60)
             {
-                m=0;
+
                 h++;
+                m=0;
             }
         }
     }

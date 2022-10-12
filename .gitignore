@@ -21,3 +21,4 @@ iris-powctrl-ccs/.launches/*
 .xdchelp
 /.config
 /.launches
+iris-powpcu-ccs/.launches/iris-powpcu-ccs.launch

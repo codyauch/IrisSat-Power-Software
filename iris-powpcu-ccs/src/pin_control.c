@@ -74,9 +74,9 @@ char digitalRead(char p)
 
 void resetATMRS(void)
 {
-    digitalWrite(TMRRST, LOW);
+    digitalWrite(TMRRST, LOW); // ****** for FM this needs to be HIGH
     delay(1000);
-    digitalWrite(TMRRST, HIGH);
+    digitalWrite(TMRRST, HIGH);// ****** for FM this needs to be LOW
     delay(1000);
 }
 
