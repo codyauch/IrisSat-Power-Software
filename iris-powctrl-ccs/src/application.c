@@ -288,33 +288,37 @@ void commandHandler_noInterrupt(void)
 
 void checkCommands(void)
 {
-    TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register
-    TCAN4x5x_MCAN_ReadInterrupts(&mcan_ir);             // Read the interrupt register
-
-    if (dev_ir.SPIERR)                                  // If the SPIERR flag is set
-        TCAN4x5x_Device_ClearSPIERR();                  // Clear the SPIERR flag
-
-    if (mcan_ir.RF0N)                                   // If a new message in RX FIFO 0
+    vTaskSuspend(detumbleDriver);
+    while(1)
     {
-        TCAN4x5x_MCAN_RX_Header MsgHeader = {0};        // Initialize to 0 or you'll get garbage
-        uint8_t numBytes = 0;                           // Used since the ReadNextFIFO function will return how many bytes of data were read
-        uint8_t dataPayload[64] = {0};                  // Used to store the received data
+        TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register
+        TCAN4x5x_MCAN_ReadInterrupts(&mcan_ir);             // Read the interrupt register
 
-        TCAN4x5x_MCAN_ClearInterrupts(&mcan_ir);        // Clear any of the interrupt bits that are set.
+        if (dev_ir.SPIERR)                                  // If the SPIERR flag is set
+            TCAN4x5x_Device_ClearSPIERR();                  // Clear the SPIERR flag
 
-        numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
-
-        if (MsgHeader.RXID == CDH_RXID)        // Example of how you can do an action based off a received address
+        if (mcan_ir.RF0N)                                   // If a new message in RX FIFO 0
         {
-            CdhCmd_t command;
-            command.cmd_id = dataPayload[0];
-            command.params[0] = dataPayload[1];
-            handleCommand(&command);
-        }
-        // Process the command
-//            telemetryPacket_t command;
-//            unpackTelemetry(dataPayload, &command);
-//            handleCommand(&command);
+            TCAN4x5x_MCAN_RX_Header MsgHeader = {0};        // Initialize to 0 or you'll get garbage
+            uint8_t numBytes = 0;                           // Used since the ReadNextFIFO function will return how many bytes of data were read
+            uint8_t dataPayload[64] = {0};                  // Used to store the received data
 
+            TCAN4x5x_MCAN_ClearInterrupts(&mcan_ir);        // Clear any of the interrupt bits that are set.
+
+            numBytes = TCAN4x5x_MCAN_ReadNextFIFO( RXFIFO0, &MsgHeader, dataPayload);   // This will read the next element in the RX FIFO 0
+
+            if (MsgHeader.RXID == CDH_RXID)        // Example of how you can do an action based off a received address
+            {
+                CdhCmd_t command;
+                command.cmd_id = dataPayload[0];
+                command.params[0] = dataPayload[1];
+                handleCommand(&command);
+            }
+            // Process the command
+    //            telemetryPacket_t command;
+    //            unpackTelemetry(dataPayload, &command);
+    //            handleCommand(&command);
+
+        }
     }
 }

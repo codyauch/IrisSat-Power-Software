@@ -13,7 +13,6 @@
 #include "driverlib.h"
 
 typedef enum {
-    DETUMBLE_MODE,
     CRITICAL_HOLD_MODE,
     SURVIVAL_MODE,
     LOW_POWER_MODE,
@@ -21,6 +20,7 @@ typedef enum {
     NORMAL_MODE,
     SUN_POINTING_MODE,
     SCIENCE_MODE,
+    DETUMBLE_MODE,
     NUM_POWER_MODES
 } PowerMode_t;
 

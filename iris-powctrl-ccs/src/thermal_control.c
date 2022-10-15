@@ -15,10 +15,13 @@ void LowPowerThermalControl(void)
 
 void MainThermalControl(void)
 {
-    // Check on the thermistors to ensure they are functional.
-    CheckThermistorStatus();
-    // Heater Control
-    BatteryHeaterControl();
+    while(1)
+    {
+        // Check on the thermistors to ensure they are functional.
+        CheckThermistorStatus();
+        // Heater Control
+        BatteryHeaterControl();
+    }
 }
 
 void BatteryHeaterControl(void)

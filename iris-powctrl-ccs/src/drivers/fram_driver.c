@@ -23,6 +23,7 @@
 nvs_log_handle nvsh_bootcount;
 #pragma NOINIT(nvsStorage)
 uint8_t nvss_bootcount[NVS_RING_STORAGE_SIZE(sizeof(uint16_t), REDUNDANT_COPIES)];
+uint16_t bootcount;
 //uint16_t g_bootcount;
 // --- Operation Mode ---
 nvs_log_handle nvsh_opmode;
@@ -55,7 +56,7 @@ uint16_t LogOpMode(uint8_t opmode)
     return status;
 }
 
-uint16_t LogAddSoc(float soc)
+uint16_t LogSoc(float soc)
 {
     int i;
     uint16_t status;
@@ -121,7 +122,11 @@ uint16_t RetrieveSoc(float * prevSoc)
 }
 uint8_t NvsInit(void)
 {
+    // Initialize bootcount NVM, get, update bootcount
     nvsh_bootcount = nvs_ring_init(nvss_bootcount, sizeof(uint8_t), REDUNDANT_COPIES); // Check integrity of NVS container and initialize if required;
+    RetrieveBootCount(bootcount);
+    LogBootCount(++bootcount);
+    // Initialize operation mode, SoC NVM
     nvsh_opmode = nvs_ring_init(nvss_opmode, sizeof(float), REDUNDANT_COPIES);
     nvsh_soc = nvs_ring_init(nvss_soc, sizeof(float), REDUNDANT_COPIES);
     return 0;

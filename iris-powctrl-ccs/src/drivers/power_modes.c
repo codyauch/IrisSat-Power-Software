@@ -9,6 +9,7 @@
 #include "power_modes.h"
 #include "peripheral_driver.h"
 #include "intrinsics.h"
+#include "fram_driver.h"
 
 const float MAX_VOLTAGE = 7.3;
 
@@ -37,20 +38,32 @@ double C_RATED = 4500.0;
 float V_CHARGED = 7.1;
 float SOC_t;
 float soc_coulomb;
+uint16_t nvm_status = 0;
 
 void monitorSoc(void)
 {
-    float soc = getBatterySoc();
-
-    if(soc < 0.25) operating_mode = CRITICAL_HOLD_MODE;
-    else if(soc < 0.3) operating_mode = SURVIVAL_MODE;
-    else if(soc < 0.4) operating_mode = LOW_POWER_MODE;
-
-    // Check if mode has changed
-    if(operating_mode != prev_mode)
+    // Initialize the state of charge estimation from non-volatile memory
+    nvm_status = RetrieveSoc(SOC_t);
+    nvm_status = RetrieveSoc(soc_coulomb);
+    // Main loop
+    while(1)
     {
-        setPowMode();
-        prev_mode = operating_mode;
+        // Get SoC
+        float soc = getBatterySoc();
+        // Log SoC
+        nvm_status = LogSoc(soc);
+        //
+        if(soc < 0.25) operating_mode = CRITICAL_HOLD_MODE;
+        else if(soc < 0.3) operating_mode = SURVIVAL_MODE;
+        else if(soc < 0.4) operating_mode = LOW_POWER_MODE;
+        else if(operating_mode < IDLE_MODE) operating_mode = IDLE_MODE;
+        // Check if mode has changed
+        if(operating_mode != prev_mode)
+        {
+            setPowMode();
+            prev_mode = operating_mode;
+            LogOpMode(operating_mode);
+        }
     }
 }
 

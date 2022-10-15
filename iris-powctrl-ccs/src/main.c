@@ -20,6 +20,12 @@
 #include "semphr.h"
 #include "timers.h"
 
+
+#define MAX_DETUMBLE_TIME_SECONDS 4500
+#define MIN_OMEGA 0.1
+// Prototypes
+void InitNormalOps(void);
+bool detumblingComplete(void);
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */
 void vApplicationMallocFailedHook( void );
@@ -68,24 +74,43 @@ int main(void) {
 
     // Initialize non-volatile storage used for telemetry logging
     NvsInit();
-    // MOVE initTelemetry to commandHandler task once FreeRTOS is implemented
-    initTelemetry();
-    // Perform post-ejection chcekout activities
+
+    // Debugging
+//    LogOpMode(DETUMBLE_MODE);
+//    LogSoc(1.0);
+
+    // Perform post-ejection checkout activities
     CheckoutActivities();
     // Initialize state for SoC estimation
-    InitEstimateSoc(1.0);
+    float initial_soc;
+    RetrieveSoc(initial_soc);
+    InitEstimateSoc(initial_soc);
+    // Get operation mode
+    uint16_t op_mode = IDLE_MODE;
+    RetrieveOpMode(op_mode);
 
-    // Create tasks
-    xTaskCreate( checkCommands,         /* Task entry point. */
-                 "CheckCmds",           /* Text name for the task - not used by the kernel. */
+    // Task which always run, no matter the operation mode
+    xTaskCreate( monitorSoc,         /* Task entry point. */
+                 "monitorSoc",           /* Text name for the task - not used by the kernel. */
+                 500,                   /* Stack to allocate to the task - in words not bytes! */
+                 NULL,                  /* The parameter passed into the task. */
+                 1,                     /* The task's priority. */
+                 NULL );                /* Task handle. */
+    xTaskCreate( MainThermalControl,         /* Task entry point. */
+                 "therm",           /* Text name for the task - not used by the kernel. */
                  500,                   /* Stack to allocate to the task - in words not bytes! */
                  NULL,                  /* The parameter passed into the task. */
                  1,                     /* The task's priority. */
                  NULL );                /* Task handle. */
 
 
-
+    // Tasks dependent upon op-mode
     xTaskCreate(detumbleDriver, "detumble", 1000, NULL, 1, NULL);
+    if(op_mode !=  DETUMBLE_MODE)
+    {
+        InitNormalOps();
+    }
+
 
     /* Start the scheduler. */
     vTaskStartScheduler();
@@ -99,6 +124,13 @@ int main(void) {
 
 }
 
+
+void InitNormalOps(void)
+{
+    initTelemetry();
+    xTaskCreate(checkCommands, "CheckCmds", 500, NULL, 1, NULL);
+}
+
 typedef enum DETUMBLE_STATES {
     COLLECT_DATA = 1,
     CALCULATE_DIPOLE = 2,
@@ -110,15 +142,16 @@ volatile int dipole[3] = {0}; //x, y, z dipoles
 TimerHandle_t detumbleTimer;
 
 void collectMagData() {
+    // Turn torque rods off
+    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_1);
+    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_2);
+    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_3);
+    // Get measurements
     uint8_t rawMagData[6] = {0};
     uint16_t tempMagData[3];
     int i;
     int magDataIndex = 0;
     while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
-        // Turn torque rods off
-        setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_1);
-        setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_2);
-        setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_3);
         // Get measurements
         getMagnetometerMeasurements(1, rawMagData);
 
@@ -177,8 +210,16 @@ void calculateDipole() {
     }
 }
 
+uint16_t detumbling_cycles = 0;
 void executeDipole() {
     while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
+        // Detumbling complete??
+        if(detumblingComplete())
+        {
+            InitNormalOps();
+            while(1) {};
+        }
+        detumbling_cycles++
         // Set polarity
         setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_1,polarity[0]);
         setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_2,polarity[1]);
@@ -193,6 +234,18 @@ void executeDipole() {
         setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_3);
         while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE); // wait after calc
     }
+}
+
+bool detumblingComplete(void)
+{
+    if(detumbling_cycles > MAX_DETUMBLE_TIME_SECONDS)
+        return true;
+    int i;
+    for(i=0; i < 3; i++){
+        if(dipole[i] > MAX_DIPOLE)
+            return false;
+    }
+    return true;
 }
 
 void vHandleTimer(TimerHandle_t xTimer) {
