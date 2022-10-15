@@ -13,25 +13,29 @@
 void MainInitGpio(void); // sets initial states and values of the pins
 void NormalModeInitGpio(void);
 
+uint8_t opmode;
 void main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;		// stop watchdog timer
+
+    WDTCTL = WDTPW | WDTHOLD;		// stop watchdog timer
 
 	MainInitGpio();
 
 //	WriteOpMode(MODE_POST_EJECTION_HOLD);
 //	WriteOpMode(MODE_NORMAL_OPERATIONS);
 
-	uint8_t opmode = GetOpMode();
+//	uint8_t opmode = GetOpMode();
+	opmode = GetOpMode();
+
+//	WriteOpMode(MODE_POST_EJECTION_HOLD);
 
 	if(opmode == MODE_POST_EJECTION_HOLD)
 	{
 	    MainPostEjectionHold();
 	}
-	else
-	{
-	    NormalModeInitGpio();
-	}
+
+	NormalModeInitGpio();
+
 
 	while(1)
 	{
@@ -42,7 +46,7 @@ void main(void)
 
 void NormalModeInitGpio(void)
 {
-
+    setSSR(MPB, HIGH);
 }
 
 void MainInitGpio(void) // sets initial states and values of the pins
@@ -69,5 +73,6 @@ void MainInitGpio(void) // sets initial states and values of the pins
     pinMode(ATMR2, INPUT);
     pinMode(TMRRST, OUTPUT);
     pinMode(WDI, OUTPUT);
+    setSSR(MPB, LOW);
 
 }

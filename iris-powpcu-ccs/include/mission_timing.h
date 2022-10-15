@@ -9,13 +9,15 @@
 #ifndef MISSION_TIMING_H_
 #define MISSION_TIMING_H_
 
-#define TTR_SEC 10
+#include "main.h"
+
+#define TTR_SEC 120
 
 volatile unsigned int ms, s, m, h, aux_ms1, one_vote_TTR_sec, timer_vote, digital_TMR;
 
 void MainPostEjectionHold(void);
 void timerA2_init();
 void startTMR();
-void checkTimers();
+uint8_t checkTimers();
 
 #endif /* MISSION_TIMING_H_ */

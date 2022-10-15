@@ -270,9 +270,9 @@ void detumbleDriver(void) {
             calculateDipole();
         }
 
-        while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
-            executeDipole();
-        }
+//        while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
+//            executeDipole();
+//        }
     }
 }
 

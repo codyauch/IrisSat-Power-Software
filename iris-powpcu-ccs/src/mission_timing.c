@@ -31,7 +31,9 @@ void MainPostEjectionHold(void)
 
     timerA2_init();
 
-    while(1)
+    uint8_t post_ejection_complete = 0;
+
+    while(post_ejection_complete == 0)
     {
 
         if (digitalRead(RBF) == HIGH) //RBF removed //****** for FM the RBF logic is reversed (this is HIGH for FM)
@@ -42,11 +44,10 @@ void MainPostEjectionHold(void)
                 is_counting = 1;
             }
             else
-                checkTimers();
+                post_ejection_complete = checkTimers();
         }
         else
         {
-            //WriteOpMode(MODE_NORMAL_OPERATIONS);
             setSSR(MPB, LOW);
             is_counting = 0;
             //return;
@@ -79,9 +80,9 @@ void startTMR()
 
 }
 
-void checkTimers()
+uint8_t checkTimers()
 {
-    if (s>10 | m>0 | h>0) //(m>30 | h>0) this should be this for FM
+    if (m>=2 | h>0) //(m>30 | h>0) this should be this for FM
         digital_TMR = 1;
     else
         digital_TMR = 0;
@@ -97,14 +98,16 @@ void checkTimers()
         //   startTMR();
         //}
         setSSR(MPB, LOW);//just for test
+        return 0;
     }
     else if(timer_vote >= 1)
     {
-        setSSR(MPB, HIGH);
+//        setSSR(MPB, HIGH);
         //setAPB(ON);
         // Do something after..?
         //while (1);
         WriteOpMode(MODE_NORMAL_OPERATIONS);
+        return 1;
     }
 
 }
