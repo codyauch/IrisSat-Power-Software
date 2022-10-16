@@ -11,7 +11,7 @@
 #include "ait_functions.h"
 #include "thermal_control.h"
 #include "fram_driver.h"
-#include "adcs_drivers.h"
+#include "adcs_driver.h"
 #include "torque_rods.h"
 // FreeRTOS
 /* Scheduler include files. */
@@ -21,17 +21,23 @@
 #include "timers.h"
 
 
-#define MAX_DETUMBLE_TIME_SECONDS 4500
+//#define MAX_DETUMBLE_TIME_SECONDS 4500
+#define MAX_DETUMBLE_TIME_SECONDS 30
 #define MIN_OMEGA 0.1
 // Prototypes
 void InitNormalOps(void);
 bool detumblingComplete(void);
+void vTestHandler(TimerHandle_t xTimer);
+void testTickSchedule(void);
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
+
+//#define INCLUDE_vTaskDelete 1
+TaskHandle_t xHandleDetumble;
 
 /* The heap is allocated here so the "persistent" qualifier can be used.  This
 requires configAPPLICATION_ALLOCATED_HEAP to be set to 1 in FreeRTOSConfig.h.
@@ -41,7 +47,6 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
 
 void Init_GPIO(void);
 void Init_interrupts(void);
-void detumbleDriver(void);
 
 unsigned int CC_milis=0;
 
@@ -75,37 +80,40 @@ int main(void) {
     // Initialize non-volatile storage used for telemetry logging
     NvsInit();
 
-    // Debugging
-//    LogOpMode(DETUMBLE_MODE);
+    /*** BELOW LINE(s) ONLY FOR TESTING PURPOSES ***/
+    LogOpMode(DETUMBLE_MODE);
 //    LogSoc(1.0);
+    /*** ABOVE LINE(s) ONLY FOR TESTING PURPOSES ***/
 
     // Perform post-ejection checkout activities
     CheckoutActivities();
     // Initialize state for SoC estimation
     float initial_soc;
-    RetrieveSoc(initial_soc);
+    RetrieveSoc(&initial_soc);
     InitEstimateSoc(initial_soc);
     // Get operation mode
-    uint16_t op_mode = IDLE_MODE;
-    RetrieveOpMode(op_mode);
+    uint16_t op_mode;
+    RetrieveOpMode(&op_mode);
 
     // Task which always run, no matter the operation mode
     xTaskCreate( monitorSoc,         /* Task entry point. */
                  "monitorSoc",           /* Text name for the task - not used by the kernel. */
-                 500,                   /* Stack to allocate to the task - in words not bytes! */
+                 configMINIMAL_STACK_SIZE,                   /* Stack to allocate to the task - in words not bytes! */
                  NULL,                  /* The parameter passed into the task. */
                  1,                     /* The task's priority. */
                  NULL );                /* Task handle. */
     xTaskCreate( MainThermalControl,         /* Task entry point. */
                  "therm",           /* Text name for the task - not used by the kernel. */
-                 500,                   /* Stack to allocate to the task - in words not bytes! */
+                 2*configMINIMAL_STACK_SIZE,                   /* Stack to allocate to the task - in words not bytes! */
                  NULL,                  /* The parameter passed into the task. */
                  1,                     /* The task's priority. */
                  NULL );                /* Task handle. */
 
 
     // Tasks dependent upon op-mode
-    xTaskCreate(detumbleDriver, "detumble", 1000, NULL, 1, NULL);
+    xHandleDetumble = NULL;
+    xTaskCreate(detumbleDriver, "detumble", 500, NULL, 1, &xHandleDetumble);
+//    xTaskCreate(testTickSchedule, "test", 500, NULL, 1, NULL);
     if(op_mode !=  DETUMBLE_MODE)
     {
         InitNormalOps();
@@ -125,33 +133,39 @@ int main(void) {
 }
 
 
+
 void InitNormalOps(void)
 {
+    /*** BELOW LINE(s) ONLY FOR TESTING PURPOSES ***/
+    setLoadSwitch(LS_ADCS,0);
+    setLoadSwitch(LS_CDH,1);
+    LogOpMode(DETUMBLE_MODE);
+    /*** ABOVE LINE(s) ONLY FOR TESTING PURPOSES ***/
+//    LogOpMode(NORMAL_MODE);
     initTelemetry();
+//    if(xHandleDetumble != NULL)
+//        vTaskDelete(&xHandleDetumble);
+    vTaskSuspend(detumbleDriver);
     xTaskCreate(checkCommands, "CheckCmds", 500, NULL, 1, NULL);
 }
 
 typedef enum DETUMBLE_STATES {
     COLLECT_DATA = 1,
-    CALCULATE_DIPOLE = 2,
-    EXECUTE_DIPOLE = 3
+    CALC_EXEC_DIPOLE = 2,
+    DETUMBLE_WAIT = 3
 };
 
 volatile int magData[100][3] = {0};
-volatile int dipole[3] = {0}; //x, y, z dipoles
+//volatile int dipole[3] = {0}; //x, y, z dipoles
 TimerHandle_t detumbleTimer;
 
 void collectMagData() {
-    // Turn torque rods off
-    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_1);
-    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_2);
-    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_3);
     // Get measurements
     uint8_t rawMagData[6] = {0};
     uint16_t tempMagData[3];
     int i;
     int magDataIndex = 0;
-    while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
+    while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA && magDataIndex < 100) {
         // Get measurements
         getMagnetometerMeasurements(1, rawMagData);
 
@@ -164,18 +178,22 @@ void collectMagData() {
         }
         magDataIndex++;
     }
+    // Wait
+    while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA);
 }
 
+int diffs[100][3] = {0};
 volatile const float gain = -1.0;
 volatile uint8_t polarity[3] = {0};
 volatile uint8_t pwm[3] = {0};
-void calculateDipole() {
-    int diffs[100][3] = {0};
+void calculateExecuteDipole() {
     float dipole[3];
     int totalMeasurements = 0;
     int i, j;
     float voltage = 0.0;
-    while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE) {
+    while(pvTimerGetTimerID(detumbleTimer) == CALC_EXEC_DIPOLE) {
+        /*** Calculate Dipole ***/
+        // Calculate finite different of magnetometer data
         for(i = 0; i < 99; i++) {
             if(magData[i][0] != 0 && magData[i+1][0] != 0) {
                 for(j = 0; j < 3; j++) {
@@ -203,23 +221,9 @@ void calculateDipole() {
             // Polarity
             polarity[i] = ((voltage >= 0) ? 1 : 0);
             // PWM
-            pwm[i] = (uint8_t)( ((polarity[1]-1) * voltage ) * ( MAX_VOLTAGE / MAX_PWM ))
+            pwm[i] = (uint8_t)( ((polarity[1]-1) * voltage ) * ( MAX_VOLTAGE / MAX_PWM ));
         }
-
-        while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE); // wait after calc
-    }
-}
-
-uint16_t detumbling_cycles = 0;
-void executeDipole() {
-    while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
-        // Detumbling complete??
-        if(detumblingComplete())
-        {
-            InitNormalOps();
-            while(1) {};
-        }
-        detumbling_cycles++
+        /*** Execute Dipole ***/
         // Set polarity
         setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_1,polarity[0]);
         setTorqueRodPolarity(ADCS_CMD_SET_POLARITY_TORQUE_ROD_2,polarity[1]);
@@ -232,12 +236,37 @@ void executeDipole() {
         setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_1);
         setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_2);
         setTorqueRodState(ADCS_CMD_SET_ON_TORQUE_ROD_3);
-        while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE); // wait after calc
+
+        while(pvTimerGetTimerID(detumbleTimer) == CALC_EXEC_DIPOLE); // wait after calc
     }
+}
+
+uint16_t detumbling_cycles = 0;
+void detumbleWait() {
+    // Turn torque rods off
+    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_1);
+    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_2);
+    setTorqueRodState(ADCS_CMD_SET_OFF_TORQUE_ROD_3);
+    // Detumbling complete??
+    if(detumblingComplete())
+    {
+        InitNormalOps();
+        while(1);
+    }
+    detumbling_cycles++;
+    // Wait
+    while(pvTimerGetTimerID(detumbleTimer) == DETUMBLE_WAIT); // wait
 }
 
 bool detumblingComplete(void)
 {
+    /*** BELOW LINE(s) ONLY FOR TESTING PURPOSES ***/
+    return detumbling_cycles > MAX_DETUMBLE_TIME_SECONDS;
+    /*** ABOVE LINE(s) ONLY FOR TESTING PURPOSES ***/
+
+
+    /*** BELOW LINE(s) COMMENTED ONLY FOR TESTING PURPOSES ***/
+    /*
     if(detumbling_cycles > MAX_DETUMBLE_TIME_SECONDS)
         return true;
     int i;
@@ -246,6 +275,8 @@ bool detumblingComplete(void)
             return false;
     }
     return true;
+    */
+    /*** ABOVE LINE(s) COMMENTED ONLY FOR TESTING PURPOSES ***/
 }
 
 void vHandleTimer(TimerHandle_t xTimer) {
@@ -260,19 +291,33 @@ void vHandleTimer(TimerHandle_t xTimer) {
 }
 
 void detumbleDriver(void) {
-    detumbleTimer = xTimerCreate("detumbleTimer", pdMS_TO_TICKS(333), pdTRUE, COLLECT_DATA, vHandleTimer);
+    /*** BELOW LINE(s) ONLY FOR TESTING PURPOSES ***/
+//    setLoadSwitch(LS_ADCS,0);
+    setLoadSwitch(LS_ADCS,1);
+    setLoadSwitch(LS_CDH,0);
+    /*** ABOVE LINE(s) ONLY FOR TESTING PURPOSES ***/
+    detumbleTimer = xTimerCreate("detumbleTimer", pdMS_TO_TICKS(333), pdTRUE, ( void * ) COLLECT_DATA, vHandleTimer);
+    if(detumbleTimer == NULL)
+    {
+//        InitNormalOps();
+        while(1);
+    }
+    else
+    {
+        xTimerStart(detumbleTimer,portMAX_DELAY);
+    }
     for(;;) {
         while(pvTimerGetTimerID(detumbleTimer) == COLLECT_DATA) {
             collectMagData();
         }
 
-        while(pvTimerGetTimerID(detumbleTimer) == CALCULATE_DIPOLE) {
-            calculateDipole();
+        while(pvTimerGetTimerID(detumbleTimer) == CALC_EXEC_DIPOLE) {
+            calculateExecuteDipole();
         }
 
-//        while(pvTimerGetTimerID(detumbleTimer) == EXECUTE_DIPOLE) {
-//            executeDipole();
-//        }
+        while(pvTimerGetTimerID(detumbleTimer) == DETUMBLE_WAIT) {
+            detumbleWait();
+        }
     }
 }
 
@@ -408,7 +453,7 @@ void vApplicationIdleHook( void )
 void vApplicationTickHook( void )
 {
     /* Force an assert. */
-    configASSERT( ( volatile void * ) NULL );
+//    configASSERT( ( volatile void * ) NULL );
 }
 /*-----------------------------------------------------------*/
 

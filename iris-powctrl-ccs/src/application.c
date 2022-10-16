@@ -288,7 +288,6 @@ void commandHandler_noInterrupt(void)
 
 void checkCommands(void)
 {
-    vTaskSuspend(detumbleDriver);
     while(1)
     {
         TCAN4x5x_Device_ReadInterrupts(&dev_ir);            // Read the device interrupt register

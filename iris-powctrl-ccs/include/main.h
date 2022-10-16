@@ -16,6 +16,7 @@
 #define THERMAL_CONTROL
 
 
+void detumbleDriver(void);
 //volatile uint32_t ulRunTimeCounterOverflows;
 //void vConfigureTimerForRunTimeStats( void )
 //{

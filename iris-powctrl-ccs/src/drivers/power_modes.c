@@ -43,8 +43,8 @@ uint16_t nvm_status = 0;
 void monitorSoc(void)
 {
     // Initialize the state of charge estimation from non-volatile memory
-    nvm_status = RetrieveSoc(SOC_t);
-    nvm_status = RetrieveSoc(soc_coulomb);
+    nvm_status = RetrieveSoc(&SOC_t);
+    nvm_status = RetrieveSoc(&soc_coulomb);
     // Main loop
     while(1)
     {

@@ -44,6 +44,7 @@ void adcsSyncSpi(void)
         g_cmd_ack = adcsTxRx(ADCS_SYNC_SPI);
     } while(g_cmd_ack != ADCS_SYNC_SPI);
 }
+/*
 bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle)
 {
     uint8_t cmd_id = -1;
@@ -76,6 +77,7 @@ bool setTorqueRodPwm(uint8_t torqueRodNumber, uint8_t dutyCycle)
 //    else
 //        return false;
 }
+*/
 uint8_t gyro_x1, gyro_x2;
 uint8_t gyro_y1, gyro_y2;
 uint8_t gyro_z1, gyro_z2;
@@ -144,7 +146,7 @@ void getMagnetometerMeasurements(uint8_t magnetometerNumber, uint8_t * magnetome
     // Testing
     g_ack = adcsTxRx(cmd_id);
     g_cmd_ack = adcsTxRx(0x00);
-    __delay_cycles(1000000);
+    __delay_cycles(10);
     magnetoCounter = 0;
     do{
         magneto = adcsTxRx(85);

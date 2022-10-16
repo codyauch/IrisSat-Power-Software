@@ -71,18 +71,24 @@ void BatteryHeaterControl(void)
 
 void CheckThermistorStatus(void)
 {
-    // Primary
-    float primaryTemp = readTemperature(0);
-    if(!CheckLimits(primaryTemp,&ThermistorErrorLimits)){
-        thermistor_error_status[PRIMARY] = false;
-        // Send error telemetry!!!
+    uint8_t i;
+    float temp;
+    for(i=0; i < 2; i++){
+        temp = readTemperature(i);
+        thermistor_error_status[i] = CheckLimits(temp,&ThermistorErrorLimits);
     }
-    // Secondary
-    float secondaryTemp = readTemperature(1);
-    if(!CheckLimits(secondaryTemp,&ThermistorErrorLimits)){
-        thermistor_error_status[SECONDARY] = false;
-        // Send error telemetry!!!
-    }
+//    // Primary
+//    float primaryTemp = readTemperature(0);
+//    if(!CheckLimits(primaryTemp,&ThermistorErrorLimits)){
+//        thermistor_error_status[PRIMARY] = false;
+//        // Send error telemetry!!!
+//    }
+//    // Secondary
+//    float secondaryTemp = readTemperature(1);
+//    if(!CheckLimits(secondaryTemp,&ThermistorErrorLimits)){
+//        thermistor_error_status[SECONDARY] = false;
+//        // Send error telemetry!!!
+//    }
 }
 
 void SetThermistorStatus(bool primaryStatus, bool secondaryStatus)
