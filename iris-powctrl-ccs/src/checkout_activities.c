@@ -26,7 +26,7 @@ void CheckoutActivities(void)
     for(i=0; i < NUM_LOAD_CURRENTS; i++)
         load_currents[i] = readLoadCurrent(i);
     // Read PCU state registers
-    uint8_t mode = loadOperatingMode();
+    // uint8_t mode = loadOperatingMode();
     // Measure solar array performance
     float sa_currents[NUM_SOLAR_ARRAYS] = {0};
     for(i=0; i < NUM_SOLAR_ARRAYS; i++)

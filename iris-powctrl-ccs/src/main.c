@@ -42,8 +42,9 @@ TaskHandle_t xHandleDetumble;
 /* The heap is allocated here so the "persistent" qualifier can be used.  This
 requires configAPPLICATION_ALLOCATED_HEAP to be set to 1 in FreeRTOSConfig.h.
 See http://www.freertos.org/a00111.html for more information. */
-#pragma PERSISTENT( ucHeap )    /* CCS version. */
-uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
+
+//#pragma PERSISTENT( ucHeap )    /* CCS version. */
+//uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
 
 void Init_GPIO(void);
 void Init_interrupts(void);
@@ -95,9 +96,13 @@ int main(void) {
     uint16_t op_mode;
     RetrieveOpMode(&op_mode);
 
+    // Tasks dependent upon op-mode
+    xHandleDetumble = NULL;
+    xTaskCreate(detumbleDriver, "detumble", configMINIMAL_STACK_SIZE, NULL, 1, &xHandleDetumble);
+
     // Task which always run, no matter the operation mode
     xTaskCreate( monitorSoc,         /* Task entry point. */
-                 "monitorSoc",           /* Text name for the task - not used by the kernel. */
+                 "monSoc",           /* Text name for the task - not used by the kernel. */
                  configMINIMAL_STACK_SIZE,                   /* Stack to allocate to the task - in words not bytes! */
                  NULL,                  /* The parameter passed into the task. */
                  1,                     /* The task's priority. */
@@ -110,13 +115,10 @@ int main(void) {
                  NULL );                /* Task handle. */
 
 
-    // Tasks dependent upon op-mode
-    xHandleDetumble = NULL;
-    xTaskCreate(detumbleDriver, "detumble", 500, NULL, 1, &xHandleDetumble);
 //    xTaskCreate(testTickSchedule, "test", 500, NULL, 1, NULL);
     if(op_mode !=  DETUMBLE_MODE)
     {
-        InitNormalOps();
+        //InitNormalOps();
     }
 
 
@@ -143,10 +145,10 @@ void InitNormalOps(void)
     /*** ABOVE LINE(s) ONLY FOR TESTING PURPOSES ***/
 //    LogOpMode(NORMAL_MODE);
     initTelemetry();
-//    if(xHandleDetumble != NULL)
-//        vTaskDelete(&xHandleDetumble);
-    vTaskSuspend(detumbleDriver);
     xTaskCreate(checkCommands, "CheckCmds", 500, NULL, 1, NULL);
+    if(xHandleDetumble != NULL) vTaskDelete(xHandleDetumble);
+    //vTaskSuspend(detumbleDriver);
+
 }
 
 typedef enum DETUMBLE_STATES {
@@ -297,6 +299,8 @@ void detumbleDriver(void) {
     setLoadSwitch(LS_CDH,0);
     /*** ABOVE LINE(s) ONLY FOR TESTING PURPOSES ***/
     detumbleTimer = xTimerCreate("detumbleTimer", pdMS_TO_TICKS(333), pdTRUE, ( void * ) COLLECT_DATA, vHandleTimer);
+//    StaticTimer_t timerSpace;
+//    TimerHandle_t detumbleTimerStatic = xTimerCreateStatic("detumbleTimer", pdMS_TO_TICKS(333), pdTRUE, ( void * ) COLLECT_DATA, vHandleTimer, &timerSpace);
     if(detumbleTimer == NULL)
     {
 //        InitNormalOps();

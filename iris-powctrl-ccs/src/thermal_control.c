@@ -75,7 +75,7 @@ void CheckThermistorStatus(void)
     float temp;
     for(i=0; i < 2; i++){
         temp = readTemperature(i);
-        thermistor_error_status[i] = CheckLimits(temp,&ThermistorErrorLimits);
+//        thermistor_error_status[i] = CheckLimits(temp,&ThermistorErrorLimits);
     }
 //    // Primary
 //    float primaryTemp = readTemperature(0);
